@@ -1,0 +1,107 @@
+"use client";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Search, RefreshCw, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { client } from "@/sanity/lib/client";
+import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
+
+export default function BlogSearchFilters({
+  query,
+  setQuery,
+  status,
+  setStatus,
+  category,
+  setCategory,
+  searchLoading,
+  error,
+  retryCount,
+  onRetry,
+}) {
+  const [categories, setCategories] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoadingCategories(true);
+        const fetchedCategories = await client.fetch(ALL_CATEGORIES_QUERY);
+        setCategories(fetchedCategories || []);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setCategories([]);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  return (
+    <div className="space-y-3 md:space-y-0 md:flex md:flex-row md:gap-4 md:items-center">
+      <div className="relative flex-1 md:max-w-sm">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search blogs..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="pl-10 h-11 md:h-10 text-base md:text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20"
+        />
+        {searchLoading && (
+          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
+        )}
+      </div>
+
+      <div className="flex gap-3 md:gap-2">
+        <Select value={category} onValueChange={setCategory}>
+          <SelectTrigger className="flex-1 md:w-40 h-11 md:h-10 text-base md:text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20">
+            <SelectValue
+              placeholder={loadingCategories ? "Loading..." : "Category"}
+            />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            {categories.map((cat) => (
+              <SelectItem key={cat._id} value={cat._id}>
+                {cat.title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={status} onValueChange={setStatus}>
+          <SelectTrigger className="flex-1 md:w-40 h-11 md:h-10 text-base md:text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="published">Published</SelectItem>
+            <SelectItem value="rejected">Rejected</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {error && retryCount > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onRetry}
+            className="h-11 md:h-10 px-4 md:px-3 text-orange-600 border-orange-200 hover:bg-orange-50 whitespace-nowrap"
+          >
+            <RefreshCw className="h-4 w-4 mr-2 md:mr-1" />
+            <span className="hidden sm:inline">Retry</span>
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
