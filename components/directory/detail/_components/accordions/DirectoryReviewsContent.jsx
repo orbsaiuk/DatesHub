@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import {
   Carousel,
@@ -9,7 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import ReviewDialog from "../ReviewDialog";
 import StarRating from "../StarRating";
 
-export default function ReviewsContent({
+export default function DirectoryReviewsContent({
   isOpen = false,
   reviews = [],
   companyId,
@@ -19,7 +20,7 @@ export default function ReviewsContent({
   const [slideCount, setSlideCount] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [sortBy, setSortBy] = React.useState("newest");
-  const [filterBy, setFilterBy] = React.useState(0); // 0 = all
+  const [filterBy, setFilterBy] = React.useState(0);
   const [localReviews, setLocalReviews] = React.useState(reviews || []);
 
   React.useEffect(() => {

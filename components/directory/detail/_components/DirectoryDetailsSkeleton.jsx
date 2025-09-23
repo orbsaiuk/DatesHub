@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function CompanyDetailsSkeleton() {
+export default function DirectoryDetailsSkeleton() {
   return (
     <div className="container mx-auto px-4 my-6 sm:my-8">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6">

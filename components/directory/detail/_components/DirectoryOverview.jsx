@@ -1,0 +1,15 @@
+"use client";
+
+import React from "react";
+import { Card } from "@/components/ui/card";
+
+export default function DirectoryOverview({ company }) {
+  return (
+    <Card className="mt-6 p-4 sm:p-6">
+      <h2 className="text-lg font-semibold">Overview</h2>
+      <div className="mt-2 text-sm text-muted-foreground whitespace-pre-line">
+        {company.description}
+      </div>
+    </Card>
+  );
+}

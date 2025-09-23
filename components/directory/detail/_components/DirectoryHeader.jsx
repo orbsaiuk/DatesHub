@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { SignedIn } from "@clerk/nextjs";
 import CompanyInteractionButton from "@/components/CompanyInteractionButton";
 
-export default function CompanyHeader({ company }) {
+export default function DirectoryHeader({ company }) {
   const logoUrl =
     typeof company.logo === "string"
       ? company.logo
@@ -29,11 +29,8 @@ export default function CompanyHeader({ company }) {
   const [loading, setLoading] = useState(false);
   const hasIncrementedRef = useRef(false);
 
-  // Increment total views on mount (best-effort)
   useEffect(() => {
     if (!company?.id) return;
-
-    // Client-side guards against duplicate increments (StrictMode, fast remounts, race conditions)
     const storageKey = `viewed_company_${company.id}`;
     try {
       if (typeof window !== "undefined") {
@@ -45,7 +42,6 @@ export default function CompanyHeader({ company }) {
     if (hasIncrementedRef.current) return;
     hasIncrementedRef.current = true;
 
-    // Fire and forget, no blocking UI
     fetch("/api/company/increment-views", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -90,9 +86,9 @@ export default function CompanyHeader({ company }) {
       const data = await res.json();
       const now = Boolean(data?.bookmarked);
       setIsBookmarked(now);
-      toast.success(now ? "Saved to bookmarks" : "Removed from bookmarks");
+      toast.success(now ? "تم الحفظ في المحفوظات" : "تم الحذف من المحفوظات");
     } catch (_) {
-      toast.error("Something went wrong. Please try again.");
+      toast.error("حدث خطأ. يرجى المحاولة مرة أخرى.");
       setIsBookmarked(prev);
     } finally {
       setLoading(false);
@@ -120,8 +116,8 @@ export default function CompanyHeader({ company }) {
             <StarRating rating={company.rating} />
             <span>
               {company?.ratingCount > 0
-                ? `${Number(company.rating || 0).toFixed(1)} (${company.ratingCount} ${company.ratingCount === 1 ? "Rating" : "Ratings"})`
-                : "No ratings yet"}
+                ? `${Number(company.rating || 0).toFixed(1)} (${company.ratingCount} ${company.ratingCount === 1 ? "تقييم" : "تقييم"})`
+                : "لا توجد تقييمات بعد"}
             </span>
           </div>
 
@@ -137,7 +133,7 @@ export default function CompanyHeader({ company }) {
                     title={company.locationList.slice(1).join("\n")}
                     className="text-muted-foreground/80 cursor-help"
                   >
-                    (+{company.locationList.length - 1} more)
+                    (+{company.locationList.length - 1} المزيد)
                   </span>
                 </>
               ) : null}
@@ -167,7 +163,7 @@ export default function CompanyHeader({ company }) {
               size="sm"
               className="cursor-pointer col-span-2 sm:col-span-1 w-full sm:w-auto"
             >
-              Visit website <ExternalLink className="size-4" />
+              زيارة الموقع <ExternalLink className="size-4" />
             </Button>
           </div>
         </div>
@@ -180,8 +176,8 @@ export default function CompanyHeader({ company }) {
               aria-pressed={isBookmarked}
               onClick={toggleBookmark}
               disabled={loading}
-              title={isBookmarked ? "Remove bookmark" : "Save bookmark"}
-              aria-label={isBookmarked ? "Remove bookmark" : "Save bookmark"}
+              title={isBookmarked ? "إزالة المرجعية" : "حفظ مرجعية"}
+              aria-label={isBookmarked ? "إزالة المرجعية" : "حفظ مرجعية"}
             >
               {isBookmarked ? (
                 <BookmarkCheck className="size-6 text-primary" />

@@ -1,14 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
+  BookmarkCheck,
+  BookmarkPlus,
   Clock3,
   MapPin,
   Star,
-  BookmarkPlus,
-  BookmarkCheck,
 } from "lucide-react";
-import Link from "next/link";
 import { CompanyLogo } from "@/components/ImageOptimized";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -34,8 +34,9 @@ function StarRating({ rating = 0 }) {
   );
 }
 
-export default function CompanyCard({
+export default function DirectoryCompanyCard({
   company,
+  basePath = "/companies",
   isBookmarked = false,
   onToggleBookmark,
 }) {
@@ -46,7 +47,6 @@ export default function CompanyCard({
     ratingCount,
     location,
     description,
-
     openingHours,
     extraServices,
   } = company;
@@ -59,9 +59,9 @@ export default function CompanyCard({
     setPending(true);
     try {
       await onToggleBookmark?.();
-      toast.success(prev ? "Removed from bookmarks" : "Saved to bookmarks");
+      toast.success(prev ? "تم الحذف من المحفوظات" : "تم الحفظ في المحفوظات");
     } catch (e) {
-      toast.error("Something went wrong. Please try again.");
+      toast.error("حدث خطأ. يرجى المحاولة مرة أخرى.");
     } finally {
       setPending(false);
     }
@@ -70,14 +70,12 @@ export default function CompanyCard({
   return (
     <div className="rounded-xl border bg-white p-4 sm:p-6 shadow-sm relative">
       <div className="flex flex-col gap-4 md:flex-row md:gap-6">
-        {/* Logo / Image */}
         <CompanyLogo
           company={company}
           size="lg"
           className="rounded-md w-[160px] h-[160px] object-cover"
         />
 
-        {/* Main left column */}
         <div className="flex-1">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
@@ -92,8 +90,8 @@ export default function CompanyCard({
                   <StarRating rating={rating} />
                   <span>
                     {ratingCount > 0
-                      ? `${Number(rating || 0).toFixed(1)} (${ratingCount} ${ratingCount === 1 ? "Rating" : "Ratings"})`
-                      : "No ratings yet"}
+                      ? `${Number(rating || 0).toFixed(1)} (${ratingCount} ${ratingCount === 1 ? "تقييم" : "تقييم"})`
+                      : "لا توجد تقييمات بعد"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -115,22 +113,20 @@ export default function CompanyCard({
           </div>
         </div>
 
-        {/* Right column description */}
         <div className="md:w-[44%]">
-          {/* Actions (desktop) */}
           <div className="hidden sm:flex md:gap-2 mb-4 w-full">
             <div className="flex gap-2">
               <CompanyInteractionButton
                 companyTenantId={company.tenantId}
                 companyName={company.name}
               />
-              <Link href={`/companies/${company.id}`}>
+              <Link href={`${basePath}/${company.id}`}>
                 <Button
                   variant="outline"
                   size="sm"
                   className="w-full cursor-pointer"
                 >
-                  View Profile
+                  عرض الملف الشخصي
                 </Button>
               </Link>
             </div>
@@ -150,7 +146,7 @@ export default function CompanyCard({
               ))}
               {extraServices.length > 6 ? (
                 <span className="text-xs text-muted-foreground">
-                  +{extraServices.length - 6} more
+                  +{extraServices.length - 6} المزيد
                 </span>
               ) : null}
             </div>
@@ -158,16 +154,15 @@ export default function CompanyCard({
         </div>
       </div>
 
-      {/* Actions (mobile) */}
       <div className="mt-4 flex gap-2 md:hidden">
         <CompanyInteractionButton
           companyTenantId={company.tenantId}
           companyName={company.name}
           className="flex-1"
         />
-        <Link href={`/companies/${company.id}`} className="flex-1">
+        <Link href={`${basePath}/${company.id}`} className="flex-1">
           <Button variant="outline" size="sm" className="w-full cursor-pointer">
-            View Profile
+            عرض الملف الشخصي
           </Button>
         </Link>
       </div>
@@ -179,8 +174,8 @@ export default function CompanyCard({
             className={`cursor-pointer transition-transform ${pending ? "scale-95" : "hover:scale-105"}`}
             aria-pressed={isBookmarked}
             onClick={handleToggle}
-            title={isBookmarked ? "Remove bookmark" : "Save bookmark"}
-            aria-label={isBookmarked ? "Remove bookmark" : "Save bookmark"}
+            title={isBookmarked ? "إزالة المرجعية" : "حفظ مرجعية"}
+            aria-label={isBookmarked ? "إزالة المرجعية" : "حفظ مرجعية"}
             disabled={pending}
           >
             {isBookmarked ? (

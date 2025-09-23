@@ -4,9 +4,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Filters from "./Filters";
+import DirectoryFilters from "./DirectoryFilters";
 
-export default function Header({
+export default function DirectoryHeader({
+  title = "جميع العناصر",
+  basePath = "/companies",
   categories = [],
   initialFilters,
   count = 0,
@@ -26,7 +28,7 @@ export default function Header({
     if (q.trim()) params.set("q", q.trim());
     else params.delete("q");
     router.push(
-      `/companies${params.toString() ? `?${params.toString()}` : ""}`
+      `${basePath}${params.toString() ? `?${params.toString()}` : ""}`
     );
   };
   return (
@@ -34,16 +36,16 @@ export default function Header({
       <div className="px-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl sm:text-2xl font-bold">All Companies</h2>
+            <h2 className="text-xl sm:text-2xl font-bold">{title}</h2>
             <span className="text-xs sm:text-sm text-muted-foreground">
-              {count} result{count === 1 ? "" : "s"}
+              {count} {count === 1 ? "نتيجة" : "نتائج"}
             </span>
           </div>
-          <div className="w-full sm:w-auto">
+          <div className="w-full sm:w-auto ">
             <div className="relative w-full sm:w-80 md:w-96">
               <Input
-                placeholder="Search companies"
-                className="bg-gray-100 pr-10"
+                placeholder="بحث"
+                className="bg-gray-100"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 onKeyDown={(e) => {
@@ -52,8 +54,8 @@ export default function Header({
               />
               <Button
                 variant="outline"
-                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 cursor-pointer bg-gray-200 hover:bg-gray-300"
-                aria-label="Search"
+                className="absolute left-0 top-1/2 -translate-y-1/2 h-8 cursor-pointer bg-gray-200 hover:bg-gray-300"
+                aria-label="بحث"
                 onClick={doSearch}
               >
                 <Search className="w-4 h-4 text-muted-foreground" />
@@ -62,7 +64,8 @@ export default function Header({
           </div>
         </div>
         <hr className="my-6 border-gray-200" />
-        <Filters
+        <DirectoryFilters
+          basePath={basePath}
           categories={categories}
           initialFilters={initialFilters}
           cities={cities}

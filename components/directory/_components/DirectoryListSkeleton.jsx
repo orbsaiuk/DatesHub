@@ -2,7 +2,7 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function CompanyListSkeleton({ items = 3 }) {
+export default function DirectoryListSkeleton({ items = 3 }) {
   return (
     <div
       className="container mx-auto px-4 my-6 sm:my-8 space-y-3 sm:space-y-5"
@@ -39,7 +39,6 @@ export default function CompanyListSkeleton({ items = 3 }) {
           </div>
         </div>
       ))}
-      <span className="sr-only">Loading companies…</span>
     </div>
   );
 }

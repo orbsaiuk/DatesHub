@@ -1,13 +1,13 @@
-import CompanyMap from "../CompanyMap";
+import DirectoryMap from "../DirectoryMap";
 
-export default function LocationContent({ company }) {
+export default function DirectoryLocationContent({ company }) {
   const allMarkers = Array.isArray(company?.locations) ? company.locations : [];
   const hasHours =
     Array.isArray(company?.openingHours) && company.openingHours.length > 0;
   return (
     <div className="rounded-xl border bg-white shadow-sm">
       <div className="aspect-[4/3] sm:aspect-[16/6] w-full rounded-xl overflow-hidden">
-        <CompanyMap company={company} />
+        <DirectoryMap company={company} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3">
         <div className="rounded-md border bg-white p-3 col-span-1 sm:col-span-2">

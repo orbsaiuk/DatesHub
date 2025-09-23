@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import MapView from "@/app/(public)/companies/_components/MapView";
+import MapView from "./MapView";
 
 function buildQueryFromLocation(loc) {
   if (!loc || typeof loc !== "object") return "";
@@ -12,7 +12,7 @@ function buildQueryFromLocation(loc) {
   return parts.join(", ");
 }
 
-export default function CompanyMap({ company, className = "" }) {
+export default function DirectoryMap({ company, className = "" }) {
   const [resolved, setResolved] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -68,7 +68,6 @@ export default function CompanyMap({ company, className = "" }) {
       }
       if (!cancelled) setResolved(out);
       if (!cancelled) {
-        // Keep the loading state visible briefly to avoid flicker
         timer = setTimeout(() => {
           if (!cancelled) setLoading(false);
         }, 300);

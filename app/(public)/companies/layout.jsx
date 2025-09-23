@@ -3,14 +3,14 @@ import Footer from "@/components/Footer";
 import BreadcrumbNavigation from "@/components/navigation/BreadcrumbNavigation";
 
 export const metadata = {
-  title: "Browse Companies - OrbsAI Business Directory",
+  title: "تصفح الشركات - دليل الأعمال OrbsAI",
   description:
-    "Discover companies worldwide. Search by location, specialization, and services. Find trusted business partners, view ratings, and connect with companies in your industry.",
-  keywords: ["companies", "company search", "business network"],
+    "اكتشف الشركات حول العالم. ابحث حسب الموقع والتخصص والخدمات. اعثر على شركاء أعمال موثوقين، واطلع على التقييمات، وتواصل مع الشركات في مجال عملك.",
+  keywords: ["شركات", "البحث عن شركات", "شبكة الأعمال"],
   openGraph: {
-    title: "Browse Companies - OrbsAI Business Directory",
+    title: "تصفح الشركات - دليل الأعمال OrbsAI",
     description:
-      "Discover companies worldwide. Find trusted business partners and connect with companies in your industry.",
+      "اكتشف الشركات حول العالم. اعثر على شركاء أعمال موثوقين وتواصل مع الشركات في مجال عملك.",
     type: "website",
   },
 };

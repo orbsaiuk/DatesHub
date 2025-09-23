@@ -9,14 +9,18 @@ import {
 export const revalidate = revalidateDetail;
 
 export async function generateStaticParams() {
-  return await generateDetailStaticParams();
+  return await generateDetailStaticParams({ type: "supplier" });
 }
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  return await buildDetailMetadata({ id, basePath: "/companies" });
+  return await buildDetailMetadata({
+    id,
+    basePath: "/suppliers",
+    type: "supplier",
+  });
 }
 
 export default function SupplierDetailsPage(props) {
-  return <DirectoryDetailPage {...props} basePath="/companies" />;
+  return <DirectoryDetailPage {...props} basePath="/suppliers" />;
 }

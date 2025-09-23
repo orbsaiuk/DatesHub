@@ -1,19 +1,20 @@
 "use client";
+
 import React from "react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
-
 import ImageOptimized from "@/components/ImageOptimized";
 import { urlFor } from "@/sanity/lib/image";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function WorkAwardsContent({ works = [], awards = [] }) {
+export default function DirectoryWorkAwardsContent({
+  works = [],
+  awards = [],
+}) {
   const [workApi, setWorkApi] = React.useState(null);
   const [awardApi, setAwardApi] = React.useState(null);
   const [workIndex, setWorkIndex] = React.useState(0);
@@ -21,7 +22,6 @@ export default function WorkAwardsContent({ works = [], awards = [] }) {
   const [workCount, setWorkCount] = React.useState(0);
   const [awardCount, setAwardCount] = React.useState(0);
 
-  // track loaded images by item key
   const [loadedImages, setLoadedImages] = React.useState({});
   const markLoaded = (key) => setLoadedImages((s) => ({ ...s, [key]: true }));
 
@@ -103,7 +103,7 @@ export default function WorkAwardsContent({ works = [], awards = [] }) {
                           {imgSrc ? (
                             <ImageOptimized
                               src={imgSrc}
-                              alt={`${p.title || p.name || 'Work project'} - Portfolio showcase`}
+                              alt={`${p.title || p.name || "Work project"} - Portfolio showcase`}
                               width={600}
                               height={400}
                               className={`h-32 sm:h-40 w-full rounded-md object-cover transition-opacity ${
@@ -196,7 +196,7 @@ export default function WorkAwardsContent({ works = [], awards = [] }) {
                           {awardImgSrc ? (
                             <ImageOptimized
                               src={awardImgSrc}
-                              alt={`${a.title || a.name || 'Award'} - Company recognition and achievement`}
+                              alt={`${a.title || a.name || "Award"} - Company recognition and achievement`}
                               width={600}
                               height={400}
                               className={`h-28 sm:h-36 w-full rounded-md object-contain bg-white transition-opacity ${

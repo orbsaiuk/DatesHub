@@ -19,7 +19,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function Filters({
+export default function DirectoryFilters({
+  basePath = "/companies",
   categories = [],
   initialFilters,
   cities = [],
@@ -38,6 +39,17 @@ export default function Filters({
   const [isApplying, setIsApplying] = useState(false);
   const [dirty, setDirty] = useState(false);
 
+  const hasActiveFilters = useMemo(() => {
+    const locParam = searchParams?.get("loc");
+    const specParam = searchParams?.get("spec");
+    const ctypeParam = searchParams?.get("ctype");
+    return Boolean(
+      (locParam && locParam.trim()) ||
+        (specParam && specParam.trim()) ||
+        (ctypeParam && ctypeParam !== "all")
+    );
+  }, [searchParams]);
+
   const filteredCategories = useMemo(() => {
     const q = specializationQuery.trim().toLowerCase();
     const list = Array.isArray(categories) ? categories : [];
@@ -53,7 +65,7 @@ export default function Filters({
   }, [locationQuery, cities]);
 
   const selectedLabel = useMemo(() => {
-    if (!selectedSpecialization) return "Category";
+    if (!selectedSpecialization) return "الفئة";
     return (
       categories.find((c) => c.slug === selectedSpecialization)?.title ||
       selectedSpecialization
@@ -77,7 +89,7 @@ export default function Filters({
     if (companyType && companyType !== "all") params.set("ctype", companyType);
     else params.delete("ctype");
     router.push(
-      `/companies${params.toString() ? `?${params.toString()}` : ""}`
+      `${basePath}${params.toString() ? `?${params.toString()}` : ""}`
     );
     setTimeout(() => setIsApplying(false), 600);
   };
@@ -90,7 +102,7 @@ export default function Filters({
           <PopoverTrigger asChild>
             <div>
               <Input
-                placeholder="Location (City or Region)"
+                placeholder="الموقع (المدينة أو المنطقة)"
                 className="bg-gray-100 pl-9 h-10 cursor-pointer"
                 value={location}
                 readOnly
@@ -102,7 +114,7 @@ export default function Filters({
             <div className="space-y-2">
               <div className="relative">
                 <Input
-                  placeholder="Search city or region"
+                  placeholder="ابحث عن مدينة أو منطقة"
                   className="pl-8 h-9"
                   value={locationQuery}
                   onChange={(e) => setLocationQuery(e.target.value)}
@@ -111,7 +123,7 @@ export default function Filters({
               </div>
               <div className="rounded-md border">
                 <div className="px-3 py-2 text-xs font-medium text-muted-foreground">
-                  City, Region
+                  المدينة، المنطقة
                 </div>
                 <ul className="divide-y max-h-56 overflow-y-auto">
                   {filteredCities.map((cr) => (
@@ -150,7 +162,7 @@ export default function Filters({
           <div className="space-y-2">
             <div className="relative">
               <Input
-                placeholder="Search"
+                placeholder="بحث"
                 className="pl-8 h-9"
                 value={specializationQuery}
                 onChange={(e) => setSpecializationQuery(e.target.value)}
@@ -204,20 +216,21 @@ export default function Filters({
           setCompanyType(v);
           setDirty(true);
         }}
+        dir="rtl"
       >
         <SelectTrigger className="h-10 w-full bg-gray-100 justify-between">
           <div className="flex items-center gap-1">
-            <span className="text-muted-foreground">Event Type:</span>
-            <SelectValue placeholder="All" />
+            <span className="text-muted-foreground">نوع الفعالية:</span>
+            <SelectValue placeholder="الكل" />
           </div>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All</SelectItem>
-          <SelectItem value="full-event-planner">Full Event Planner</SelectItem>
-          <SelectItem value="kids-birthday">Kids Birthday</SelectItem>
-          <SelectItem value="wedding">Wedding</SelectItem>
-          <SelectItem value="social-gathering">Social Gathering</SelectItem>
-          <SelectItem value="corporate-event">Corporate Event</SelectItem>
+          <SelectItem value="all">الكل</SelectItem>
+          <SelectItem value="full-event-planner">منسق فعاليات كامل</SelectItem>
+          <SelectItem value="kids-birthday">أعياد ميلاد الأطفال</SelectItem>
+          <SelectItem value="wedding">حفلات الزفاف</SelectItem>
+          <SelectItem value="social-gathering">التجمعات الاجتماعية</SelectItem>
+          <SelectItem value="corporate-event">الفعاليات المؤسسية</SelectItem>
         </SelectContent>
       </Select>
 
@@ -226,26 +239,30 @@ export default function Filters({
           onClick={applyFilters}
           className="cursor-pointer h-10"
           variant="outline"
-          disabled={isApplying}
+          disabled={isApplying || !dirty}
         >
           {isApplying
-            ? "Applying..."
+            ? "جاري التطبيق..."
             : dirty
-              ? "Apply Filters"
-              : "Filters Applied"}
+              ? "تطبيق المرشحات"
+              : hasActiveFilters
+                ? "تم تطبيق المرشحات"
+                : "تطبيق المرشحات"}
         </Button>
-        <Button
-          onClick={() => {
-            setLocation("");
-            setSelectedSpecialization("");
-            setCompanyType("all");
-            router.push("/companies");
-          }}
-          className="cursor-pointer h-10"
-          variant="ghost"
-        >
-          Reset
-        </Button>
+        {hasActiveFilters && (
+          <Button
+            onClick={() => {
+              setLocation("");
+              setSelectedSpecialization("");
+              setCompanyType("all");
+              router.push(basePath);
+            }}
+            className="cursor-pointer h-10"
+            variant="ghost"
+          >
+            إعادة تعيين
+          </Button>
+        )}
       </div>
     </div>
   );

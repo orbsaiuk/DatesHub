@@ -25,6 +25,7 @@ import { useBreadcrumb } from "@/contexts/BreadcrumbContext";
 const routeConfig = {
   "": { label: "الرئيسية", icon: Home },
   companies: { label: "الشركات", icon: Building2 },
+  suppliers: { label: "الموردين", icon: Building2 },
   blogs: { label: "المدونة", icon: FileText },
   bookmarks: { label: "المحفوظات", icon: Bookmark },
   become: { label: "انضم إلينا", icon: UserPlus },
@@ -45,6 +46,21 @@ const getCompanyName = async (id) => {
     console.error("Error fetching company name:", error);
   }
   return `شركة ${id}`;
+};
+
+const getSupplierName = async (id) => {
+  try {
+    const response = await fetch(
+      `/api/supplier?tenantId=${encodeURIComponent(id)}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data.name || data?.supplier?.name || `مورد ${id}`;
+    }
+  } catch (error) {
+    console.error("Error fetching supplier name:", error);
+  }
+  return `مورد ${id}`;
 };
 
 // Function to get conversation label (other participant display name)
@@ -82,6 +98,7 @@ export default function BreadcrumbNavigation({
   const pathname = usePathname();
   const { customBreadcrumbs: contextBreadcrumbs } = useBreadcrumb();
   const [companyNames, setCompanyNames] = useState({});
+  const [supplierNames, setSupplierNames] = useState({});
   const [conversationLabels, setConversationLabels] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -93,13 +110,16 @@ export default function BreadcrumbNavigation({
     const pathSegments = pathname.split("/").filter(Boolean);
     const companyIds = [];
     const conversationIds = [];
-
+    const supplierIds = [];
     pathSegments.forEach((segment, index) => {
       if (pathSegments[index - 1] === "companies" && index > 0) {
         companyIds.push(segment);
       }
       if (pathSegments[index - 1] === "messages" && index > 0) {
         conversationIds.push(segment);
+      }
+      if (pathSegments[index - 1] === "suppliers" && index > 0) {
+        supplierIds.push(segment);
       }
     });
 
@@ -112,11 +132,14 @@ export default function BreadcrumbNavigation({
         Promise.all(
           missingIds.map(async (id) => {
             const name = await getCompanyName(id);
-            return { id, name };
+            const supplierName = await getSupplierName(id);
+            setSupplierNames((prev) => ({ ...prev, ...supplierName }));
+            return { id, name, supplierName };
           })
         ).then((results) => {
-          const newNames = results.reduce((acc, { id, name }) => {
+          const newNames = results.reduce((acc, { id, name, supplierName }) => {
             acc[id] = name;
+            acc[id] = supplierName;
             return acc;
           }, {});
           setCompanyNames((prev) => ({ ...prev, ...newNames }));
@@ -141,6 +164,24 @@ export default function BreadcrumbNavigation({
             return acc;
           }, {});
           setConversationLabels((prev) => ({ ...prev, ...newLabels }));
+        });
+      }
+    }
+    if (supplierIds.length > 0) {
+      const missingSupplierIds = supplierIds.filter((id) => !supplierNames[id]);
+      if (missingSupplierIds.length > 0) {
+        Promise.all(
+          missingSupplierIds.map(async (id) => {
+            const name = await getSupplierName(id);
+            return { id, name, supplierName };
+          })
+        ).then((results) => {
+          const newNames = results.reduce((acc, { id, name, supplierName }) => {
+            acc[id] = name;
+            acc[id] = supplierName;
+            return acc;
+          }, {});
+          setSupplierNames((prev) => ({ ...prev, ...newNames }));
         });
       }
     }
@@ -243,6 +284,7 @@ export default function BreadcrumbNavigation({
       const companyId = nextSegment;
       const companyName =
         companyNames[companyId] ||
+        supplierNames[companyId] ||
         (loading ? "جارٍ التحميل..." : `شركة ${companyId}`);
 
       breadcrumbs.push({

@@ -57,9 +57,7 @@ export default function ReviewDialog({
       const payload = await res.json().catch(() => null);
       toast.success("Review submitted");
       try {
-        // Optimistic hint update; the page is ISR so full refresh may be needed
         if (typeof window !== "undefined") {
-          // Broadcast a simple event in case we add live updates later
           window.dispatchEvent(
             new CustomEvent("review-submitted", { detail: payload })
           );

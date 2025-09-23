@@ -27,9 +27,9 @@ export default function Loading() {
       </section>
       <DirectoryListSkeleton items={5} />
       <div className="flex justify-center my-8">
-        <Spinner label="جاري تحميل الشركات…" />
+        <Spinner label="جاري تحميل الموردين…" />
       </div>
-      <span className="sr-only">جاري تحميل قائمة الشركات…</span>
+      <span className="sr-only">جاري تحميل قائمة الموردين…</span>
     </div>
   );
 }

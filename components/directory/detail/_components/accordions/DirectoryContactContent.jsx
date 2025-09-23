@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 
-export default function ContactContent({ company }) {
+export default function DirectoryContactContent({ company }) {
   return (
     <div className="rounded-md border p-4 sm:p-5 bg-white">
       <div className="flex items-start gap-3">

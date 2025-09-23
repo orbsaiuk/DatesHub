@@ -23,7 +23,8 @@ export default async function Header({ brandTitle, logoUrl }) {
   }
   const isBusiness = role === "company" || role === "supplier";
   const dashboardHref = isBusiness ? `/business/${role}/dashboard` : "#";
-
+  const directoryHref = isBusiness ? "/suppliers" : "/companies";
+  const directoryLabel = isBusiness ? "الموردين" : "الشركات";
   const title = brandTitle || "العلامة";
   return (
     <header className="w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
@@ -49,7 +50,7 @@ export default async function Header({ brandTitle, logoUrl }) {
         <nav className="hidden md:flex items-center gap-6 text-sm">
           <Link href="#featured">شركات مميزة</Link>
           <Link href="#how">كيف تعمل المنصة</Link>
-          <Link href="/companies">الشركات</Link>
+          <Link href={directoryHref}>{directoryLabel}</Link>
           <SignedIn>
             <Link href="/bookmarks">
               <Bookmark className="size-5" />
