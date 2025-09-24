@@ -3,7 +3,7 @@ import {
   getAllPlans,
   updatePlan,
   getPlanByStripePriceId,
-  createOrUpdateSubscription,
+  createSubscription,
   getSubscriptionByStripeId,
   updateSubscription,
   createPayment,
@@ -312,7 +312,7 @@ export async function handleCheckoutCompleted(session) {
       "[Stripe] Creating/updating subscription with data:",
       subscriptionData
     );
-    const result = await createOrUpdateSubscription(subscriptionData);
+    const result = await createSubscription(subscriptionData);
     console.log("[Stripe] Subscription created/updated:", result?._id);
   }
 }
