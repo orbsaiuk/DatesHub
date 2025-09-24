@@ -34,7 +34,7 @@ export default function ContactInfo({
 
       {entityType === "company" && (
         <div className="pt-2">
-          <h3 className="text-base font-medium mb-2">Social Links</h3>
+          <h3 className="text-base font-medium mb-2">روابط التواصل الاجتماعي</h3>
           <SocialLinksForm
             form={form}
             updateField={updateField}

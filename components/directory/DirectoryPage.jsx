@@ -79,7 +79,6 @@ export default async function DirectoryPage({
             loc: loc || "",
             spec: spec || "",
             ctype: ctype || "all",
-            sort: sort || "verified",
             q: q || "",
           }}
           count={companies.length}

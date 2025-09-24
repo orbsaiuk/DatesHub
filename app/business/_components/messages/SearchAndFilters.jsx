@@ -17,7 +17,7 @@ export default function SearchAndFilters({
       <div className="relative flex-1">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search messages..."
+          placeholder="البحث في الرسائل..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10 h-11 sm:h-10 text-base sm:text-sm"
@@ -32,7 +32,7 @@ export default function SearchAndFilters({
       >
         <TabsList>
           <TabsTrigger value="all" className="flex items-center gap-2">
-            All
+            الكل
             <Badge variant="secondary" className="text-xs ml-1">
               {filteredConversations.length}
             </Badge>
@@ -41,7 +41,7 @@ export default function SearchAndFilters({
             value="unread"
             className="flex items-center justify-center gap-2 text-sm sm:text-sm px-3 sm:px-4 py-2 min-h-[44px] sm:min-h-0"
           >
-            Unread
+            غير مقروءة
             {unreadCount > 0 && (
               <Badge variant="destructive" className="text-xs ml-1">
                 {unreadCount}

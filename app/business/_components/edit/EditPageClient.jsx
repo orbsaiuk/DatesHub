@@ -66,7 +66,7 @@ export default function EditPageClient({ initialEntity, entityType }) {
         Array.isArray(formData.categories) &&
         formData.categories.filter(Boolean).length > 0;
       if (!hasCategories) {
-        toast.error("Please select at least one category before continuing");
+        toast.error("يرجى تحديد فئة واحدة على الأقل قبل المتابعة");
         return;
       }
     }
@@ -118,8 +118,8 @@ export default function EditPageClient({ initialEntity, entityType }) {
       if (!ok) {
         toast.error(
           entityType === "company"
-            ? "Please provide contact details and at least one social link."
-            : "Please provide at least one contact detail."
+            ? "يرجى تقديم تفاصيل الاتصال ورابط واحد على الأقل لوسائل التواصل الاجتماعي."
+            : "يرجى تقديم تفاصيل اتصال واحدة على الأقل."
         );
         return;
       }
@@ -132,7 +132,7 @@ export default function EditPageClient({ initialEntity, entityType }) {
       hasIncompleteWork()
     ) {
       toast.error(
-        "Please complete or delete the added work before leaving this section."
+        "يرجى إكمال أو حذف العمل المضاف قبل مغادرة هذا القسم."
       );
       return;
     }
@@ -142,7 +142,7 @@ export default function EditPageClient({ initialEntity, entityType }) {
       hasIncompleteAward()
     ) {
       toast.error(
-        "Please complete or delete the added award before leaving this section."
+        "يرجى إكمال أو حذف الجائزة المضافة قبل مغادرة هذا القسم."
       );
       return;
     }
@@ -150,24 +150,26 @@ export default function EditPageClient({ initialEntity, entityType }) {
     setCurrentSection(nextId);
   };
 
-  const sections = [
+    const sections = [
     {
       id: "section-company-info",
-      label:
-        entityType === "supplier"
-          ? "Supplier Information"
-          : "Company Information",
+      label: "معلومات الشركة",
     },
-    { id: "section-locations", label: "Locations" },
-    { id: "section-contact", label: "Contact" },
-    { id: "section-services", label: "Services" },
+    {
+      id: "section-services",
+      label: "الخدمات",
+    },
+    {
+      id: "section-contact",
+      label: "الاتصال",
+    },
     {
       id: "section-our-works",
-      label: "Our Works",
+      label: "أعمالنا",
     },
     {
       id: "section-awards",
-      label: "Awards",
+      label: "الجوائز",
     },
   ];
 
@@ -179,11 +181,11 @@ export default function EditPageClient({ initialEntity, entityType }) {
     hasNoCategories ||
     (entityType === "company" && (hasIncompleteAward() || hasIncompleteWork()));
   const saveDisabledReason = hasNoCategories
-    ? "Please select at least one category before saving."
+    ? "يرجى تحديد فئة واحدة على الأقل قبل الحفظ."
     : entityType === "company" && hasIncompleteAward()
-      ? "Please complete or delete the added award before saving."
+      ? "يرجى إكمال أو حذف الجائزة المضافة قبل الحفظ."
       : entityType === "company" && hasIncompleteWork()
-        ? "Please complete or delete the added work before saving."
+        ? "يرجى إكمال أو حذف العمل المضاف قبل الحفظ."
         : "";
 
   return (
@@ -192,7 +194,7 @@ export default function EditPageClient({ initialEntity, entityType }) {
       <div className="lg:col-span-1">
         <div className="bg-card rounded-xl border p-3 sm:p-4 lg:sticky lg:top-20 lg:h-fit">
           <h3 className="text-sm sm:text-base font-semibold mb-3 sm:mb-4">
-            Sections
+            الأقسام
           </h3>
           {/* On mobile, render sections as a horizontal scrollable pill list */}
           <div className="block lg:hidden -mx-1 overflow-x-auto">

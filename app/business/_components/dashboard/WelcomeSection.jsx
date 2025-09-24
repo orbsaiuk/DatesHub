@@ -11,13 +11,13 @@ export default function WelcomeSection({ entity, entityType, subscription }) {
   const getPlanDisplay = () => {
     if (!subscription) {
       return {
-        name: "free plan",
+        name: "الباقة المجانية",
         color: "text-green-500",
         bgColor: "bg-green-500/10",
       };
     }
 
-    const planName = subscription.plan?.name?.toLowerCase() || "free plan";
+    const planName = subscription.plan?.name?.toLowerCase() || "الباقة المجانية";
 
     // Color coding based on plan type
     if (planName.includes("pro") || planName.includes("premium")) {
@@ -35,7 +35,7 @@ export default function WelcomeSection({ entity, entityType, subscription }) {
         color: "text-purple-500",
         bgColor: "bg-purple-500/10",
       };
-    } else {
+      } else {
       return {
         name: planName,
         color: "text-green-500",
@@ -52,10 +52,10 @@ export default function WelcomeSection({ entity, entityType, subscription }) {
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Dashboard
+          لوحة التحكم
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground mt-1.5">
-          Manage your profile, view analytics, and grow your business.
+          إدارة ملفك الشخصي، وعرض التحليلات، وتنمية عملك.
         </p>
       </div>
       <div className="flex items-center gap-2 sm:gap-3">
@@ -70,7 +70,7 @@ export default function WelcomeSection({ entity, entityType, subscription }) {
             href={`/business/${entityType}/packages`}
             className="inline-flex items-center justify-center rounded-md text-xs sm:text-sm font-medium px-3 py-2 underline"
           >
-            Upgrade
+            ترقية
           </Link>
         )}
       </div>

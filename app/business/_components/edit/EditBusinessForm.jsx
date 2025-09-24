@@ -50,39 +50,38 @@ export default function EditBusinessForm({
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [errors, setErrors] = useState({});
 
-
   const sections = [
     {
       id: "section-company-info",
       label:
         entityType === "supplier"
-          ? "Supplier Information"
-          : "Company Information",
+          ? "معلومات المورد"
+          : "معلومات الشركة",
       component: "company-info",
     },
     {
       id: "section-locations",
-      label: "Locations",
+      label: "المواقع",
       component: "locations",
     },
     {
       id: "section-contact",
-      label: "Contact",
+      label: "الاتصال",
       component: "contact",
     },
     {
       id: "section-services",
-      label: "Services",
+      label: "الخدمات",
       component: "services",
     },
     {
       id: "section-our-works",
-      label: "Our Works",
+      label: "أعمالنا",
       component: "our-works",
     },
     {
       id: "section-awards",
-      label: "Awards",
+      label: "الجوائز",
       component: "awards",
     },
   ];
@@ -267,11 +266,13 @@ export default function EditBusinessForm({
         locations: cleanedLocations,
         awards: processedAwards,
         ourWorks: processedOurWorks,
-        ...(entityType === 'company' ? {
-          socialLinks: form.socialLinks,
-          companyType: form.companyType,
-          totalEmployees: form.totalEmployees,
-        } : {})
+        ...(entityType === "company"
+          ? {
+              socialLinks: form.socialLinks,
+              companyType: form.companyType,
+              totalEmployees: form.totalEmployees,
+            }
+          : {}),
       };
 
       const endpoint = `/api/${entityType}/update`;
@@ -287,13 +288,19 @@ export default function EditBusinessForm({
         body: JSON.stringify(body),
       });
       if (!res.ok) throw new Error("Failed");
-      toast.success(`${entityType} updated successfully`);
+      toast.success(
+        entityType === "company"
+          ? "تم تحديث الشركة بنجاح"
+          : "تم تحديث المورد بنجاح"
+      );
       setHasUnsavedChanges(false);
       setErrors({});
       onErrorsChange?.({});
       onSaved?.();
     } catch (err) {
-      toast.error(`Failed to update ${entityType}`);
+      toast.error(
+        entityType === "company" ? "فشل في تحديث الشركة" : "فشل في تحديث المورد"
+      );
     } finally {
       setSaving(false);
     }
@@ -375,7 +382,7 @@ export default function EditBusinessForm({
           Array.isArray(form.categories) &&
           form.categories.filter(Boolean).length > 0;
         if (!hasCategories) {
-          toast.error("Please select at least one category before continuing");
+          toast.error("يرجى تحديد فئة واحدة على الأقل قبل المتابعة");
           return;
         }
       }
@@ -405,7 +412,7 @@ export default function EditBusinessForm({
           !descriptionOk
         ) {
           toast.error(
-            `Please fill all required fields in ${entityType} Information.`
+            `يرجى ملء جميع الحقول المطلوبة في معلومات ${entityType === "company" ? "الشركة" : "المورد"}.`
           );
           return;
         }
@@ -430,8 +437,8 @@ export default function EditBusinessForm({
         if (!ok) {
           toast.error(
             entityType === "company"
-              ? "Please provide contact details and at least one social link."
-              : "Please provide at least one contact detail."
+              ? "يرجى تقديم تفاصيل الاتصال ورابط واحد على الأقل لوسائل التواصل الاجتماعي."
+              : "يرجى تقديم تفاصيل اتصال واحدة على الأقل."
           );
           return;
         }
@@ -505,7 +512,7 @@ export default function EditBusinessForm({
               {currentSectionData.label}
             </h2>
             <p className="text-muted-foreground mt-0.5 sm:mt-1 text-sm">
-              Step {currentIndex + 1} of {sections.length}
+              الخطوة {currentIndex + 1} من {sections.length}
             </p>
           </div>
         </div>
@@ -525,7 +532,7 @@ export default function EditBusinessForm({
                 onClick={goToPreviousSection}
                 className="cursor-pointer px-4 py-2"
               >
-                ← Previous
+                ← السابق
               </Button>
             )}
           </div>
@@ -538,7 +545,7 @@ export default function EditBusinessForm({
                 onClick={goToNextSection}
                 className="cursor-pointer w-full sm:w-auto px-4 py-2"
               >
-                Next →
+                التالي →
               </Button>
             ) : (
               <Button
@@ -547,7 +554,7 @@ export default function EditBusinessForm({
                 className="cursor-pointer w-full sm:w-auto px-4 py-2"
               >
                 <Check className="h-4 w-4 mr-1" />
-                {saving ? "Saving..." : "Save All Changes"}
+                {saving ? "جاري الحفظ..." : "حفظ جميع التغييرات"}
               </Button>
             )}
           </div>

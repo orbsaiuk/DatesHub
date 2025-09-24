@@ -9,10 +9,10 @@ export default function OfferEmptyState({
   variant = "table", // "table" or "card"
 }) {
   const hasFilters = query || status !== "all";
-  const title = hasFilters ? "No matching offers" : "No offers yet";
+  const title = hasFilters ? "لا توجد عروض مطابقة" : "لا توجد عروض بعد";
   const description = hasFilters
-    ? "Try adjusting your search or filters"
-    : "Create your first offer to get started";
+    ? "جرب تعديل البحث أو المرشحات"
+    : "أنشئ عرضك الأول للبدء";
 
   if (variant === "card") {
     return (
@@ -34,7 +34,7 @@ export default function OfferEmptyState({
               onClick={onClearFilters}
               className="mt-4 h-12 md:h-10"
             >
-              Clear filters
+              مسح المرشحات
             </Button>
           )}
         </div>
@@ -60,7 +60,7 @@ export default function OfferEmptyState({
               onClick={onClearFilters}
               className="mt-2"
             >
-              Clear filters
+              مسح المرشحات
             </Button>
           )}
         </div>

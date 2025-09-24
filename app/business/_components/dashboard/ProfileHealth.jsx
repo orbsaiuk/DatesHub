@@ -69,21 +69,21 @@ export default function ProfileHealth({ entity, entityType }) {
   return (
     <div className="bg-card rounded-xl border p-4 sm:p-6">
       <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
-        Profile Health
+        صحة الملف الشخصي
       </h2>
       <div className="h-2.5 sm:h-3 bg-muted rounded-full overflow-hidden">
         <div className={`h-full ${barColor}`} style={{ width: `${pct}%` }} />
       </div>
       <div className="mt-2 sm:mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <span className="text-xs sm:text-sm text-muted-foreground">
-          {pct}% Complete ({completed}/{total} sections)
+          {pct}% مكتمل ({completed}/{total} أقسام)
         </span>
         {pct < 100 && (
           <Link
             href={`/business/${entityType}/edit`}
             className="text-xs sm:text-sm underline hover:no-underline"
           >
-            Complete your Profile
+            أكمل ملفك الشخصي
           </Link>
         )}
       </div>

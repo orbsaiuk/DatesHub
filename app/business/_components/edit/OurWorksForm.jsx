@@ -124,13 +124,13 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
     // Validate required fields
     const errors = {};
     if (!draft.title?.trim()) {
-      errors.title = 'Title is required';
+      errors.title = 'العنوان مطلوب';
     }
     if (!draft.description?.trim()) {
-      errors.description = 'Description is required';
+      errors.description = 'الوصف مطلوب';
     }
     if (!draft.images?.length) {
-      errors.images = 'At least one image is required';
+      errors.images = 'مطلوب صورة واحدة على الأقل';
     }
     
     // If there are errors, update state and prevent save
@@ -189,7 +189,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
           <div className="absolute inset-0">
             <Image
               src={imgs[0]}
-              alt={title || "Work image"}
+              alt={title || "صورة العمل"}
               className="object-contain"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -268,7 +268,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
           className="cursor-pointer px-4 py-2"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add Work Example
+          إضافة مثال عمل
         </Button>
       </div>
 
@@ -286,12 +286,12 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <CardTitle className="text-base">
-                        {work.title || "Untitled Work"}
+                        {work.title || "عمل بدون عنوان"}
                       </CardTitle>
                       <CardDescription>
                         {(work.description || "").length > 120
                           ? `${work.description.slice(0, 120)}...`
-                          : work.description || "No description provided"}
+                          : work.description || "لم يتم تقديم وصف"}
                       </CardDescription>
                     </div>
                     <div className="flex items-center gap-1">
@@ -322,17 +322,17 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                               Remove Work Example
                             </AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to remove this work example?
-                              This action cannot be undone.
+                              هل أنت متأكد أنك تريد إزالة مثال العمل هذا؟
+                              لا يمكن التراجع عن هذا الإجراء.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogCancel>إلغاء</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => removeWork(index)}
                               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                             >
-                              Remove
+                              إزالة
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
@@ -350,9 +350,9 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
       ) : (
         <div className="text-center py-10 sm:py-12 border-2 border-dashed border-muted-foreground/30 rounded-lg">
           <ImageIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground">No work examples added yet</p>
+          <p className="text-muted-foreground">لم يتم إضافة أمثلة عمل حتى الآن</p>
           <p className="text-sm text-muted-foreground mt-1">
-            Add your first work example to showcase your expertise
+            أضف مثال عملك الأول لعرض خبرتك
           </p>
         </div>
       )}
@@ -371,10 +371,10 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>
-              {editingIndex === null ? "Add Work Example" : "Edit Work Example"}
+              {editingIndex === null ? "إضافة مثال عمل" : "تحرير مثال عمل"}
             </DialogTitle>
             <DialogDescription>
-              Provide details and images for this work example.
+              قدم التفاصيل والصور لمثال العمل هذا.
             </DialogDescription>
           </DialogHeader>
 
@@ -433,7 +433,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
 
               <div>
                 <label className="text-sm sm:text-base font-medium">
-                  Event Images <span className="text-red-500">*</span>
+                  صور الحدث <span className="text-red-500">*</span>
                 </label>
                 <div className="mt-2">
                   <ImageUploader
@@ -444,7 +444,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                         setDraftErrors(prev => ({ ...prev, images: undefined }));
                       }
                     }}
-                    placeholder="Add event photos"
+                    placeholder="أضف صور الحدث"
                     multiple={true}
                     maxFiles={4}
                     maxSizeMB={5}
@@ -466,13 +466,13 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                 setEditingIndex(null);
               }}
             >
-              Cancel
+              إلغاء
             </Button>
             <Button
               onClick={saveDraft}
               disabled={!draft?.title?.trim() || !draft?.description?.trim() || !draft?.images?.length}
             >
-              Save
+              حفظ
             </Button>
           </DialogFooter>
         </DialogContent>

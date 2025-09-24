@@ -16,7 +16,7 @@ export default function ServicesForm({ form, updateField }) {
         }
         onOpeningHoursChange={(hours) => updateField("openingHours", hours)}
         errors={{}}
-        servicesLabel="Categories"
+        servicesLabel="الفئات"
         servicesFieldName="categories"
         maxCategories={3}
         maxExtraServices={20}

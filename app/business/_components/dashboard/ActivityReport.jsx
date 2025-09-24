@@ -61,11 +61,9 @@ export default function ActivityReport({ entity }) {
   return (
     <div className="bg-card rounded-xl border p-4 sm:p-6">
       <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4">
-        <h2 className="text-lg sm:text-xl font-semibold">
-          Your Business Activity Report
-        </h2>
+        <h2 className="text-lg sm:text-xl font-semibold">تقرير نشاط عملك</h2>
         <div className="text-xs sm:text-sm text-muted-foreground">
-          Last {monthsBack} months
+          آخر {monthsBack} أشهر
         </div>
       </div>
       {/* Mobile: cards */}
@@ -73,16 +71,16 @@ export default function ActivityReport({ entity }) {
         {rows.map((row, index) => (
           <div key={index} className="rounded-lg border bg-background p-4">
             <div className="flex items-center justify-between">
-              <div className="text-sm text-muted-foreground">Period</div>
+              <div className="text-sm text-muted-foreground">التاريخ</div>
               <div className="text-sm font-medium">{row.date}</div>
             </div>
             <div className="mt-2 grid grid-cols-2 gap-3 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Views</span>
+                <span className="text-muted-foreground">المشاهدات</span>
                 <span className="font-medium">{row.views}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Messages</span>
+                <span className="text-muted-foreground">الرسائل</span>
                 <span className="font-medium">{row.messages}</span>
               </div>
             </div>
@@ -94,9 +92,9 @@ export default function ActivityReport({ entity }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-muted-foreground">
-              <th className="p-3">Period</th>
-              <th className="p-3">Profile Views</th>
-              <th className="p-3">Messages</th>
+              <th className="p-3">التاريخ</th>
+              <th className="p-3">المشاهدات</th>
+              <th className="p-3">الرسائل</th>
             </tr>
           </thead>
           <tbody>

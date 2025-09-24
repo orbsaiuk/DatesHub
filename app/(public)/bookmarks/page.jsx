@@ -1,4 +1,4 @@
-import CompanyList from "../companies/_components/CompanyList";
+import DirectoryList from "@/components/directory/_components/DirectoryList";
 import { writeClient } from "@/sanity/lib/serverClient";
 import { auth } from "@clerk/nextjs/server";
 import { USER_BOOKMARKS_QUERY } from "@/sanity/queries/user";
@@ -50,7 +50,11 @@ export default async function BookmarksPage() {
           {companies.length === 0 ? (
             <p className="text-sm text-muted-foreground">No bookmarks yet.</p>
           ) : (
-            <CompanyList companies={companies} />
+            <DirectoryList
+              items={companies}
+              basePath="/companies"
+              clearHref="/companies"
+            />
           )}
         </div>
       </main>

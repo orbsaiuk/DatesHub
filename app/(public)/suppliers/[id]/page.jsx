@@ -1,12 +1,10 @@
-import DirectoryDetailPage, {
-  revalidate as revalidateDetail,
-} from "@/components/directory/detail/DirectoryDetailPage";
+import DirectoryDetailPage from "@/components/directory/detail/DirectoryDetailPage";
 import {
   buildDetailMetadata,
   generateDetailStaticParams,
 } from "@/components/directory/detail/DirectoryDetailPage";
 
-export const revalidate = revalidateDetail;
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   return await generateDetailStaticParams({ type: "supplier" });

@@ -36,7 +36,7 @@ export default function SocialLinksForm({ form, updateField, errors = {} }) {
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted-foreground">
-        Add links to your website or social profiles.
+        أضف روابط إلى موقعك الإلكتروني أو ملفاتك الشخصية على وسائل التواصل الاجتماعي.
       </p>
       <div className="space-y-2">
         {(links.length ? links : [""]).map((link, index) => (
@@ -53,7 +53,7 @@ export default function SocialLinksForm({ form, updateField, errors = {} }) {
               onClick={() => handleRemove(index)}
               className="cursor-pointer"
             >
-              Remove
+              إزالة
             </Button>
           </div>
         ))}
@@ -65,7 +65,7 @@ export default function SocialLinksForm({ form, updateField, errors = {} }) {
           onClick={handleAdd}
           className="cursor-pointer"
         >
-          Add another link
+          إضافة رابط آخر
         </Button>
         {links.length > 1 && (
           <Button
@@ -74,7 +74,7 @@ export default function SocialLinksForm({ form, updateField, errors = {} }) {
             onClick={handleClear}
             className="cursor-pointer"
           >
-            Clear
+            مسح
           </Button>
         )}
       </div>

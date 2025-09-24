@@ -9,7 +9,7 @@ export default function QuickStats({ entity, entityType }) {
 
   const stats = [
     {
-      title: "Total Views",
+      title: "إجمالي المشاهدات",
       value: totalViews,
       icon: "📊",
       gradientFrom: "blue-50",
@@ -21,9 +21,9 @@ export default function QuickStats({ entity, entityType }) {
       ? []
       : [
           {
-            title: "Average Rating",
+            title: "متوسط التقييم",
             value: rating ? rating.toFixed(1) : "0.0",
-            subtitle: `${ratingCount} reviews`,
+            subtitle: `${ratingCount} تقييم`,
             icon: "⭐",
             gradientFrom: "green-50",
             gradientTo: "green-100",
@@ -32,7 +32,7 @@ export default function QuickStats({ entity, entityType }) {
           },
         ]),
     {
-      title: "Messages",
+      title: "الرسائل",
       value: messagesCount,
       icon: "💬",
       gradientFrom: "orange-50",

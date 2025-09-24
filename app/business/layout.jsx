@@ -7,8 +7,8 @@ import { USER_ROLE_AND_MEMBERSHIPS_BY_CLERK_ID_QUERY } from "@/sanity/queries/us
 
 export const metadata = {
   robots: { index: false, follow: false },
-  title: "Business",
-  description: "Business dashboard and management.",
+  title: "الأعمال",
+  description: "لوحة تحكم الأعمال والإدارة.",
 };
 
 export default async function BusinessLayout({ children }) {

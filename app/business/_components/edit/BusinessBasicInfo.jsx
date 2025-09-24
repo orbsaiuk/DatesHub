@@ -84,7 +84,7 @@ export default function BusinessBasicInfo({
                       {form.logo instanceof File ? (
                         <Image
                           src={logoPreviewUrl || ""}
-                          alt="Company logo preview"
+                          alt="معاينة شعار الشركة"
                           width={160}
                           height={160}
                           className="w-full h-full object-cover"
@@ -92,7 +92,7 @@ export default function BusinessBasicInfo({
                       ) : form.logo?.asset?._ref ? (
                         <Image
                           src={urlFor(form.logo).width(160).height(160).url()}
-                          alt="Company logo"
+                          alt="شعار الشركة"
                           width={160}
                           height={160}
                           className="w-full h-full object-cover"
@@ -119,10 +119,10 @@ export default function BusinessBasicInfo({
               <div className="flex-1 space-y-2 sm:space-y-3 w-full">
                 <div>
                   <label className="text-sm sm:text-base font-medium">
-                    Upload Logo <span className="text-red-600">*</span>
+                    تحميل الشعار <span className="text-red-600">*</span>
                   </label>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    JPG, PNG or SVG. Max size 2MB. Recommended 200x200px.
+                    JPG، PNG أو SVG. الحد الأقصى للحجم 2 ميجابايت. موصى به 200x200 بكسل.
                   </p>
                 </div>
 
@@ -138,7 +138,7 @@ export default function BusinessBasicInfo({
                       if (!file) return;
 
                       if (file.size > 2 * 1024 * 1024) {
-                        toast.error("File size must be less than 2MB");
+                        toast.error("يجب أن يكون حجم الملف أقل من 2 ميجابايت");
                         return;
                       }
 
@@ -149,7 +149,7 @@ export default function BusinessBasicInfo({
                         if (fileInputRef.current)
                           fileInputRef.current.value = "";
                       } catch (error) {
-                        toast.error("Could not preview file");
+                        toast.error("لا يمكن معاينة الملف");
                       }
                     }}
                   />
@@ -160,7 +160,7 @@ export default function BusinessBasicInfo({
                     onClick={() => fileInputRef.current?.click()}
                     className="cursor-pointer w-full sm:w-auto"
                   >
-                    Choose File
+                    اختر ملف
                   </Button>
 
                   {form.logo && (
@@ -180,7 +180,7 @@ export default function BusinessBasicInfo({
                       className="text-destructive hover:text-destructive w-full sm:w-auto"
                     >
                       <X className="h-4 w-4 mr-1" />
-                      Remove
+                      إزالة
                     </Button>
                   )}
                 </div>
