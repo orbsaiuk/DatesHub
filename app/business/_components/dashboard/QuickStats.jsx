@@ -6,7 +6,6 @@ export default function QuickStats({ entity, entityType }) {
   const totalViews = Number(entity?.totalViews || 0);
   const messagesCount = Number(entity?.messagesCount || 0);
 
-
   const stats = [
     {
       title: "إجمالي المشاهدات",

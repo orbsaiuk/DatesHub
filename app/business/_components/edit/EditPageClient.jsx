@@ -131,9 +131,7 @@ export default function EditPageClient({ initialEntity, entityType }) {
       currentSection === "section-our-works" &&
       hasIncompleteWork()
     ) {
-      toast.error(
-        "يرجى إكمال أو حذف العمل المضاف قبل مغادرة هذا القسم."
-      );
+      toast.error("يرجى إكمال أو حذف العمل المضاف قبل مغادرة هذا القسم.");
       return;
     }
     if (
@@ -141,16 +139,14 @@ export default function EditPageClient({ initialEntity, entityType }) {
       currentSection === "section-awards" &&
       hasIncompleteAward()
     ) {
-      toast.error(
-        "يرجى إكمال أو حذف الجائزة المضافة قبل مغادرة هذا القسم."
-      );
+      toast.error("يرجى إكمال أو حذف الجائزة المضافة قبل مغادرة هذا القسم.");
       return;
     }
 
     setCurrentSection(nextId);
   };
 
-    const sections = [
+  const sections = [
     {
       id: "section-company-info",
       label: "معلومات الشركة",

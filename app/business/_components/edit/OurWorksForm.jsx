@@ -58,12 +58,12 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
       w && w.id
         ? w
         : {
-          ...w,
-          id:
-            typeof crypto !== "undefined" && crypto.randomUUID
-              ? crypto.randomUUID()
-              : `${Date.now()}-${i}`,
-        }
+            ...w,
+            id:
+              typeof crypto !== "undefined" && crypto.randomUUID
+                ? crypto.randomUUID()
+                : `${Date.now()}-${i}`,
+          }
     );
     updateField("ourWorks", withIds);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,28 +120,28 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
 
   const saveDraft = () => {
     if (!draft) return;
-    
+
     // Validate required fields
     const errors = {};
     if (!draft.title?.trim()) {
-      errors.title = 'العنوان مطلوب';
+      errors.title = "العنوان مطلوب";
     }
     if (!draft.description?.trim()) {
-      errors.description = 'الوصف مطلوب';
+      errors.description = "الوصف مطلوب";
     }
     if (!draft.images?.length) {
-      errors.images = 'مطلوب صورة واحدة على الأقل';
+      errors.images = "مطلوب صورة واحدة على الأقل";
     }
-    
+
     // If there are errors, update state and prevent save
     if (Object.keys(errors).length > 0) {
       setDraftErrors(errors);
       return;
     }
-    
+
     // Clear any previous errors
     setDraftErrors({});
-    
+
     // Proceed with saving
     const works = Array.isArray(form.ourWorks) ? [...form.ourWorks] : [];
     if (editingIndex === null || editingIndex === undefined) {
@@ -322,8 +322,8 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                               Remove Work Example
                             </AlertDialogTitle>
                             <AlertDialogDescription>
-                              هل أنت متأكد أنك تريد إزالة مثال العمل هذا؟
-                              لا يمكن التراجع عن هذا الإجراء.
+                              هل أنت متأكد أنك تريد إزالة مثال العمل هذا؟ لا
+                              يمكن التراجع عن هذا الإجراء.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -350,7 +350,9 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
       ) : (
         <div className="text-center py-10 sm:py-12 border-2 border-dashed border-muted-foreground/30 rounded-lg">
           <ImageIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground">لم يتم إضافة أمثلة عمل حتى الآن</p>
+          <p className="text-muted-foreground">
+            لم يتم إضافة أمثلة عمل حتى الآن
+          </p>
           <p className="text-sm text-muted-foreground mt-1">
             أضف مثال عملك الأول لعرض خبرتك
           </p>
@@ -389,14 +391,16 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                   onChange={(e) => {
                     setDraft({ ...draft, title: e.target.value });
                     if (draftErrors.title) {
-                      setDraftErrors(prev => ({ ...prev, title: undefined }));
+                      setDraftErrors((prev) => ({ ...prev, title: undefined }));
                     }
                   }}
                   placeholder="e.g., Sarah & John's Wedding, Tech Conference 2024"
                   className="mt-2"
                 />
                 {draftErrors.title && (
-                  <p className="text-sm text-destructive mt-1">{draftErrors.title}</p>
+                  <p className="text-sm text-destructive mt-1">
+                    {draftErrors.title}
+                  </p>
                 )}
                 {editingIndex !== null && getErrorFor(editingIndex, "title") ? (
                   <div className="text-xs text-destructive mt-1">
@@ -414,17 +418,22 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                   onChange={(e) => {
                     setDraft({ ...draft, description: e.target.value });
                     if (draftErrors.description) {
-                      setDraftErrors(prev => ({ ...prev, description: undefined }));
+                      setDraftErrors((prev) => ({
+                        ...prev,
+                        description: undefined,
+                      }));
                     }
                   }}
                   placeholder="Describe the event, challenges overcome, and outcomes achieved..."
                   className="mt-2 min-h-[100px]"
                 />
                 {draftErrors.description && (
-                  <p className="text-sm text-destructive mt-1">{draftErrors.description}</p>
+                  <p className="text-sm text-destructive mt-1">
+                    {draftErrors.description}
+                  </p>
                 )}
                 {editingIndex !== null &&
-                  getErrorFor(editingIndex, "description") ? (
+                getErrorFor(editingIndex, "description") ? (
                   <div className="text-xs text-destructive mt-1">
                     {getErrorFor(editingIndex, "description")}
                   </div>
@@ -441,7 +450,10 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                     onImageChange={(newImages) => {
                       setDraft({ ...draft, images: newImages });
                       if (draftErrors.images) {
-                        setDraftErrors(prev => ({ ...prev, images: undefined }));
+                        setDraftErrors((prev) => ({
+                          ...prev,
+                          images: undefined,
+                        }));
                       }
                     }}
                     placeholder="أضف صور الحدث"
@@ -450,7 +462,9 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                     maxSizeMB={5}
                   />
                   {draftErrors.images && (
-                    <p className="text-sm text-destructive mt-1">{draftErrors.images}</p>
+                    <p className="text-sm text-destructive mt-1">
+                      {draftErrors.images}
+                    </p>
                   )}
                 </div>
               </div>
@@ -470,7 +484,11 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
             </Button>
             <Button
               onClick={saveDraft}
-              disabled={!draft?.title?.trim() || !draft?.description?.trim() || !draft?.images?.length}
+              disabled={
+                !draft?.title?.trim() ||
+                !draft?.description?.trim() ||
+                !draft?.images?.length
+              }
             >
               حفظ
             </Button>

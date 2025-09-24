@@ -14,7 +14,8 @@ export default function PageHeader({
         اختر باقتك
       </h1>
       <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
-        طور {tenantType === "company" ? "شركتك" : "عملك"} بالباقة المثالية. يمكنك الترقية أو التراجع في أي وقت.
+        طور {tenantType === "company" ? "شركتك" : "عملك"} بالباقة المثالية.
+        يمكنك الترقية أو التراجع في أي وقت.
       </p>
 
       {/* Billing Toggle */}

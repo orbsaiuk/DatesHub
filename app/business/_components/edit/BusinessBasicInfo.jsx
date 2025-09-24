@@ -122,7 +122,8 @@ export default function BusinessBasicInfo({
                     تحميل الشعار <span className="text-red-600">*</span>
                   </label>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    JPG، PNG أو SVG. الحد الأقصى للحجم 2 ميجابايت. موصى به 200x200 بكسل.
+                    JPG، PNG أو SVG. الحد الأقصى للحجم 2 ميجابايت. موصى به
+                    200x200 بكسل.
                   </p>
                 </div>
 

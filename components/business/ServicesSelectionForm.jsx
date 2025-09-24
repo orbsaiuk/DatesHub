@@ -216,7 +216,13 @@ export default function ServicesSelectionForm({
               return (
                 <div className="py-2 flex items-center gap-2 text-muted-foreground text-xs">
                   <Spinner size={16} label="Loading categories" />
-                  <span>جاري تحميل {servicesLabel === "Categories" ? "الفئات" : servicesLabel.toLowerCase()}…</span>
+                  <span>
+                    جاري تحميل{" "}
+                    {servicesLabel === "Categories"
+                      ? "الفئات"
+                      : servicesLabel.toLowerCase()}
+                    …
+                  </span>
                 </div>
               );
             }
@@ -281,11 +287,18 @@ export default function ServicesSelectionForm({
                   })
                 ) : (
                   <p className="text-xs text-muted-foreground">
-                    لم يتم العثور على {servicesLabel === "Categories" ? "فئات" : servicesLabel.toLowerCase()}
+                    لم يتم العثور على{" "}
+                    {servicesLabel === "Categories"
+                      ? "فئات"
+                      : servicesLabel.toLowerCase()}
                   </p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  اختر حتى {maxCategories} {servicesLabel === "Categories" ? "فئات" : servicesLabel.toLowerCase()}.
+                  اختر حتى {maxCategories}{" "}
+                  {servicesLabel === "Categories"
+                    ? "فئات"
+                    : servicesLabel.toLowerCase()}
+                  .
                 </p>
               </div>
             );
@@ -416,7 +429,8 @@ export default function ServicesSelectionForm({
       {showServicesSection && (
         <div>
           <Label className="text-sm" htmlFor="categorySearch">
-            البحث عن {servicesLabel === "Categories" ? "الفئات" : servicesLabel} <span className="text-red-500">*</span>
+            البحث عن {servicesLabel === "Categories" ? "الفئات" : servicesLabel}{" "}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
             id="categorySearch"
@@ -471,9 +485,7 @@ export default function ServicesSelectionForm({
               <p className="text-xs text-red-600 mt-1">الحد الأدنى 2 أحرف.</p>
             )}
             {extraTooLong && (
-              <p className="text-xs text-red-600 mt-1">
-                الحد الأقصى 30 حرف.
-              </p>
+              <p className="text-xs text-red-600 mt-1">الحد الأقصى 30 حرف.</p>
             )}
             {extraLimitReached && (
               <p className="text-xs text-red-600 mt-1">
@@ -500,7 +512,8 @@ export default function ServicesSelectionForm({
               </div>
             )}
             <p className="text-xs text-muted-foreground mt-1">
-              2-30 حرف لكل خدمة، حتى {maxExtraServices} علامات. ستظهر هذه كعلامات على ملفك الشخصي والبطاقات.
+              2-30 حرف لكل خدمة، حتى {maxExtraServices} علامات. ستظهر هذه
+              كعلامات على ملفك الشخصي والبطاقات.
             </p>
           </div>
         </div>
@@ -513,8 +526,7 @@ export default function ServicesSelectionForm({
             ساعات العمل <span className="text-red-500">*</span>
           </Label>
           <p className="text-xs text-muted-foreground mt-1">
-            قدم الساعات لجميع الأيام السبعة. مثال: "9:00 ص - 5:00 م" أو
-            "مغلق".
+            قدم الساعات لجميع الأيام السبعة. مثال: "9:00 ص - 5:00 م" أو "مغلق".
           </p>
           {renderOpeningHoursSection()}
           <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-3 mt-3">

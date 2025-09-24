@@ -296,9 +296,7 @@ export default function BusinessBasicInfoForm({
       {showDescription && (
         <div className="md:col-span-2">
           <Label className="text-sm" htmlFor="description">
-            {entityType === "supplier"
-              ? "وصف الخدمات"
-              : "وصف الشركة"}{" "}
+            {entityType === "supplier" ? "وصف الخدمات" : "وصف الشركة"}{" "}
             {requiredMark}
           </Label>
           {renderTextarea(

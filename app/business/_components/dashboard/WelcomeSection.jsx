@@ -17,7 +17,8 @@ export default function WelcomeSection({ entity, entityType, subscription }) {
       };
     }
 
-    const planName = subscription.plan?.name?.toLowerCase() || "الباقة المجانية";
+    const planName =
+      subscription.plan?.name?.toLowerCase() || "الباقة المجانية";
 
     // Color coding based on plan type
     if (planName.includes("pro") || planName.includes("premium")) {
@@ -35,7 +36,7 @@ export default function WelcomeSection({ entity, entityType, subscription }) {
         color: "text-purple-500",
         bgColor: "bg-purple-500/10",
       };
-      } else {
+    } else {
       return {
         name: planName,
         color: "text-green-500",

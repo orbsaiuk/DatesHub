@@ -53,10 +53,7 @@ export default function EditBusinessForm({
   const sections = [
     {
       id: "section-company-info",
-      label:
-        entityType === "supplier"
-          ? "معلومات المورد"
-          : "معلومات الشركة",
+      label: entityType === "supplier" ? "معلومات المورد" : "معلومات الشركة",
       component: "company-info",
     },
     {

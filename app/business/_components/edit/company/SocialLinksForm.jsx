@@ -36,7 +36,8 @@ export default function SocialLinksForm({ form, updateField, errors = {} }) {
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted-foreground">
-        أضف روابط إلى موقعك الإلكتروني أو ملفاتك الشخصية على وسائل التواصل الاجتماعي.
+        أضف روابط إلى موقعك الإلكتروني أو ملفاتك الشخصية على وسائل التواصل
+        الاجتماعي.
       </p>
       <div className="space-y-2">
         {(links.length ? links : [""]).map((link, index) => (
