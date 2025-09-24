@@ -69,11 +69,11 @@ export default function ContactDetailsForm({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <Label className="text-sm" htmlFor="ownerName">
-          Owner Name {requiredMark}
+          اسم المالك {requiredMark}
         </Label>
         {renderInput(
           "ownerName",
-          "Owner Name",
+          "اسم المالك",
           ownerName,
           onOwnerNameChange,
           "text",
@@ -89,11 +89,11 @@ export default function ContactDetailsForm({
 
       <div>
         <Label className="text-sm" htmlFor="phone">
-          Phone Number {requiredMark}
+          رقم الهاتف {requiredMark}
         </Label>
         {renderInput(
           "phone",
-          "Phone Number",
+          "رقم الهاتف",
           phone,
           onPhoneChange,
           "tel",
@@ -109,11 +109,11 @@ export default function ContactDetailsForm({
 
       <div>
         <Label className="text-sm" htmlFor="email">
-          Business Email Address {requiredMark}
+          عنوان البريد الإلكتروني للشركة {requiredMark}
         </Label>
         {renderInput(
           "email",
-          "Email Address",
+          "عنوان البريد الإلكتروني",
           email,
           onEmailChange,
           "email",
@@ -129,11 +129,11 @@ export default function ContactDetailsForm({
 
       <div>
         <Label className="text-sm" htmlFor="contactAddress">
-          Home Address {requiredMark}
+          عنوان المنزل {requiredMark}
         </Label>
         {renderInput(
           "contactAddress",
-          "Home Address",
+          "عنوان المنزل",
           address,
           onAddressChange,
           "text",

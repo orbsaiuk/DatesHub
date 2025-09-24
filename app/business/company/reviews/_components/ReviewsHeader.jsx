@@ -5,10 +5,10 @@ export default function ReviewsHeader({ company }) {
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
       <div className="min-w-0">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-          Reviews
+          التقييمات
         </h1>
         <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">
-          Manage and respond to customer reviews for {company.name} company
+          إدارة والرد على تقييمات العملاء لشركة {company.name}
         </p>
       </div>
       <div className="sm:text-right">
@@ -32,7 +32,7 @@ export default function ReviewsHeader({ company }) {
           </div>
         </div>
         <p className="text-xs sm:text-sm text-muted-foreground">
-          {company.ratingCount || 0} total reviews
+          {company.ratingCount || 0} إجمالي التقييمات
         </p>
       </div>
     </div>

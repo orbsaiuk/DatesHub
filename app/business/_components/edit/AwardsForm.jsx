@@ -101,28 +101,28 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
 
   const saveDraft = () => {
     if (!draft) return;
-    
+
     // Validate required fields
     const errors = {};
     if (!draft.name?.trim()) {
-      errors.name = 'Award name is required';
+      errors.name = "اسم الجائزة مطلوب";
     }
     if (!draft.description?.trim()) {
-      errors.description = 'Description is required';
+      errors.description = "الوصف مطلوب";
     }
     if (!draft.image) {
-      errors.image = 'An image is required';
+      errors.image = "الصورة مطلوبة";
     }
-    
+
     // If there are errors, update state and prevent save
     if (Object.keys(errors).length > 0) {
       setDraftErrors(errors);
       return;
     }
-    
+
     // Clear any previous errors
     setDraftErrors({});
-    
+
     // Proceed with saving
     const awards = Array.isArray(form.awards) ? [...form.awards] : [];
     if (editingIndex === null || editingIndex === undefined) {
@@ -173,7 +173,7 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
           className="cursor-pointer px-4 py-2"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add Award
+          إضافة جائزة
         </Button>
       </div>
 
@@ -202,7 +202,7 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
                         variant="ghost"
                         size="icon"
                         onClick={() => startEdit(index)}
-                        aria-label="Edit award"
+                        aria-label="تحرير الجائزة"
                         className="cursor-pointer"
                       >
                         <Pencil className="h-4 w-4" />
@@ -214,26 +214,26 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
                             variant="ghost"
                             size="icon"
                             className="text-destructive hover:text-destructive cursor-pointer"
-                            aria-label="Remove award"
+                            aria-label="إزالة الجائزة"
                           >
                             <X className="h-4 w-4" />
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Remove Award</AlertDialogTitle>
+                            <AlertDialogTitle>إزالة الجائزة</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to remove this award? This
-                              action cannot be undone.
+                              هل أنت متأكد أنك تريد إزالة هذه الجائزة؟ لا يمكن
+                              التراجع عن هذا الإجراء.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogCancel>إلغاء</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => removeAward(index)}
                               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                             >
-                              Remove
+                              إزالة
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
@@ -267,9 +267,9 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
       ) : (
         <div className="text-center py-10 sm:py-12 border-2 border-dashed border-muted-foreground/30 rounded-lg">
           <Trophy className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground">No awards added yet</p>
+          <p className="text-muted-foreground">لم يتم إضافة جوائز حتى الآن</p>
           <p className="text-sm text-muted-foreground mt-1">
-            Add your first award to showcase your achievements
+            أضف جائزتك الأولى لعرض إنجازاتك
           </p>
         </div>
       )}
@@ -288,11 +288,10 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
-              {editingIndex === null ? "Add Award" : "Edit Award"}
+              {editingIndex === null ? "إضافة جائزة" : "تحرير جائزة"}
             </DialogTitle>
             <DialogDescription>
-              Provide the award details below. Changes are saved when you click
-              Save.
+              قدم تفاصيل الجائزة أدناه. يتم حفظ التغييرات عند الضغط على حفظ.
             </DialogDescription>
           </DialogHeader>
 
@@ -307,14 +306,16 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
                   onChange={(e) => {
                     setDraft({ ...draft, name: e.target.value });
                     if (draftErrors.name) {
-                      setDraftErrors(prev => ({ ...prev, name: undefined }));
+                      setDraftErrors((prev) => ({ ...prev, name: undefined }));
                     }
                   }}
                   placeholder="e.g., Best Event Planner 2024, Excellence in Service"
                   className="mt-2"
                 />
                 {draftErrors.name && (
-                  <p className="text-sm text-destructive mt-1">{draftErrors.name}</p>
+                  <p className="text-sm text-destructive mt-1">
+                    {draftErrors.name}
+                  </p>
                 )}
                 {editingIndex !== null && getErrorFor(editingIndex, "name") ? (
                   <div className="text-xs text-destructive mt-1">
@@ -332,14 +333,19 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
                   onChange={(e) => {
                     setDraft({ ...draft, description: e.target.value });
                     if (draftErrors.description) {
-                      setDraftErrors(prev => ({ ...prev, description: undefined }));
+                      setDraftErrors((prev) => ({
+                        ...prev,
+                        description: undefined,
+                      }));
                     }
                   }}
                   placeholder="Describe what this award recognizes, criteria, and significance..."
                   className="mt-2 min-h-[100px]"
                 />
                 {draftErrors.description && (
-                  <p className="text-sm text-destructive mt-1">{draftErrors.description}</p>
+                  <p className="text-sm text-destructive mt-1">
+                    {draftErrors.description}
+                  </p>
                 )}
                 {editingIndex !== null &&
                 getErrorFor(editingIndex, "description") ? (
@@ -359,14 +365,19 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
                     onImageChange={(newImage) => {
                       setDraft({ ...draft, image: newImage });
                       if (draftErrors.image) {
-                        setDraftErrors(prev => ({ ...prev, image: undefined }));
+                        setDraftErrors((prev) => ({
+                          ...prev,
+                          image: undefined,
+                        }));
                       }
                     }}
                     placeholder="Add award image"
                     maxSizeMB={5}
                   />
                   {draftErrors.image && (
-                    <p className="text-sm text-destructive mt-1">{draftErrors.image}</p>
+                    <p className="text-sm text-destructive mt-1">
+                      {draftErrors.image}
+                    </p>
                   )}
                 </div>
               </div>
@@ -386,10 +397,14 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
             >
               Cancel
             </Button>
-            <Button 
-              onClick={saveDraft} 
+            <Button
+              onClick={saveDraft}
               className="cursor-pointer"
-              disabled={!draft?.name?.trim() || !draft?.description?.trim() || !draft?.image}
+              disabled={
+                !draft?.name?.trim() ||
+                !draft?.description?.trim() ||
+                !draft?.image
+              }
             >
               Save
             </Button>

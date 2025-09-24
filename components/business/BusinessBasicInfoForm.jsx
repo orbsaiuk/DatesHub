@@ -16,11 +16,11 @@ const employeeOptions = [
 ];
 
 const companyTypeOptions = [
-  { label: "Full Event Planner", value: "full-event-planner" },
-  { label: "Kids Birthday", value: "kids-birthday" },
-  { label: "Wedding", value: "wedding" },
-  { label: "Social Gathering", value: "social-gathering" },
-  { label: "Corporate Event", value: "corporate-event" },
+  { label: "منظم فعاليات شامل", value: "full-event-planner" },
+  { label: "عيد ميلاد أطفال", value: "kids-birthday" },
+  { label: "زفاف", value: "wedding" },
+  { label: "تجمع اجتماعي", value: "social-gathering" },
+  { label: "فعالية مؤسسية", value: "corporate-event" },
 ];
 
 export default function BusinessBasicInfoForm({
@@ -115,7 +115,7 @@ export default function BusinessBasicInfoForm({
           aria-invalid={!!error}
           {...register(id)}
         >
-          <option value="">Select</option>
+          <option value="">اختر</option>
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -134,7 +134,7 @@ export default function BusinessBasicInfoForm({
           error ? "border-destructive" : ""
         }`}
       >
-        <option value="">Select</option>
+        <option value="">اختر</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
@@ -181,11 +181,11 @@ export default function BusinessBasicInfoForm({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <Label className="text-sm" htmlFor="name">
-          {entityLabel} name {requiredMark}
+          اسم {entityType === "company" ? "الشركة" : "المورد"} {requiredMark}
         </Label>
         {renderInput(
           "name",
-          `${entityLabel} name`,
+          `اسم ${entityType === "company" ? "الشركة" : "المورد"}`,
           name,
           onNameChange,
           "text",
@@ -199,7 +199,7 @@ export default function BusinessBasicInfoForm({
       </div>
       <div>
         <Label className="text-sm" htmlFor="website">
-          {entityLabel} Website
+          موقع {entityType === "company" ? "الشركة" : "المورد"} الإلكتروني
         </Label>
         {renderInput(
           "website",
@@ -218,7 +218,7 @@ export default function BusinessBasicInfoForm({
       {entityType === "company" && (
         <div>
           <Label className="text-sm" htmlFor="totalEmployees">
-            Total Employees {requiredMark}
+            إجمالي الموظفين {requiredMark}
           </Label>
           {renderSelect(
             "totalEmployees",
@@ -237,11 +237,11 @@ export default function BusinessBasicInfoForm({
 
       <div>
         <Label className="text-sm" htmlFor="foundingYear">
-          Founding Year {requiredMark}
+          سنة التأسيس {requiredMark}
         </Label>
         {renderInput(
           "foundingYear",
-          "e.g. 2015",
+          "مثال: 2015",
           foundingYear,
           onFoundingYearChange,
           "text",
@@ -257,7 +257,7 @@ export default function BusinessBasicInfoForm({
       {entityType === "company" && (
         <div>
           <Label className="text-sm" htmlFor="companyType">
-            Business Types {requiredMark}
+            أنواع الأعمال {requiredMark}
           </Label>
           {renderSelect(
             "companyType",
@@ -276,11 +276,11 @@ export default function BusinessBasicInfoForm({
 
       <div>
         <Label className="text-sm" htmlFor="registrationNumber">
-          Business Registration Number {requiredMark}
+          رقم السجل التجاري {requiredMark}
         </Label>
         {renderInput(
           "registrationNumber",
-          "Business Registration Number",
+          "رقم السجل التجاري",
           registrationNumber,
           onRegistrationNumberChange,
           "number",
@@ -297,15 +297,15 @@ export default function BusinessBasicInfoForm({
         <div className="md:col-span-2">
           <Label className="text-sm" htmlFor="description">
             {entityType === "supplier"
-              ? "Service Description"
-              : "Business Description"}{" "}
+              ? "وصف الخدمات"
+              : "وصف الشركة"}{" "}
             {requiredMark}
           </Label>
           {renderTextarea(
             "description",
             entityType === "supplier"
-              ? "Describe your services and what makes you unique..."
-              : "Tell customers about your business...",
+              ? "اوصف خدماتك وما يجعلك مميزاً..."
+              : "أخبر العملاء عن شركتك...",
             description,
             onDescriptionChange,
             6,

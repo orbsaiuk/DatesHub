@@ -166,7 +166,7 @@ export default function EventCalendar() {
         <div className="flex flex-col items-center space-y-3">
           <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 border-b-2 border-primary"></div>
           <p className="text-sm sm:text-base text-muted-foreground font-medium">
-            Loading calendar...
+            جاري تحميل التقويم...
           </p>
         </div>
       </div>
@@ -179,10 +179,10 @@ export default function EventCalendar() {
       <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div className="space-y-1">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
-            Event Calendar
+            تقويم الفعاليات
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground">
-            Manage your events and appointments
+            إدارة فعالياتك ومواعيدك
           </p>
         </div>
 
@@ -197,7 +197,7 @@ export default function EventCalendar() {
           size="default"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-          <span className="font-medium">New Event</span>
+          <span className="font-medium">فعالية جديدة</span>
         </Button>
       </div>
 

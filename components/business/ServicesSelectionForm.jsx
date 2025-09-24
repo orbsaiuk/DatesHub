@@ -169,13 +169,13 @@ export default function ServicesSelectionForm({
 
   const loadWeekdayTemplate = () => {
     const template = [
-      "9:00 AM - 5:00 PM",
-      "9:00 AM - 5:00 PM",
-      "9:00 AM - 5:00 PM",
-      "9:00 AM - 5:00 PM",
-      "9:00 AM - 5:00 PM",
-      "Closed",
-      "Closed",
+      "9:00 ص - 5:00 م",
+      "9:00 ص - 5:00 م",
+      "9:00 ص - 5:00 م",
+      "9:00 ص - 5:00 م",
+      "9:00 ص - 5:00 م",
+      "مغلق",
+      "مغلق",
     ];
 
     if (rhfMode && setValue) {
@@ -216,7 +216,7 @@ export default function ServicesSelectionForm({
               return (
                 <div className="py-2 flex items-center gap-2 text-muted-foreground text-xs">
                   <Spinner size={16} label="Loading categories" />
-                  <span>Loading {servicesLabel.toLowerCase()}…</span>
+                  <span>جاري تحميل {servicesLabel === "Categories" ? "الفئات" : servicesLabel.toLowerCase()}…</span>
                 </div>
               );
             }
@@ -281,11 +281,11 @@ export default function ServicesSelectionForm({
                   })
                 ) : (
                   <p className="text-xs text-muted-foreground">
-                    No {servicesLabel.toLowerCase()} found
+                    لم يتم العثور على {servicesLabel === "Categories" ? "فئات" : servicesLabel.toLowerCase()}
                   </p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Select up to {maxCategories} {servicesLabel.toLowerCase()}.
+                  اختر حتى {maxCategories} {servicesLabel === "Categories" ? "فئات" : servicesLabel.toLowerCase()}.
                 </p>
               </div>
             );
@@ -360,8 +360,8 @@ export default function ServicesSelectionForm({
                   <div className="relative w-full">
                     <Input
                       {...field}
-                      placeholder="e.g. 9:00 AM - 5:00 PM"
-                      aria-label={`${day} opening hours`}
+                      placeholder="مثال: 9:00 ص - 5:00 م"
+                      aria-label={`${day} ساعات العمل`}
                       className="pr-10"
                     />
                     {!!field.value && (
@@ -370,8 +370,8 @@ export default function ServicesSelectionForm({
                         variant="ghost"
                         size="icon"
                         onClick={() => field.onChange("")}
-                        aria-label={`Clear ${day} hours`}
-                        title={`Clear ${day} hours`}
+                        aria-label={`مسح ساعات ${day}`}
+                        title={`مسح ساعات ${day}`}
                         className="absolute right-1 top-1/2 -translate-y-1/2 cursor-pointer"
                       >
                         <X />
@@ -385,8 +385,8 @@ export default function ServicesSelectionForm({
                 <Input
                   value={currentHours[i] || ""}
                   onChange={(e) => setOpeningHour(i, e.target.value)}
-                  placeholder="e.g. 9:00 AM - 5:00 PM"
-                  aria-label={`${day} opening hours`}
+                  placeholder="مثال: 9:00 ص - 5:00 م"
+                  aria-label={`${day} ساعات العمل`}
                   className="pr-10"
                 />
                 {!!currentHours[i] && (
@@ -395,8 +395,8 @@ export default function ServicesSelectionForm({
                     variant="ghost"
                     size="icon"
                     onClick={() => setOpeningHour(i, "")}
-                    aria-label={`Clear ${day} hours`}
-                    title={`Clear ${day} hours`}
+                    aria-label={`مسح ساعات ${day}`}
+                    title={`مسح ساعات ${day}`}
                     className="absolute right-1 top-1/2 -translate-y-1/2 cursor-pointer"
                   >
                     <X />
@@ -416,11 +416,11 @@ export default function ServicesSelectionForm({
       {showServicesSection && (
         <div>
           <Label className="text-sm" htmlFor="categorySearch">
-            Search for {servicesLabel} <span className="text-red-500">*</span>
+            البحث عن {servicesLabel === "Categories" ? "الفئات" : servicesLabel} <span className="text-red-500">*</span>
           </Label>
           <Input
             id="categorySearch"
-            placeholder={`Search for ${servicesLabel}`}
+            placeholder={`البحث عن ${servicesLabel === "Categories" ? "الفئات" : servicesLabel}`}
             className="mt-1"
             value={categoryQuery}
             onChange={(e) => setCategoryQuery(e.target.value)}
@@ -441,13 +441,13 @@ export default function ServicesSelectionForm({
       {showExtraServicesSection && (
         <div>
           <Label className="text-sm" htmlFor="extraServiceInput">
-            Extra Services (optional)
+            خدمات إضافية (اختيارية)
           </Label>
           <div className="mt-2">
             <div className="flex gap-2">
               <Input
                 id="extraServiceInput"
-                placeholder="Type a service and press Add"
+                placeholder="اكتب خدمة واضغط إضافة"
                 value={extraInput}
                 onChange={(e) => setExtraInput(e.target.value)}
                 className="flex-1"
@@ -464,20 +464,20 @@ export default function ServicesSelectionForm({
                 }
                 onClick={addExtraService}
               >
-                Add
+                إضافة
               </Button>
             </div>
             {extraTooShort && (
-              <p className="text-xs text-red-600 mt-1">Minimum 2 characters.</p>
+              <p className="text-xs text-red-600 mt-1">الحد الأدنى 2 أحرف.</p>
             )}
             {extraTooLong && (
               <p className="text-xs text-red-600 mt-1">
-                Maximum 30 characters.
+                الحد الأقصى 30 حرف.
               </p>
             )}
             {extraLimitReached && (
               <p className="text-xs text-red-600 mt-1">
-                You reached the maximum of {maxExtraServices} extra services.
+                لقد وصلت إلى الحد الأقصى وهو {maxExtraServices} خدمات إضافية.
               </p>
             )}
             {extraServices.length > 0 && (
@@ -500,8 +500,7 @@ export default function ServicesSelectionForm({
               </div>
             )}
             <p className="text-xs text-muted-foreground mt-1">
-              2–30 chars each, up to {maxExtraServices} tags. These will be
-              shown as tags on your profile and cards.
+              2-30 حرف لكل خدمة، حتى {maxExtraServices} علامات. ستظهر هذه كعلامات على ملفك الشخصي والبطاقات.
             </p>
           </div>
         </div>
@@ -511,11 +510,11 @@ export default function ServicesSelectionForm({
       {showOpeningHoursSection && (
         <div>
           <Label className="text-sm">
-            Opening Hours <span className="text-red-500">*</span>
+            ساعات العمل <span className="text-red-500">*</span>
           </Label>
           <p className="text-xs text-muted-foreground mt-1">
-            Provide hours for all 7 days. Example: "9:00 AM - 5:00 PM" or
-            "Closed".
+            قدم الساعات لجميع الأيام السبعة. مثال: "9:00 ص - 5:00 م" أو
+            "مغلق".
           </p>
           {renderOpeningHoursSection()}
           <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-3 mt-3">
@@ -525,20 +524,20 @@ export default function ServicesSelectionForm({
               onClick={loadWeekdayTemplate}
               className="cursor-pointer w-full sm:w-auto"
             >
-              Load weekday template
+              تحميل قالب أيام الأسبوع
             </Button>
             <Button
               type="button"
               onClick={clearAllHours}
               className="cursor-pointer w-full sm:w-auto"
             >
-              Clear all
+              مسح الكل
             </Button>
           </div>
           {Array.isArray(errors.openingHours) &&
             errors.openingHours.length > 0 && (
               <p className="text-xs text-red-600 mt-2">
-                Please provide hours for all 7 days.
+                يرجى تقديم الساعات لجميع الأيام السبعة.
               </p>
             )}
         </div>
