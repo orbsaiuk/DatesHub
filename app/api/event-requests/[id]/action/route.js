@@ -3,8 +3,6 @@ import { auth } from "@clerk/nextjs/server";
 import { writeClient } from "@/sanity/lib/serverClient";
 import { hasTenanMembership } from "@/lib/auth/authorization";
 import { sendMessage } from "@/services/sanity/messaging";
-import { subscriptionService } from "@/services/subscriptions/SubscriptionService";
-
 export async function POST(request, { params }) {
   try {
     const { userId } = await auth();
@@ -43,25 +41,6 @@ export async function POST(request, { params }) {
     if (!hasPermission) {
       return NextResponse.json(
         { error: "Unauthorized to respond to this event request" },
-        { status: 403 }
-      );
-    }
-
-    // Enforce subscription: free plans (or no active plan) cannot respond
-    const subscription = await subscriptionService.getCurrentSubscription(
-      "company",
-      eventRequest.targetCompanyTenantId
-    );
-    const isFreePlan =
-      !subscription ||
-      subscription?.plan?.slug === "free" ||
-      subscription?.plan?.price?.amount === 0;
-    if (isFreePlan) {
-      return NextResponse.json(
-        {
-          error:
-            "Your current plan doesn't allow responding to event requests. Please upgrade your plan.",
-        },
         { status: 403 }
       );
     }
