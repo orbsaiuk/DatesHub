@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { writeClient } from "@/sanity/lib/serverClient";
-import { subscriptionService } from "@/services/subscriptions/SubscriptionService";
 
 export async function POST(request) {
   try {
@@ -48,25 +47,6 @@ export async function POST(request) {
     if (!hasPermission) {
       return NextResponse.json(
         { error: "You don't have permission to respond to this request" },
-        { status: 403 }
-      );
-    }
-
-    // Enforce subscription: free plans (or no active plan) cannot respond
-    const subscription = await subscriptionService.getCurrentSubscription(
-      "company",
-      eventRequest.targetCompanyTenantId
-    );
-    const isFreePlan =
-      !subscription ||
-      subscription?.plan?.slug === "free" ||
-      subscription?.plan?.price?.amount === 0;
-    if (isFreePlan) {
-      return NextResponse.json(
-        {
-          error:
-            "Your current plan doesn't allow responding to event requests. Please upgrade your plan.",
-        },
         { status: 403 }
       );
     }
