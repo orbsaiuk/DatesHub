@@ -7,8 +7,6 @@ import {
   SUBSCRIPTION_BY_TENANT_QUERY,
   ALL_SUBSCRIPTIONS_BY_TENANT_QUERY,
   SUBSCRIPTION_BY_ID_QUERY,
-  PAYMENTS_BY_SUBSCRIPTION_QUERY,
-  PAYMENTS_BY_TENANT_QUERY,
   SUBSCRIPTION_USAGE_QUERY,
   PRICING_PLANS_QUERY,
 } from "@/sanity/queries/subscriptions";
@@ -152,77 +150,6 @@ export async function createSubscription(subscriptionData) {
   }
 }
 
-// Create or update a subscription record based on Stripe IDs
-export async function createOrUpdateSubscription(data) {
-  try {
-    const {
-      tenantType,
-      tenantId,
-      tenantName,
-      planId,
-      stripeSubscriptionId,
-      stripeCustomerId,
-      status,
-      endDate,
-    } = data;
-
-    const existing = stripeSubscriptionId
-      ? await getSubscriptionByStripeId(stripeSubscriptionId)
-      : null;
-
-    // Get tenant document reference
-    let tenantRef = null;
-    if (tenantType && tenantId) {
-      try {
-        const tenantDoc = await writeClient.fetch(
-          `*[_type == $tenantType && tenantId == $tenantId][0]{_id}`,
-          { tenantType, tenantId }
-        );
-        if (tenantDoc?._id) {
-          tenantRef = { _type: "reference", _ref: tenantDoc._id };
-        }
-      } catch (error) {
-        console.error(
-          "[subscriptions] error fetching tenant doc for reference:",
-          error
-        );
-      }
-    }
-
-    const baseFields = {
-      tenantType,
-      tenantId,
-      tenantName,
-      tenant: tenantRef,
-      plan: planId ? { _type: "reference", _ref: planId } : undefined,
-      status,
-      endDate,
-      stripeSubscriptionId,
-      stripeCustomerId,
-    };
-
-    if (existing && existing._id) {
-      return await updateSubscription(existing._id, baseFields);
-    }
-
-    const created = await writeClient.create({
-      _type: "subscription",
-      ...baseFields,
-      startDate: new Date().toISOString(),
-      usage: {
-        blogPosts: 0,
-      },
-    });
-
-    await updateTenantSubscription(tenantType, tenantId, created._id);
-
-    return created;
-  } catch (error) {
-    console.error("Error creating/updating subscription:", error);
-    throw error;
-  }
-}
-
 export async function updateSubscription(subscriptionId, updates) {
   try {
     return await writeClient
@@ -360,28 +287,6 @@ export async function checkUsageLimit(tenantType, tenantId, usageType) {
 }
 
 // Payment methods
-export async function getPaymentsBySubscription(subscriptionId) {
-  try {
-    return await writeClient.fetch(PAYMENTS_BY_SUBSCRIPTION_QUERY, {
-      subscriptionId,
-    });
-  } catch (error) {
-    console.error("Error fetching payments by subscription:", error);
-    return [];
-  }
-}
-
-export async function getPaymentsByTenant(tenantType, tenantId) {
-  try {
-    return await writeClient.fetch(PAYMENTS_BY_TENANT_QUERY, {
-      tenantType,
-      tenantId,
-    });
-  } catch (error) {
-    console.error("Error fetching payments by tenant:", error);
-    return [];
-  }
-}
 
 export async function createPayment(paymentData) {
   try {
@@ -392,21 +297,6 @@ export async function createPayment(paymentData) {
     });
   } catch (error) {
     console.error("Error creating payment:", error);
-    throw error;
-  }
-}
-
-export async function updatePayment(paymentId, updates) {
-  try {
-    return await writeClient
-      .patch(paymentId)
-      .set({
-        ...updates,
-        _updatedAt: new Date().toISOString(),
-      })
-      .commit();
-  } catch (error) {
-    console.error("Error updating payment:", error);
     throw error;
   }
 }
@@ -448,11 +338,6 @@ export async function formatPrice(amount, currency = "usd") {
     currency: currency.toUpperCase(),
   });
   return formatter.format(amount);
-}
-
-export async function formatUsagePercentage(current, limit) {
-  if (limit === -1) return 0; // Unlimited
-  return Math.min((current / limit) * 100, 100);
 }
 
 // Find a subscription by Stripe subscription ID

@@ -20,7 +20,6 @@ export default function BlogList({
   onCreateNew,
   onEdit,
   onDelete,
-  onSubmitForReview,
   onView,
   onRefresh,
   showCreateButton = true,
@@ -261,7 +260,6 @@ export default function BlogList({
               blog={blog}
               onEdit={onEdit}
               onDelete={onDelete}
-              onSubmitForReview={onSubmitForReview}
               onView={onView}
             />
           ))}

@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { SubscriptionService } from "@/services/sanity/subscriptions";
+import {
+  getCurrentSubscription,
+  updateSubscription,
+  createPayment,
+} from "@/services/sanity/subscriptions";
+import { getPlanById } from "@/services/sanity/subscriptions";
 
 export async function POST(request) {
   try {
@@ -20,8 +25,10 @@ export async function POST(request) {
     }
 
     // Get current subscription
-    const currentSubscription =
-      await SubscriptionService.getCurrentSubscription(tenantType, tenantId);
+    const currentSubscription = await getCurrentSubscription(
+      tenantType,
+      tenantId
+    );
 
     if (!currentSubscription) {
       return NextResponse.json(
@@ -31,7 +38,7 @@ export async function POST(request) {
     }
 
     // Get the new plan details
-    const newPlan = await SubscriptionService.getPlan(newPlanId);
+    const newPlan = await getPlanById(newPlanId);
     if (!newPlan) {
       return NextResponse.json({ error: "Plan not found" }, { status: 404 });
     }

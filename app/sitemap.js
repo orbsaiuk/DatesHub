@@ -1,10 +1,6 @@
 import { writeClient } from "@/sanity/lib/serverClient";
-import {
-  COMPANY_SLUGS_QUERY,
-  COMPANY_CITY_REGION_QUERY,
-} from "@/sanity/queries/company";
+import { COMPANY_SLUGS_QUERY } from "@/sanity/queries/company";
 import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
-import { PUBLIC_TENANT } from "@/sanity/lib/tenancy";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -54,29 +50,6 @@ export default async function sitemap() {
         url: `${siteUrl}/companies?spec=${category.slug}`,
         changeFrequency: "weekly",
         priority: 0.5,
-        lastModified: new Date(),
-      });
-    }
-  }
-
-  // Location-based company listing pages
-  let locations = [];
-  try {
-    const locationsRes = await writeClient.fetch(COMPANY_CITY_REGION_QUERY);
-    locations = Array.isArray(locationsRes)
-      ? locationsRes
-      : (locationsRes?.data ?? []);
-  } catch (e) {
-    locations = [];
-  }
-  for (const location of locations || []) {
-    if (location && location.trim()) {
-      // URL encode the location for proper sitemap format
-      const encodedLocation = encodeURIComponent(location);
-      urls.push({
-        url: `${siteUrl}/companies?loc=${encodedLocation}`,
-        changeFrequency: "monthly",
-        priority: 0.4,
         lastModified: new Date(),
       });
     }

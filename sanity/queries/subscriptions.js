@@ -118,37 +118,6 @@ export const SUBSCRIPTION_BY_ID_QUERY = `
 `;
 
 // Payment queries
-export const PAYMENTS_BY_SUBSCRIPTION_QUERY = `
-*[_type == "payment" && subscription._ref == $subscriptionId] | order(transactionDate desc) {
-  _id,
-  amount,
-  status,
-  paymentMethod,
-  transactionDate,
-  periodCovered,
-  invoice,
-  refund
-}
-`;
-
-export const PAYMENTS_BY_TENANT_QUERY = `
-*[_type == "payment" && tenantType == $tenantType && tenantId == $tenantId] | order(transactionDate desc) {
-  _id,
-  subscription->{
-    _id,
-    plan->{
-      name
-    }
-  },
-  amount,
-  status,
-  paymentMethod,
-  transactionDate,
-  periodCovered,
-  invoice,
-  refund
-}
-`;
 
 export const PAYMENT_BY_ID_QUERY = `
 *[_type == "payment" && _id == $paymentId][0] {

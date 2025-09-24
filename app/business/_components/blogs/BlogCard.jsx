@@ -1,17 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Eye,
-  Trash2,
-  Clock,
-  Calendar,
-  Send,
-  MoreHorizontal,
-} from "lucide-react";
+import { Eye, Trash2, Calendar, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +18,6 @@ export default function BlogCard({
   onPreview,
   onDelete, // immediate delete
   onAskDelete, // legacy confirm path
-  onSubmitForReview,
   onView,
   showActions = true,
   pending = { id: null, type: null },
@@ -66,7 +57,6 @@ export default function BlogCard({
     });
   };
 
-  const canSubmitForReview = status === "rejected";
   const deleting =
     pending.id === _id && (pending.type === "delete" || !pending.type);
 
@@ -125,16 +115,6 @@ export default function BlogCard({
                   >
                     <Eye className="h-4 w-4 mr-2" />
                     View
-                  </DropdownMenuItem>
-                )}
-                {onSubmitForReview && canSubmitForReview && (
-                  <DropdownMenuItem
-                    onClick={() => onSubmitForReview(blog)}
-                    disabled={deleting}
-                    className="cursor-pointer"
-                  >
-                    <Send className="h-4 w-4 mr-2" />
-                    Submit for Review
                   </DropdownMenuItem>
                 )}
                 {(onDelete || onAskDelete) && (

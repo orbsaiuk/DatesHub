@@ -10,7 +10,6 @@ import {
   createBlogPost,
   updateBlogPost,
   deleteBlogPost,
-  submitBlogForReview,
 } from "@/services/sanity/blogs";
 import {
   Dialog,
@@ -143,17 +142,6 @@ export default function SupplierBlogsPage() {
     }
   };
 
-  const handleSubmitForReview = async (blog) => {
-    try {
-      await submitBlogForReview(blog._id);
-      toast.success("Blog post submitted for review");
-      loadBlogs();
-    } catch (error) {
-      console.error("Error submitting blog for review:", error);
-      toast.error("Failed to submit blog for review");
-    }
-  };
-
   const handleDelete = async (blog) => {
     if (!confirm("Are you sure you want to delete this blog post?")) {
       return;
@@ -184,7 +172,6 @@ export default function SupplierBlogsPage() {
             onCreateNew={handleCreateNew}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            onSubmitForReview={handleSubmitForReview}
             onView={handleView}
             onRefresh={loadBlogs}
             title="Supplier Blogs"
