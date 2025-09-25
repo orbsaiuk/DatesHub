@@ -1,10 +1,19 @@
 export const metadata = {
-  title: "Join OrbsAI Business Network",
-  description: "Register your company or become a supplier on OrbsAI. Join thousands of verified businesses, showcase your services, and connect with potential clients worldwide. Start building your business profile today.",
-  keywords: ["business registration", "supplier network", "company directory", "business listing", "OrbsAI", "business profile"],
+  title: "انضم إلى شبكة OrbsAI التجارية",
+  description:
+    "سجل شركتك أو كن مورداً في OrbsAI. انضم إلى آلاف الشركات المعتمدة، واعرض خدماتك، وتواصل مع العملاء المحتملين حول العالم. ابدأ ببناء ملفك التجاري اليوم.",
+  keywords: [
+    "تسجيل الأعمال",
+    "شبكة الموردين",
+    "دليل الشركات",
+    "قائمة الأعمال",
+    "OrbsAI",
+    "ملف تجاري",
+  ],
   openGraph: {
-    title: "Join OrbsAI Business Network",
-    description: "Register your company or become a supplier on OrbsAI. Join thousands of verified businesses worldwide.",
+    title: "انضم إلى شبكة OrbsAI التجارية",
+    description:
+      "سجل شركتك أو كن مورداً في OrbsAI. انضم إلى آلاف الشركات المعتمدة حول العالم.",
     type: "website",
   },
   robots: { index: true, follow: true },

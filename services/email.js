@@ -27,23 +27,23 @@ export async function sendEventRequestConfirmationToCustomer(eventRequest) {
       return { ok: false, reason: "no customer email" };
     }
 
-    const subject = "We received your event request";
-    const html = buildBasicHtmlEmail("Event Request Submitted", [
-      `Hello ${eventRequest.fullName || "there"},`,
+    const subject = "تم استلام طلب الفعالية الخاص بك";
+    const html = buildBasicHtmlEmail("تم تقديم طلب الفعالية", [
+      `مرحباً ${eventRequest.fullName || "بك"},`,
       "",
-      "Thanks for submitting your event request. We've shared it with the company.",
+      "شكراً لك لتقديم طلب الفعالية. لقد قمنا بمشاركته مع الشركة.",
       "",
-      "Here are the details you provided:",
-      `• Service: ${eventRequest.serviceRequired}`,
-      `• Date: ${new Date(eventRequest.eventDate).toLocaleDateString()}`,
-      `• Time: ${formatTime(eventRequest.eventTime)}`,
-      `• Guests: ${eventRequest.numberOfGuests}`,
-      `• Location: ${eventRequest.eventLocation}`,
+      "إليك التفاصيل التي قدمتها:",
+      `• الخدمة: ${eventRequest.serviceRequired}`,
+      `• التاريخ: ${new Date(eventRequest.eventDate).toLocaleDateString("ar-SA")}`,
+      `• الوقت: ${formatTime(eventRequest.eventTime)}`,
+      `• عدد الضيوف: ${eventRequest.numberOfGuests}`,
+      `• الموقع: ${eventRequest.eventLocation}`,
       "",
-      "We'll notify you as soon as the company responds.",
+      "سنقوم بإشعارك فور رد الشركة.",
       "",
-      "Best regards,",
-      "The OrbsAI Team",
+      "مع أطيب التحيات،",
+      "فريق OrbsAI",
     ]);
 
     const emailResult = await sendEmail({ to: customerEmail, subject, html });
@@ -66,29 +66,30 @@ export async function sendApprovalEmail(reqDoc) {
     if (!to) return { ok: false, reason: "no email address" };
 
     const entityType = reqDoc.tenantType || "company";
-    const entityLabel = entityType === "supplier" ? "Supplier" : "Company";
+    const entityLabel = entityType === "supplier" ? "مورد" : "شركة";
 
-    const subject = `🎉 Your ${entityLabel} Registration Has Been Approved!`;
-    const html = buildBasicHtmlEmail(`Welcome to Our Platform!`, [
-      `Hi${reqDoc?.name ? ` ${reqDoc.name}` : ""},`,
+    const subject = `🎉 تم قبول تسجيل ${entityLabel}ك!`;
+    const html = buildBasicHtmlEmail(`مرحباً بك في منصتنا!`, [
+      `مرحباً${reqDoc?.name ? ` ${reqDoc.name}` : ""},`,
       "",
-      `Great news! Your ${entityLabel.toLowerCase()} registration request has been **approved** and processed.`,
+      `أخبار رائعة! تم **قبول** ومعالجة طلب تسجيل ${entityLabel}ك.`,
       "",
-      "**What happens next:**",
-      `• Your ${entityLabel.toLowerCase()} profile has been created and is now live`,
-      "• You can now access your dashboard to manage your profile",
-      "• Start connecting with potential partners and customers",
-      "• Update your business information anytime",
+      "**ماذا يحدث بعد ذلك:**",
+      `• تم إنشاء ملف ${entityLabel}ك الشخصي وهو متاح الآن`,
+      "• يمكنك الآن الوصول إلى لوحة التحكم لإدارة ملفك الشخصي",
+      "• ابدأ بالتواصل مع الشركاء والعملاء المحتملين",
+      "• حديث معلومات شركتك في أي وقت",
       "",
-      "**Getting Started:**",
-      "1. Log into your account to access your dashboard",
-      "2. Complete your profile with additional details",
-      "3. Browse and connect with other businesses",
+      "**بدء العمل:**",
+      "1. قم بتسجيل الدخول إلى حسابك للوصول إلى لوحة التحكم",
+      "2. أكمل ملفك الشخصي بالتفاصيل الإضافية",
+      "3. تصفح وتواصل مع الشركات الأخرى",
       "",
-      "Welcome aboard! We're excited to have you as part of our business community.",
       "",
-      "Best regards,",
-      "The OrbsAI Team",
+      "نتطلع إلى الترحيب بك في مجتمع الأعمال لدينا قريباً!",
+      "",
+      "مع أطيب التحيات،",
+      "فريق OrbsAI",
     ]);
 
     console.log(`Sending approval email to ${to}`);
@@ -121,34 +122,34 @@ export async function sendRejectionEmail(reqDoc) {
     }
 
     const entityType = reqDoc.tenantType || "company";
-    const entityLabel = entityType === "supplier" ? "Supplier" : "Company";
+    const entityLabel = entityType === "supplier" ? "مورد" : "شركة";
 
-    const subject = `Update Required: Your ${entityLabel} Registration`;
-    const html = buildBasicHtmlEmail(`Registration Update Needed`, [
-      `Hi${reqDoc?.name ? ` ${reqDoc.name}` : ""},`,
+    const subject = `مطلوب تحديث: تسجيل ${entityLabel}ك`;
+    const html = buildBasicHtmlEmail(`مطلوب تحديث التسجيل`, [
+      `مرحباً${reqDoc?.name ? ` ${reqDoc.name}` : ""},`,
       "",
-      `Thank you for your interest in joining our platform as a ${entityLabel.toLowerCase()}.`,
+      `شكراً لك لاهتمامك بالانضمام إلى منصتنا كـ${entityLabel}.`,
       "",
-      "After reviewing your registration, we need some additional information or corrections before we can approve your application.",
+      "بعد مراجعة تسجيلك، نحتاج إلى بعض المعلومات الإضافية أو التصحيحات قبل أن نتمكن من الموافقة على طلبك.",
       "",
-      "**Common reasons for review:**",
-      "• Incomplete business information",
-      "• Missing required documentation",
-      "• Business details need verification",
-      "• Contact information requires clarification",
+      "**الأسباب الشائعة للمراجعة:**",
+      "• معلومات الشركة غير مكتملة",
+      "• وثائق مطلوبة مفقودة",
+      "• تفاصيل الشركة تحتاج إلى تحقق",
+      "• معلومات الاتصال تتطلب توضيح",
       "",
-      "**Next Steps:**",
-      "1. Review your submitted information for completeness",
-      "2. Ensure all required fields are properly filled",
-      "3. Verify your business documentation is current",
-      "4. Resubmit your application when ready",
+      "**الخطوات التالية:**",
+      "1. راجع المعلومات المقدمة للتأكد من اكتمالها",
+      "2. تأكد من ملء جميع الحقول المطلوبة بشكل صحيح",
+      "3. تحقق من أن وثائق شركتك محدثة",
+      "4. أعد تقديم طلبك عندما تكون جاهزاً",
       "",
-      "If you have questions about the review process or need assistance, please don't hesitate to contact our support team.",
+      "إذا كان لديك أسئلة حول عملية المراجعة أو تحتاج إلى مساعدة، لا تتردد في الاتصال بفريق الدعم لدينا.",
       "",
-      "We look forward to welcoming you to our business community soon!",
+      "نتطلع إلى الترحيب بك في مجتمع الأعمال لدينا قريباً!",
       "",
-      "Best regards,",
-      "The OrbsAI Team",
+      "مع أطيب التحيات،",
+      "فريق OrbsAI",
     ]);
 
     console.log(`Sending rejection email to: ${to}`);
@@ -205,35 +206,35 @@ export async function sendEventRequestNotificationToCompany(eventRequest) {
     // Get requester information
     let requesterName = eventRequest.fullName || "A customer";
 
-    const subject = `New Event Request - ${eventRequest.serviceRequired}`;
-    const html = buildBasicHtmlEmail(`New Event Request Received`, [
-      `Hello ${company.name},`,
+    const subject = `طلب فعالية جديد - ${eventRequest.serviceRequired}`;
+    const html = buildBasicHtmlEmail(`تم استلام طلب فعالية جديد`, [
+      `مرحباً ${company.name},`,
       "",
-      `You have received a new event request from ${requesterName}.`,
+      `لقد تلقيت طلب فعالية جديد من ${requesterName}.`,
       "",
-      "**Event Details:**",
-      `• Service Required: ${eventRequest.serviceRequired}`,
-      `• Event Date: ${new Date(eventRequest.eventDate).toLocaleDateString()}`,
-      `• Event Time: ${formatTime(eventRequest.eventTime)}`,
-      `• Number of Guests: ${eventRequest.numberOfGuests}`,
-      `• Location: ${eventRequest.eventLocation}`,
+      "**تفاصيل الفعالية:**",
+      `• الخدمة المطلوبة: ${eventRequest.serviceRequired}`,
+      `• تاريخ الفعالية: ${new Date(eventRequest.eventDate).toLocaleDateString("ar-SA")}`,
+      `• وقت الفعالية: ${formatTime(eventRequest.eventTime)}`,
+      `• عدد الضيوف: ${eventRequest.numberOfGuests}`,
+      `• الموقع: ${eventRequest.eventLocation}`,
       "",
-      "**Event Description:**",
+      "**وصف الفعالية:**",
       eventRequest.eventDescription,
       "",
-      "**Contact Information:**",
-      `• Name: ${eventRequest.fullName}`,
+      "**معلومات الاتصال:**",
+      `• الاسم: ${eventRequest.fullName}`,
       "",
-      "**Next Steps:**",
-      "1. Log into your business dashboard to view the full request details",
-      "2. Review the requirements and check your availability",
-      "3. Accept or decline the request with your response",
-      "4. If accepted, you'll be able to message the customer directly",
+      "**الخطوات التالية:**",
+      "1. قم بتسجيل الدخول إلى لوحة التحكم لعرض تفاصيل الطلب كاملة",
+      "2. راجع المتطلبات وتحقق من توفرك",
+      "3. اقبل أو ارفض الطلب مع ردك",
+      "4. إذا تم القبول، ستتمكن من مراسلة العميل مباشرة",
       "",
-      "Don't keep your customers waiting - respond promptly to build trust and grow your business!",
+      "لا تجعل عملائك ينتظرون - رد بسرعة لبناء الثقة وتنمية أعمالك!",
       "",
-      "Best regards,",
-      "The OrbsAI Team",
+      "مع أطيب التحيات،",
+      "فريق OrbsAI",
     ]);
 
     console.log(
@@ -303,67 +304,64 @@ export async function sendEventRequestResponseToCustomer(
     const isAccepted = eventRequest.status === "accepted";
 
     const subject = isAccepted
-      ? `Great News! Your Event Request Has Been Accepted`
-      : `Update on Your Event Request`;
+      ? `أخبار رائعة! تم قبول طلب الفعالية الخاص بك`
+      : `تحديث حول طلب الفعالية الخاص بك`;
 
     const bodyLines = [
-      `Hello ${eventRequest.fullName},`,
+      `مرحباً ${eventRequest.fullName},`,
       "",
-      `${companyName} has responded to your event request for "${eventRequest.serviceRequired}".`,
+      `قام ${companyName} بالرد على طلب الفعالية الخاص بك لـ "${eventRequest.serviceRequired}".`,
       "",
     ];
 
     if (isAccepted) {
       bodyLines.push(
-        "🎉 **Good news - your request has been accepted!**",
+        "🎉 **أخبار جيدة - تم قبول طلبك!**",
         "",
-        "**Event Details:**",
-        `• Service: ${eventRequest.serviceRequired}`,
-        `• Date: ${new Date(eventRequest.eventDate).toLocaleDateString()}`,
-        `• Time: ${formatTime(eventRequest.eventTime)}`,
-        `• Guests: ${eventRequest.numberOfGuests}`,
-        `• Location: ${eventRequest.eventLocation}`,
+        "**تفاصيل الفعالية:**",
+        `• الخدمة: ${eventRequest.serviceRequired}`,
+        `• التاريخ: ${new Date(eventRequest.eventDate).toLocaleDateString("ar-SA")}`,
+        `• الوقت: ${formatTime(eventRequest.eventTime)}`,
+        `• عدد الضيوف: ${eventRequest.numberOfGuests}`,
+        `• الموقع: ${eventRequest.eventLocation}`,
         ""
       );
 
       if (response?.companyResponse) {
-        bodyLines.push("**Company's Message:**", response.companyResponse, "");
+        bodyLines.push("**رسالة الشركة:**", response.companyResponse, "");
       }
 
       bodyLines.push(
-        "**Next Steps:**",
-        "1. You can now message the company directly to discuss details",
-        "2. Coordinate final arrangements and confirm all requirements",
-        "3. Make any necessary payments or deposits as agreed",
+        "**الخطوات التالية:**",
+        "1. يمكنك الآن مراسلة الشركة مباشرة لمناقشة التفاصيل",
+        "2. تنسيق الترتيبات النهائية وتأكيد جميع المتطلبات",
+        "3. قم بالدفعات أو الودائع الضرورية حسب الاتفاق",
         "",
-        "We're excited to help make your event a success!",
+        "نحن متحمسون لمساعدتك في إنجاح فعاليتك!",
         ""
       );
     } else {
-      bodyLines.push(
-        "Unfortunately, your request was not accepted at this time.",
-        ""
-      );
+      bodyLines.push("لسوء الحظ، لم يتم قبول طلبك في هذا الوقت.", "");
 
       if (response?.companyResponse) {
-        bodyLines.push("**Company's Message:**", response.companyResponse, "");
+        bodyLines.push("**رسالة الشركة:**", response.companyResponse, "");
       }
 
       bodyLines.push(
-        "**What's Next:**",
-        "• You can submit a new request with different dates or requirements",
-        "• Browse other service providers who might be available",
-        "• Contact the company directly if you have questions",
+        "**ما التالي:**",
+        "• يمكنك تقديم طلب جديد بتواريخ أو متطلبات مختلفة",
+        "• تصفح مقدمي الخدمات الآخرين الذين قد يكونوا متاحين",
+        "• تواصل مع الشركة مباشرة إذا كان لديك أسئلة",
         "",
-        "Don't give up - the perfect provider for your event is out there!",
+        "لا تستسلم - المقدم المثالي لفعاليتك موجود!",
         ""
       );
     }
 
-    bodyLines.push("Best regards,", "The OrbsAI Team");
+    bodyLines.push("مع أطيب التحيات،", "فريق OrbsAI");
 
     const html = buildBasicHtmlEmail(
-      isAccepted ? "Your Event Request Was Accepted!" : "Event Request Update",
+      isAccepted ? "تم قبول طلب الفعالية الخاص بك!" : "تحديث طلب الفعالية",
       bodyLines
     );
 

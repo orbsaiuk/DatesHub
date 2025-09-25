@@ -12,7 +12,7 @@ import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
 
 export default async function Categories() {
   const result = await sanityFetch({ query: ALL_CATEGORIES_QUERY });
-  const categories = Array.isArray(result) ? result : result?.data ?? [];
+  const categories = Array.isArray(result) ? result : (result?.data ?? []);
 
   return (
     <section className="w-full pb-12 sm:py-16">
@@ -23,6 +23,7 @@ export default async function Categories() {
             containScroll: "trimSnaps",
             slidesToScroll: 1,
             loop: false,
+            direction: "rtl",
           }}
           aria-label="الفئات"
         >

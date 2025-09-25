@@ -9,7 +9,15 @@ import { client } from "@/sanity/lib/client";
 import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
 import Spinner from "@/components/ui/spinner";
 
-const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DAY_LABELS = [
+  "السبت",
+  "الأحد",
+  "الإثنين",
+  "الثلاثاء",
+  "الأربعاء",
+  "الخميس",
+  "الجمعة",
+];
 
 export default function ServicesSelectionForm({
   // Services/Categories - Now using Sanity references
@@ -313,7 +321,7 @@ export default function ServicesSelectionForm({
         {isLoadingCategories ? (
           <div className="py-2 flex items-center gap-2 text-muted-foreground text-xs">
             <Spinner size={16} label="Loading categories" />
-            <span>Loading {servicesLabel.toLowerCase()}…</span>
+            <span>جاري تحميل {servicesLabel.toLowerCase()}…</span>
           </div>
         ) : filteredCategories.length > 0 ? (
           filteredCategories.map((category) => {
@@ -340,11 +348,11 @@ export default function ServicesSelectionForm({
           })
         ) : (
           <p className="text-xs text-muted-foreground">
-            No {servicesLabel.toLowerCase()} found
+            لم يتم العثور على {servicesLabel.toLowerCase()}
           </p>
         )}
         <p className="text-xs text-muted-foreground">
-          Select up to {maxCategories} {servicesLabel.toLowerCase()}.
+          اختر حتى {maxCategories} {servicesLabel.toLowerCase()}.
         </p>
       </div>
     );
@@ -512,8 +520,8 @@ export default function ServicesSelectionForm({
               </div>
             )}
             <p className="text-xs text-muted-foreground mt-1">
-              2-30 حرف لكل خدمة، حتى {maxExtraServices} علامات. ستظهر هذه
-              كعلامات على ملفك الشخصي والبطاقات.
+              2-30 حرف لكل خدمة، حتى {maxExtraServices} خدمة. ستظهر هذه كعلامات
+              على ملفك الشخصي والبطاقات.
             </p>
           </div>
         </div>

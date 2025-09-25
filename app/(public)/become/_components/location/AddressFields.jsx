@@ -8,11 +8,11 @@ export default function AddressFields({ idx, register, errors }) {
     <>
       <div className="md:col-span-2">
         <Label className="text-sm" htmlFor={`address_${idx}`}>
-          Address
+          العنوان <span className="text-red-600">*</span>
         </Label>
         <Input
           id={`address_${idx}`}
-          placeholder="Street address"
+          placeholder="عنوان الشارع"
           aria-invalid={!!errors.locations?.[idx]?.address}
           {...register(`locations.${idx}.address`)}
           className="mt-1"
@@ -25,11 +25,11 @@ export default function AddressFields({ idx, register, errors }) {
       </div>
       <div>
         <Label className="text-sm" htmlFor={`country_${idx}`}>
-          Country
+          البلد <span className="text-red-600">*</span>
         </Label>
         <Input
           id={`country_${idx}`}
-          placeholder="Country"
+          placeholder="البلد"
           aria-invalid={!!errors.locations?.[idx]?.country}
           {...register(`locations.${idx}.country`)}
           className="mt-1"
@@ -42,11 +42,11 @@ export default function AddressFields({ idx, register, errors }) {
       </div>
       <div>
         <Label className="text-sm" htmlFor={`city_${idx}`}>
-          City
+          المدينة <span className="text-red-600">*</span>
         </Label>
         <Input
           id={`city_${idx}`}
-          placeholder="City"
+          placeholder="المدينة"
           aria-invalid={!!errors.locations?.[idx]?.city}
           {...register(`locations.${idx}.city`)}
           className="mt-1"
@@ -59,11 +59,11 @@ export default function AddressFields({ idx, register, errors }) {
       </div>
       <div>
         <Label className="text-sm" htmlFor={`zip_${idx}`}>
-          Zip code
+          الرمز البريدي <span className="text-red-600">*</span>
         </Label>
         <Input
           id={`zip_${idx}`}
-          placeholder="Zip code"
+          placeholder="الرمز البريدي"
           aria-invalid={!!errors.locations?.[idx]?.zipCode}
           {...register(`locations.${idx}.zipCode`)}
           className="mt-1"
@@ -76,11 +76,11 @@ export default function AddressFields({ idx, register, errors }) {
       </div>
       <div>
         <Label className="text-sm" htmlFor={`region_${idx}`}>
-          Region
+          المنطقة <span className="text-red-600">*</span>
         </Label>
         <Input
           id={`region_${idx}`}
-          placeholder="State/Region"
+          placeholder="الولاية/المنطقة"
           aria-invalid={!!errors.locations?.[idx]?.region}
           {...register(`locations.${idx}.region`)}
           className="mt-1"

@@ -79,7 +79,7 @@ export default function LogoUploader() {
                 <Image
                   key={previewUrl} // important: forces re-render when URL changes
                   src={previewUrl}
-                  alt="Logo preview"
+                  alt="معاينة الشعار"
                   width={64}
                   height={64}
                   className="w-16 h-16 object-cover"
@@ -91,7 +91,7 @@ export default function LogoUploader() {
               onClick={onOpenPicker}
               className="w-full sm:w-auto"
             >
-              Change
+              تغيير
             </Button>
             <Button
               type="button"
@@ -99,7 +99,7 @@ export default function LogoUploader() {
               onClick={onClear}
               className="w-full sm:w-auto"
             >
-              Remove
+              إزالة
             </Button>
           </>
         ) : (
@@ -109,16 +109,16 @@ export default function LogoUploader() {
               onClick={onOpenPicker}
               className="w-full sm:w-auto"
             >
-              Upload
+              رفع
             </Button>
             <span className="text-xs text-muted-foreground">PNG, JPG, SVG</span>
           </>
         )}
       </div>
       {hasAnyLogo ? (
-        <p className="text-xs text-muted-foreground">Logo selected</p>
+        <p className="text-xs text-muted-foreground">تم اختيار الشعار</p>
       ) : (
-        <p className="text-xs text-muted-foreground">No logo selected</p>
+        <p className="text-xs text-muted-foreground">لم يتم اختيار شعار</p>
       )}
       {errors.logo?.message ? (
         <p className="text-xs text-red-600">{errors.logo.message}</p>

@@ -24,5 +24,12 @@ export function generateViewport() {
 }
 
 export default function StudioPage() {
-  return <NextStudio config={config} />;
+  return (
+    <div
+      style={{ direction: "ltr", textAlign: "left" }}
+      className="sanity-studio-wrapper"
+    >
+      <NextStudio config={config} />
+    </div>
+  );
 }

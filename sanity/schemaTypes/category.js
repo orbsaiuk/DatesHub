@@ -6,26 +6,6 @@ export default defineType({
   type: "document",
   fields: [
     defineField({
-      name: "tenantType",
-      title: "Tenant Type (optional)",
-      type: "string",
-      options: {
-        list: [
-          { title: "User", value: "user" },
-          { title: "Company", value: "company" },
-          { title: "Supplier", value: "supplier" },
-        ],
-        layout: "radio",
-      },
-      description: "Leave empty for global categories shared across tenants.",
-    }),
-    defineField({
-      name: "tenantId",
-      title: "Tenant ID (optional)",
-      type: "string",
-      description: "Leave empty for global categories.",
-    }),
-    defineField({
       name: "title",
       title: "Title",
       type: "string",

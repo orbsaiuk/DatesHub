@@ -30,7 +30,7 @@ export default function SocialLinks() {
             onClick={() => remove(index)}
             className="cursor-pointer"
           >
-            Remove
+            إزالة
           </Button>
         </div>
       ))}
@@ -41,7 +41,7 @@ export default function SocialLinks() {
           onClick={() => append("")}
           className="cursor-pointer"
         >
-          Add another link
+          إضافة رابط آخر
         </Button>
         {fields.length > 1 && (
           <Button
@@ -52,7 +52,7 @@ export default function SocialLinks() {
             }}
             className="cursor-pointer"
           >
-            Clear
+            مسح
           </Button>
         )}
       </div>

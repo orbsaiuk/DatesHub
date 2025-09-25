@@ -50,10 +50,10 @@ export default function MapPicker({ value, onChange }) {
     onChange?.(lat, lng);
   }
 
-  // Default to United Kingdom when not selected
-  const defaultCenter = [54.5, -3.0];
+  // Default to Middle East when not selected
+  const defaultCenter = [25.5, 40.0]; // Kuwait/Persian Gulf region
   const initialCenter = pos ? [pos.lat, pos.lng] : defaultCenter;
-  const initialZoom = pos ? 12 : 6;
+  const initialZoom = pos ? 12 : 4; // Lower zoom to show entire Middle East region
 
   return (
     <div className="relative h-full w-full">

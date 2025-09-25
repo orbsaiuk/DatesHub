@@ -163,10 +163,10 @@ export async function POST(request) {
     // Fire-and-forget: applicant confirmation email
     const toEmail = (email || doc?.contact?.email || "").trim();
     if (toEmail) {
-      const subject = `We received your submission: ${name || "Your request"}`;
-      const html = buildBasicHtmlEmail("Submission received", [
-        `Thanks for submitting your ${tenantType} request${name ? ` for ${name}` : ""}.`,
-        "Our team will review it and notify you once it's approved or if we need more details.",
+      const subject = `تم استلام طلبك: ${name || "طلبك"}`;
+      const html = buildBasicHtmlEmail("تم استلام الطلب", [
+        `شكراً لتقديم طلب ${tenantType === "company" ? "الشركة" : "المورد"}${name ? ` لـ ${name}` : ""}.`,
+        "سيقوم فريقنا بمراجعته وإشعارك عند الموافقة أو إذا كنا بحاجة إلى تفاصيل إضافية.",
       ]);
       // eslint-disable-next-line no-unused-vars
       const _ = sendEmail({ to: toEmail, subject, html });
@@ -175,11 +175,11 @@ export async function POST(request) {
     // Optional: notify admins if configured
     const adminEmail = (process.env.ADMIN_NOTIFIER_EMAIL || "").trim();
     if (adminEmail) {
-      const subject = `[New ${tenantType} submission] ${name || "Untitled"}`;
-      const html = buildBasicHtmlEmail("New submission", [
-        `Type: ${tenantType}`,
-        `Name: ${name || "-"}`,
-        `Email: ${toEmail || "-"}`,
+      const subject = `[طلب ${tenantType === "company" ? "شركة" : "مورد"} جديد] ${name || "بدون عنوان"}`;
+      const html = buildBasicHtmlEmail("طلب جديد", [
+        `النوع: ${tenantType === "company" ? "شركة" : "مورد"}`,
+        `الاسم: ${name || "-"}`,
+        `البريد الإلكتروني: ${toEmail || "-"}`,
       ]);
       // eslint-disable-next-line no-unused-vars
       const _ = sendEmail({ to: adminEmail, subject, html });

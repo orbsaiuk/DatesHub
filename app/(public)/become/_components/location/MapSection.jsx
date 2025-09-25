@@ -15,7 +15,7 @@ export default function MapSection({
 }) {
   return (
     <div className="md:col-span-2">
-      <Label className="text-sm">Pin on Map</Label>
+      <Label className="text-sm">علامة على الخريطة</Label>
       <div className="mt-2 h-64 w-full overflow-hidden rounded">
         <DynamicMap value={value} onChange={onChange} />
       </div>
@@ -26,7 +26,7 @@ export default function MapSection({
           onClick={onCollapse}
           className="w-full sm:w-auto"
         >
-          Collapse
+          طي
         </Button>
         <Button
           type="button"
@@ -35,7 +35,7 @@ export default function MapSection({
           disabled={clearDisabled}
           className="w-full sm:w-auto"
         >
-          Clear pin
+          مسح العلامة
         </Button>
       </div>
     </div>

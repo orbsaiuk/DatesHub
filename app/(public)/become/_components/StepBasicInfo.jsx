@@ -47,14 +47,14 @@ export default function StepBasicInfo({
       !hasFieldErrors
   );
 
-  const entityLabel = entityType === "company" ? "Company" : "Supplier";
+  const entityLabel = entityType === "company" ? "الشركة" : "المورد";
 
   return (
     <div>
       <h1 className="text-2xl font-semibold mb-8">
-        Add {entityLabel} Information
+        إضافة معلومات {entityLabel}
       </h1>
-      <h2 className="text-lg font-medium mb-4">Basic Information</h2>
+      <h2 className="text-lg font-medium mb-4">المعلومات الأساسية</h2>
 
       <BusinessBasicInfoForm
         rhfMode={true}
@@ -68,14 +68,14 @@ export default function StepBasicInfo({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="md:col-span-2">
           <Label className="text-sm">
-            Logo Upload <span className="text-red-600">*</span>
+            رفع الشعار <span className="text-red-600">*</span>
           </Label>
           <LogoUploader />
         </div>
 
         {entityType === "company" && (
           <div className="md:col-span-2">
-            <Label className="text-sm">Add your social media links</Label>
+            <Label className="text-sm">أضف روابط وسائل التواصل الاجتماعي</Label>
             <SocialLinks />
           </div>
         )}
@@ -88,7 +88,7 @@ export default function StepBasicInfo({
           disabled={!onPrev}
           className="w-full sm:w-auto cursor-pointer"
         >
-          Previous
+          السابق
         </Button>
         <Button
           type="button"
@@ -96,7 +96,7 @@ export default function StepBasicInfo({
           disabled={!canNext}
           className="cursor-pointer w-full sm:w-auto"
         >
-          Next
+          التالي
         </Button>
       </div>
     </div>

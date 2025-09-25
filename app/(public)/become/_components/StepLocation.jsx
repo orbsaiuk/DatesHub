@@ -1,9 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import MethodSelector from "./location/MethodSelector";
@@ -31,6 +29,8 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
     control,
     setValue,
     watch,
+    trigger,
+    clearErrors,
   } = useFormContext();
   const { fields, append, remove, update } = useFieldArray({
     control,
@@ -90,16 +90,26 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
   async function reverseGeocodeWithToast(idx, lat, lng) {
     if (isReverseLoading) return; // prevent concurrent toasts/requests
     setIsReverseLoading(true);
-    toast.loading("Getting address...", { id: TOAST_IDS.reverse });
+    toast.loading("الحصول على العنوان...", { id: TOAST_IDS.reverse });
     try {
       const res = await fetch(`/api/geocode/reverse?lat=${lat}&lng=${lng}`);
       if (!res.ok) throw new Error("reverse_failed");
       const data = await res.json();
       update(idx, { ...locations[idx], ...data, geo: { lat, lng } });
-      toast.success("Location added", { id: TOAST_IDS.reverse });
+
+      // Clear validation errors for this location when data is filled
+      clearErrors([
+        `locations.${idx}.country`,
+        `locations.${idx}.city`,
+        `locations.${idx}.address`,
+        `locations.${idx}.region`,
+        `locations.${idx}.zipCode`,
+      ]);
+
+      toast.success("تم إضافة الموقع", { id: TOAST_IDS.reverse });
       return data;
     } catch (error) {
-      toast.error("Couldn't fetch address, please fill fields manually.", {
+      toast.error("لا يمكن الحصول على العنوان، يرجى ملء الحقول يدوياً.", {
         id: TOAST_IDS.reverse,
       });
       throw error;
@@ -110,8 +120,8 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
 
   async function onLocateMe(idx) {
     if (!navigator.geolocation) {
-      toast.error("Geolocation not supported", {
-        description: "Your browser doesn't support locating.",
+      toast.error("تحديد الموقع غير مدعوم", {
+        description: "متصفحك لا يدعم تحديد الموقع.",
         id: TOAST_IDS.geoloc,
       });
       return;
@@ -129,9 +139,9 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
         });
         // Geolocation permission state checked
         if (permission.state === "denied") {
-          toast.error("Permission denied", {
+          toast.error("تم رفض الإذن", {
             description:
-              "Location access is blocked. Please enable it in your browser settings and refresh the page.",
+              "تم حظر الوصول للموقع. يرجى تفعيله في إعدادات المتصفح وإعادة تحميل الصفحة.",
             id: TOAST_IDS.geoloc,
           });
           return;
@@ -160,27 +170,27 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
         // Geolocation error occurred
         setLocatingIdx(null);
         if (err.code === GEO_ERROR.PERMISSION_DENIED) {
-          toast.error("Permission needed", {
+          toast.error("إذن مطلوب", {
             description:
-              "Location access was denied. Please enable location permissions in your browser or drop a pin on the map.",
+              "تم رفض الوصول للموقع. يرجى تفعيل أذونات الموقع في المتصفح أو وضع علامة على الخريطة.",
             id: TOAST_IDS.geoloc,
           });
         } else if (err.code === GEO_ERROR.POSITION_UNAVAILABLE) {
-          toast.error("Location unavailable", {
+          toast.error("الموقع غير متاح", {
             description:
-              "Your location could not be determined. Try again later or drop a map pin.",
+              "لا يمكن تحديد موقعك. حاول مرة أخرى لاحقاً أو ضع علامة على الخريطة.",
             id: TOAST_IDS.geoloc,
           });
         } else if (err.code === GEO_ERROR.TIMEOUT) {
-          toast.error("Location timeout", {
+          toast.error("انتهت مهلة الموقع", {
             description:
-              "Location request timed out. Try again or drop a map pin.",
+              "انتهت مهلة طلب الموقع. حاول مرة أخرى أو ضع علامة على الخريطة.",
             id: TOAST_IDS.geoloc,
           });
         } else {
-          toast.error("Couldn't get location", {
+          toast.error("لا يمكن الحصول على الموقع", {
             description:
-              "An error occurred while getting your location. Use the map to select a spot.",
+              "حدث خطأ أثناء الحصول على موقعك. استخدم الخريطة لاختيار مكان.",
             id: TOAST_IDS.geoloc,
           });
         }
@@ -198,10 +208,38 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
     update(idx, { ...(locations[idx] || {}), geo: null });
   }
 
+  // Validate locations before proceeding to next step
+  async function handleNext() {
+    const isValid = await trigger("locations");
+    if (isValid) {
+      onNext();
+    }
+  }
+
+  // Check if all required location fields are filled
+  function areAllLocationFieldsFilled() {
+    if (!locations || locations.length === 0) {
+      return false;
+    }
+
+    return locations.every((location) => {
+      // Required fields for location validation
+      return (
+        location?.country?.trim() &&
+        location?.city?.trim() &&
+        location?.address?.trim() &&
+        location?.region?.trim() &&
+        location?.zipCode?.trim()
+      );
+    });
+  }
+
+  const isNextDisabled = !areAllLocationFieldsFilled();
+
   return (
     <div className="min-h-[50vh]">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-        <h1 className="text-2xl font-semibold">Add Location(s)</h1>
+        <h1 className="text-2xl font-semibold">إضافة الموقع/المواقع</h1>
         {fields.length > 0 ? (
           <Button
             type="button"
@@ -209,7 +247,7 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
             onClick={addLocation}
             className="cursor-pointer w-full sm:w-auto"
           >
-            Add another location
+            إضافة موقع آخر
           </Button>
         ) : (
           <Button
@@ -218,7 +256,7 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
             onClick={addLocation}
             className="cursor-pointer w-full sm:w-auto"
           >
-            Add location
+            إضافة موقع
           </Button>
         )}
       </div>
@@ -228,7 +266,7 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
           const summary =
             [loc.address, loc.city, loc.region, loc.zipCode, loc.country]
               .filter(Boolean)
-              .join(", ") || `Location ${idx + 1}`;
+              .join(", ") || `الموقع ${idx + 1}`;
           if (idx !== activeIdx) {
             if (isEmpty(loc)) return null;
             return (
@@ -273,7 +311,7 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
                   disabled={fields.length <= 1}
                   className="cursor-pointer"
                 >
-                  Remove location
+                  إزالة الموقع
                 </Button>
               </div>
             </div>
@@ -288,14 +326,15 @@ export default function StepLocation({ onPrev, onNext, hideFooter }) {
             onClick={onPrev}
             className="cursor-pointer w-full sm:w-auto"
           >
-            Previous
+            السابق
           </Button>
           <Button
             type="button"
-            onClick={onNext}
+            onClick={handleNext}
+            disabled={isNextDisabled}
             className="cursor-pointer w-full sm:w-auto"
           >
-            Next
+            التالي
           </Button>
         </div>
       )}

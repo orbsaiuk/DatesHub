@@ -26,7 +26,7 @@ export default function StepServices({ onPrev, onSubmit, saving }) {
 
   return (
     <div className="min-h-[50vh]">
-      <h1 className="text-2xl font-semibold mb-8">Add Categories You Offer</h1>
+      <h1 className="text-2xl font-semibold mb-8">إضافة الفئات التي تقدمها</h1>
 
       <ServicesSelectionForm
         selectedCategories={servicesSelected}
@@ -39,7 +39,7 @@ export default function StepServices({ onPrev, onSubmit, saving }) {
         extraServices={extraServices}
         openingHours={openingHours}
         errors={errors}
-        servicesLabel="Categories"
+        servicesLabel="الفئات"
         servicesFieldName="services"
         maxCategories={3}
         maxExtraServices={20}
@@ -58,7 +58,7 @@ export default function StepServices({ onPrev, onSubmit, saving }) {
           disabled={saving}
           className="cursor-pointer w-full sm:w-auto"
         >
-          Previous
+          السابق
         </Button>
         <Button
           disabled={saving || !canSubmit}
@@ -67,7 +67,7 @@ export default function StepServices({ onPrev, onSubmit, saving }) {
             saving ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {saving ? "Saving..." : "Submit"}
+          {saving ? "جارٍ الحفظ..." : "إرسال"}
         </Button>
       </div>
     </div>

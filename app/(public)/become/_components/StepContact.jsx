@@ -29,8 +29,8 @@ export default function StepContact({ onPrev, onNext }) {
 
   return (
     <div className="min-h-[50vh]">
-      <h1 className="text-2xl font-semibold mb-8">Official Contact Details</h1>
-      <h2 className="text-lg font-medium mb-4">Contact Details</h2>
+      <h1 className="text-2xl font-semibold mb-8">تفاصيل الاتصال الرسمية</h1>
+      <h2 className="text-lg font-medium mb-4">تفاصيل الاتصال</h2>
 
       <ContactDetailsForm
         rhfMode={true}
@@ -46,7 +46,7 @@ export default function StepContact({ onPrev, onNext }) {
           onClick={onPrev}
           className={` w-full sm:w-auto ${!onPrev ? "opacity-50 cursor-not-allowed" : " cursor-pointer"}`}
         >
-          Previous
+          السابق
         </Button>
         <Button
           type="button"
@@ -54,7 +54,7 @@ export default function StepContact({ onPrev, onNext }) {
           disabled={!canNext}
           className="cursor-pointer w-full sm:w-auto"
         >
-          Next
+          التالي
         </Button>
       </div>
     </div>

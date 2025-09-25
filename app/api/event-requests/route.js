@@ -28,7 +28,11 @@ export async function GET(request) {
     // Filter by user's requests or company's received requests
     if (companyTenantId) {
       // Verify user has access to this company
-      const hasAccess = await hasTenanMembership(userId, "company", companyTenantId);
+      const hasAccess = await hasTenanMembership(
+        userId,
+        "company",
+        companyTenantId
+      );
       if (!hasAccess) {
         return NextResponse.json(
           { error: "Access denied to company data" },

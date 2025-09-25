@@ -1,12 +1,6 @@
 import Link from "next/link";
-import { CheckCircle2, ArrowRight, Home } from "lucide-react";
+import { CheckCircle2, ArrowLeft, Home } from "lucide-react";
 
-export const metadata = {
-  title: "Application Submitted - OrbsAI Business Network",
-  description: "Your business registration request has been submitted successfully. Our team will review your application and notify you once it's approved. Thank you for joining OrbsAI.",
-  keywords: ["application submitted", "business registration", "pending approval", "OrbsAI"],
-  robots: { index: false, follow: false },
-};
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,8 +10,50 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { notFound } from "next/navigation";
+import { checkTenantRequestExists } from "@/services/sanity/tenantRequest";
 
-export default function SuccessPage() {
+export async function generateMetadata() {
+  // Check if the request exists
+  try {
+    const request = await checkTenantRequestExists(id);
+    if (!request) {
+      return {
+        title: "الصفحة غير موجودة - شبكة OrbsAI التجارية",
+        description: "عذرًا، لم نتمكن من العثور على الطلب المحدد.",
+        robots: { index: false, follow: false },
+      };
+    }
+  } catch (error) {
+    return {
+      title: "الصفحة غير موجودة - شبكة OrbsAI التجارية",
+      description: "حدث خطأ أثناء البحث عن الطلب.",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  // Return success page metadata
+  return {
+    title: "تم إرسال الطلب - شبكة OrbsAI التجارية",
+    description:
+      "تم إرسال طلب تسجيل عملك التجاري بنجاح. سيقوم فريقنا بمراجعة طلبك وإخطارك عند الموافقة عليه. شكراً لانضمامك إلى OrbsAI.",
+    keywords: [
+      "تم إرسال الطلب",
+      "تسجيل الأعمال",
+      "في انتظار الموافقة",
+      "OrbsAI",
+    ],
+    robots: { index: false, follow: false },
+  };
+}
+
+export default async function SuccessPage({ searchParams }) {
+  const { id } = await searchParams;
+  const request = await checkTenantRequestExists(id);
+  // Check if id exists before making the query
+  if (!id || !request) {
+    return notFound();
+  }
   return (
     <div className="relative min-h-[70vh] flex items-center justify-center px-4">
       <div aria-hidden className="pointer-events-none absolute inset-0">
@@ -29,17 +65,16 @@ export default function SuccessPage() {
           <div className="mx-auto mb-2 size-14 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 flex items-center justify-center">
             <CheckCircle2 className="size-7" />
           </div>
-          <CardTitle className="text-2xl">Request submitted</CardTitle>
+          <CardTitle className="text-2xl">تم إرسال الطلب</CardTitle>
           <CardDescription>
-            Thanks for submitting your company details. Our team will review
-            your request shortly. You’ll be notified once it’s approved or
-            rejected.
+            شكرًا لتقديم بيانات شركتك. سيقوم فريقنا بمراجعة طلبك قريبًا، وسيتم
+            إخطارك عند الموافقة أو الرفض.
           </CardDescription>
         </CardHeader>
 
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            You can continue exploring companies while we review your request.
+            يمكنك متابعة استكشاف الشركات بينما نقوم بمراجعة طلبك.
           </p>
         </CardContent>
 
@@ -47,13 +82,13 @@ export default function SuccessPage() {
           <Button variant="outline" asChild>
             <Link href="/">
               <Home className="size-4" />
-              Go to homepage
+              الانتقال للصفحة الرئيسية
             </Link>
           </Button>
           <Button asChild>
             <Link href="/companies">
-              Explore companies
-              <ArrowRight className="size-4" />
+              استكشاف الشركات
+              <ArrowLeft className="size-4" />
             </Link>
           </Button>
         </CardFooter>

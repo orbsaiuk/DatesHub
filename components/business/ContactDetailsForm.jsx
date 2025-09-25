@@ -40,6 +40,9 @@ export default function ContactDetailsForm({
     error = null,
     rhfName = null
   ) => {
+    // Special handling for phone input
+    const isTel = type === "tel";
+
     if (rhfMode && register) {
       return (
         <Input
@@ -47,8 +50,33 @@ export default function ContactDetailsForm({
           type={type}
           placeholder={placeholder}
           aria-invalid={!!error}
-          {...register(rhfName || id)}
-          className={`mt-1 ${error ? "border-destructive focus-visible:ring-destructive" : ""}`}
+          inputMode={isTel ? "numeric" : undefined}
+          pattern={isTel ? "[0-9]*" : undefined}
+          {...register(rhfName || id, {
+            ...(isTel && {
+              pattern: {
+                value: /^[0-9]+$/,
+                message: "الرجاء إدخال أرقام فقط",
+              },
+            }),
+            ...(id === "ownerName" && {
+              pattern: {
+                value: /^[^0-9]*$/,
+                message: "الاسم لا يجب أن يحتوي على أرقام",
+              },
+            }),
+          })}
+          onInput={(e) => {
+            // Client-side filtering for real-time input
+            if (id === "ownerName") {
+              e.target.value = e.target.value.replace(/[0-9]/g, "");
+            } else if (isTel) {
+              e.target.value = e.target.value.replace(/\D/g, "");
+            }
+          }}
+          className={`mt-1 text-right ${
+            error ? "border-destructive focus-visible:ring-destructive" : ""
+          }`}
         />
       );
     }
@@ -58,8 +86,18 @@ export default function ContactDetailsForm({
         id={id}
         type={type}
         value={value || ""}
-        onChange={(e) => onChange?.(e.target.value)}
+        onChange={(e) => {
+          let val = e.target.value;
+          if (isTel) {
+            val = val.replace(/\D/g, ""); // remove non-digits
+          } else if (id === "ownerName") {
+            val = val.replace(/[0-9]/g, ""); // remove numbers from name
+          }
+          onChange?.(val);
+        }}
         placeholder={placeholder}
+        inputMode={isTel ? "numeric" : undefined}
+        pattern={isTel ? "[0-9]*" : undefined}
         className={`mt-1 ${error ? "border-destructive focus-visible:ring-destructive" : ""}`}
       />
     );

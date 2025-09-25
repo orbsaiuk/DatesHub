@@ -20,7 +20,7 @@ export default function CollapsedRow({
           onClick={onEdit}
           className="cursor-pointer"
         >
-          Edit
+          تعديل
         </Button>
         <Button
           type="button"
@@ -29,7 +29,7 @@ export default function CollapsedRow({
           disabled={removeDisabled}
           className="cursor-pointer"
         >
-          Remove
+          إزالة
         </Button>
       </div>
     </div>

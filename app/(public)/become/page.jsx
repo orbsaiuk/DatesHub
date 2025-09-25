@@ -102,7 +102,6 @@ export default function BecomeTenantPage() {
     setSuccess("");
     try {
       const categories = values.services || [];
- 
 
       const data = {
         tenantType: values.entityType || "company",
@@ -147,13 +146,13 @@ export default function BecomeTenantPage() {
         method: "POST",
         body: form,
       });
-      if (!res.ok) throw new Error("Failed to submit request");
+      if (!res.ok) throw new Error("فشل في إرسال الطلب");
       const responseData = await res.json();
-      if (!responseData?.ok) throw new Error("Submit returned an error");
+      if (!responseData?.ok) throw new Error("حدث خطأ في الإرسال");
 
-      router.push("/become/success");
-      // Optionally reset form
-      // methods.reset(initial);
+      const requestId = responseData?.id;
+
+      router.push(`/become/success?id=${requestId}`);
     } catch (e) {
       setError(String(e?.message || e));
     } finally {
@@ -248,27 +247,27 @@ export default function BecomeTenantPage() {
 
       function labelFor(path) {
         const map = {
-          entityType: "Entity type",
-          name: entityType === "company" ? "Company name" : "Business name",
-          logo: "Logo",
-          website: "Website",
-          description: "Description",
-          totalEmployees: "Total employees",
-          foundingYear: "Founding year",
-          registrationNumber: "Registration number",
-          businessLicense: "Business license",
-          productCategories: "Product categories",
-          "contact.ownerName": "Owner name",
-          "contact.phone": "Phone",
-          "contact.email": "Email",
-          "contact.address": "Contact address",
-          locations: "Locations",
-          "locations.0.address": "Address (Location 1)",
-          "locations.0.country": "Country (Location 1)",
-          "locations.0.city": "City (Location 1)",
-          "locations.0.region": "Region (Location 1)",
-          "locations.0.zipCode": "Zip code (Location 1)",
-          services: "Services",
+          entityType: "نوع الكيان",
+          name: entityType === "company" ? "اسم الشركة" : "اسم العمل التجاري",
+          logo: "الشعار",
+          website: "الموقع الإلكتروني",
+          description: "الوصف",
+          totalEmployees: "إجمالي الموظفين",
+          foundingYear: "سنة التأسيس",
+          registrationNumber: "رقم السجل التجاري",
+          businessLicense: "الرخصة التجارية",
+          productCategories: "فئات المنتجات",
+          "contact.ownerName": "اسم المالك",
+          "contact.phone": "الهاتف",
+          "contact.email": "البريد الإلكتروني",
+          "contact.address": "عنوان التواصل",
+          locations: "المواقع",
+          "locations.0.address": "العنوان (الموقع الأول)",
+          "locations.0.country": "البلد (الموقع الأول)",
+          "locations.0.city": "المدينة (الموقع الأول)",
+          "locations.0.region": "المنطقة (الموقع الأول)",
+          "locations.0.zipCode": "الرمز البريدي (الموقع الأول)",
+          services: "الخدمات",
         };
         return map[path] || path;
       }
@@ -284,7 +283,7 @@ export default function BecomeTenantPage() {
       }, 0);
 
       setError(
-        `${labelFor(first?.path)}: ${first?.message || "Please fill out this field"}`
+        `${labelFor(first?.path)}: ${first?.message || "يرجى تعبئة هذا الحقل"}`
       );
       return;
     }

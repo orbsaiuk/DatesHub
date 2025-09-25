@@ -19,16 +19,16 @@ import {
 // Base schema shared by both entity types
 const baseEntitySchema = z.object({
   entityType: entityTypeEnum,
-  name: requiredString("Business name is required"),
+  name: requiredString("اسم العمل التجاري مطلوب"),
   website: optionalUrl,
   foundingYear: yearString,
-  registrationNumber: requiredString("Registration number is required"),
+  registrationNumber: requiredString("رقم السجل التجاري مطلوب"),
   logoSelected: z.boolean().optional(),
   logoFile: imageFileSchema,
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  description: z.string().min(10, "يجب أن يكون الوصف 10 أحرف على الأقل"),
   socialLinks: socialLinksArray,
   contact: contactSchema,
-  locations: z.array(locationSchema).min(1, "Add at least one location"),
+  locations: z.array(locationSchema).min(1, "أضف موقع واحد على الأقل"),
   openingHours: openingHoursArray,
   services: categoriesArray,
   extraServices: extraServicesArray,
@@ -38,7 +38,7 @@ const baseEntitySchema = z.object({
 const companySchema = baseEntitySchema
   .extend({
     entityType: z.literal("company"),
-    totalEmployees: requiredString("Total employees is required"),
+    totalEmployees: requiredString("إجمالي الموظفين مطلوب"),
     companyType: companyTypeEnum,
   })
   .superRefine(logoValidation);
@@ -81,7 +81,7 @@ export const getInitialValues = (entityType = "company") => {
     contact: { ownerName: "", phone: "", email: "", address: "" },
     locations: [
       {
-        country: "UK",
+        country: "",
         city: "",
         address: "",
         region: "",

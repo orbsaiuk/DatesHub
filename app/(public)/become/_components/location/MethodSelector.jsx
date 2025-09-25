@@ -15,7 +15,7 @@ export default function MethodSelector({
   return (
     <div className="md:col-span-2">
       <div className="flex items-center gap-2 flex-wrap">
-        <Label className="text-sm">Choose method</Label>
+        <Label className="text-sm">اختر الطريقة</Label>
         <div className="flex gap-2 flex-wrap">
           <Button
             type="button"
@@ -24,7 +24,7 @@ export default function MethodSelector({
             disabled={locating || reverseLoading}
             className="cursor-pointer"
           >
-            {locating ? "Locating..." : "Auto locate"}
+            {locating ? "تحديد الموقع..." : "تحديد تلقائي"}
           </Button>
           <Button
             type="button"
@@ -32,7 +32,7 @@ export default function MethodSelector({
             onClick={() => onModeChange("map")}
             className="cursor-pointer"
           >
-            Drop pin
+            إسقاط علامة
           </Button>
           <Button
             type="button"
@@ -40,7 +40,7 @@ export default function MethodSelector({
             onClick={() => onModeChange("manual")}
             className="cursor-pointer"
           >
-            Manual
+            يدوي
           </Button>
         </div>
       </div>

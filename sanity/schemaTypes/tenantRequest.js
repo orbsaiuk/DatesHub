@@ -41,29 +41,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
       // status is intentionally editable
     }),
-    defineField({
-      name: "companiesHouseUrl",
-      title: "Companies House URL",
-      type: "url",
-      description:
-        "Add the official Companies House profile URL when approving.",
-      hidden: ({ document }) => document?.status !== "approved",
-      validation: (Rule) =>
-        Rule.uri({ scheme: ["https"] }).custom((val, context) => {
-          const isApproved = context?.document?.status === "approved";
-          if (isApproved && !val) {
-            return "Companies House URL is required when status is Approved.";
-          }
-          if (val) {
-            const pattern =
-              /^https:\/\/find-and-update\.company-information\.service\.gov\.uk\/company\/[A-Za-z0-9]+\/?$/;
-            if (!pattern.test(val)) {
-              return "Enter a valid Companies House company URL.";
-            }
-          }
-          return true;
-        }),
-    }),
     // Track created company to avoid duplicates
     defineField({
       name: "createdCompanyId",
