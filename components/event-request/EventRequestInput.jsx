@@ -16,16 +16,21 @@ export default function EventRequestInput({
   register,
   onChange = null,
   min = undefined,
+  className = "",
+  lang = "ar",
 }) {
   return (
-    <div className="space-y-2">
-      <Label htmlFor={name} className="text-sm font-medium text-gray-700">
+    <div className="space-y-2" dir="rtl">
+      <Label
+        htmlFor={name}
+        className="text-sm font-medium text-gray-700 text-right"
+      >
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="text-red-500 mr-1">*</span>}
       </Label>
       <div className="relative">
         {icon && (
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
             {icon}
           </div>
         )}
@@ -36,8 +41,10 @@ export default function EventRequestInput({
           min={min}
           {...register(name)}
           onChange={onChange}
-          className={`
-            ${icon ? "pl-10" : ""}
+          dir="rtl"
+          lang={lang}
+          className={` text-right placeholder:text-right ${className}
+            ${icon ? "pr-10" : ""}
             ${error ? "border-red-500 focus-visible:ring-red-500" : ""}
             ${hasValue && !error ? "border-green-500" : ""}
           `}

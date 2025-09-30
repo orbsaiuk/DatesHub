@@ -52,9 +52,9 @@ export default function CategorySelect({
   return (
     <EventRequestSelect
       name="category"
-      label="Service Category"
+      label="نوع الخدمة المطلوبة"
       options={options}
-      placeholder="Select the type of service you need"
+      placeholder="اختر نوع الخدمة المطلوبة"
       icon={<Tag size={16} />}
       required={true}
       error={error}

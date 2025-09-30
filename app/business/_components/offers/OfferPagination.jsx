@@ -26,14 +26,14 @@ export default function OfferPagination({
               className="h-10 md:h-9 px-3 md:px-4 text-sm md:text-sm"
             />
           </PaginationItem>
-          
+
           {/* Mobile: Show only current page and total */}
           <div className="flex md:hidden items-center px-3">
             <span className="text-sm text-muted-foreground">
-              {currentPage} of {totalPages}
+              {currentPage} من {totalPages}
             </span>
           </div>
-          
+
           {/* Desktop: Show all page numbers */}
           <div className="hidden md:flex">
             {Array.from({ length: totalPages }).map((_, i) => (
@@ -48,10 +48,12 @@ export default function OfferPagination({
               </PaginationItem>
             ))}
           </div>
-          
+
           <PaginationItem>
             <PaginationNext
-              onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+              onClick={() =>
+                onPageChange(Math.min(totalPages, currentPage + 1))
+              }
               disabled={currentPage === totalPages}
               className="h-10 md:h-9 px-3 md:px-4 text-sm md:text-sm"
             />

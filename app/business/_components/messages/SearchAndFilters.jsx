@@ -29,6 +29,7 @@ export default function SearchAndFilters({
         value={activeFilter}
         onValueChange={setActiveFilter}
         className="w-full sm:w-auto"
+        dir="rtl"
       >
         <TabsList>
           <TabsTrigger value="all" className="flex items-center gap-2">

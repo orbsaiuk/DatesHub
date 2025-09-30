@@ -79,6 +79,7 @@ export default function BlogsClient({
   const openPreview = (blog) => {
     setPreviewBlog(blog);
     setTimeout(() => setShowPreview(true), 0);
+    console.log(blog);
   };
 
   async function handleDelete(blog) {
@@ -96,7 +97,7 @@ export default function BlogsClient({
       });
 
       if (res.status === 404) {
-        toast.success(`"${blogTitle}" was already deleted`, {
+        toast.success(`"${blogTitle}" تم حذفه مسبقاً`, {
           id: `delete-${id}`,
         });
         setLocalItems((prev) => prev.filter((b) => b._id !== id));
@@ -109,19 +110,19 @@ export default function BlogsClient({
         throw new Error(errorData.error || "Failed to delete blog");
       }
 
-      toast.success(`"${blogTitle}" deleted successfully`, {
+      toast.success(`تم حذف "${blogTitle}" بنجاح`, {
         id: `delete-${id}`,
       });
       setLocalItems((prev) => prev.filter((b) => b._id !== id));
       if (onChanged) onChanged();
     } catch (e) {
       const errorMsg = e.message || "Failed to delete blog";
-      toast.error(`Failed to delete "${blogTitle}"`, {
+      toast.error(`فشل في حذف "${blogTitle}"`, {
         id: `delete-${id}`,
         description: errorMsg,
         duration: 6000,
         action: {
-          label: "Try again",
+          label: "حاول مرة أخرى",
           onClick: () => handleDelete(blog),
         },
       });
@@ -173,13 +174,13 @@ export default function BlogsClient({
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "Failed to create blog");
 
-      toast.success("Blog post created");
+      toast.success("تم إنشاء المقال بنجاح");
       setLocalItems((prev) => [result.blog, ...prev]);
       setCreatingCount((c) => Math.max(0, c - 1));
       if (onChanged) onChanged();
       return result.blog;
     } catch (e) {
-      toast.error(e?.message || "Failed to save blog");
+      toast.error(e?.message || "فشل في حفظ المقال");
       setCreatingCount((c) => Math.max(0, c - 1));
     } finally {
       setSaving(false);
@@ -199,15 +200,15 @@ export default function BlogsClient({
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex flex-wrap gap-2 :text-sm">
-          <Badge variant="outline">Total: {stats.total}</Badge>
+          <Badge variant="outline">الإجمالي: {stats.total}</Badge>
           <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100">
-            Pending: {stats.pending}
+            قيد المراجعة: {stats.pending}
           </Badge>
           <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-            Published: {stats.published}
+            منشور: {stats.published}
           </Badge>
           <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
-            Rejected: {stats.rejected}
+            مرفوض: {stats.rejected}
           </Badge>
         </div>
         <AddBlogDialog
@@ -235,7 +236,6 @@ export default function BlogsClient({
             pageItems={[]}
             pending={pending}
             onPreview={openPreview}
-            onView={null}
             onDelete={handleDelete}
             createSkeletonCount={creatingCount}
           />
@@ -269,7 +269,7 @@ export default function BlogsClient({
         <DialogContent className="w-full max-w-[95vw] sm:max-w-[85vw] lg:max-w-[70vw] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           <DialogHeader className="pb-4">
             <DialogTitle className="text-lg sm:text-xl">
-              Create New Blog Post
+              إنشاء مقال جديد
             </DialogTitle>
           </DialogHeader>
           <BlogForm

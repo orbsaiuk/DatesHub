@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import OfferForm from "@/app/business/_components/offers/OfferForm";
+import { Plus } from "lucide-react";
 
 export default function AddOfferDialog({
   tenantType,
@@ -50,13 +51,13 @@ export default function AddOfferDialog({
   async function submit() {
     if (!isValid) return;
     if (form.startDate && form.startDate < todayStr) {
-      return toast.error("Start date cannot be in the past");
+      return toast.error("لا يمكن أن يكون تاريخ البداية في الماضي");
     }
     if (form.startDate && form.endDate) {
       const start = new Date(form.startDate);
       const end = new Date(form.endDate);
       if (end <= start) {
-        return toast.error("End date must be after start date");
+        return toast.error("يجب أن يكون تاريخ النهاية بعد تاريخ البداية");
       }
     }
     setLoading(true);
@@ -96,7 +97,7 @@ export default function AddOfferDialog({
       }
       const json = await res.json();
       if (!res.ok || !json?.ok) throw new Error(json?.error || "Failed");
-      toast.success("Offer created");
+      toast.success("تم إنشاء العرض");
       setOpen(false);
       setForm({
         title: "",
@@ -108,7 +109,7 @@ export default function AddOfferDialog({
       });
       onCreated?.(json.offer);
     } catch (e) {
-      toast.error(e.message || "Failed to create offer");
+      toast.error(e.message || "فشل في إنشاء العرض");
     } finally {
       setLoading(false);
     }
@@ -117,13 +118,16 @@ export default function AddOfferDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className={triggerClassName}>New offer</Button>
+        <Button className={triggerClassName}>
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+          <span className="font-medium">عرض جديد</span>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Offer</DialogTitle>
-          <DialogDescription>
-            Fill in details for your service offer.
+          <DialogTitle className="text-center">عرض جديد</DialogTitle>
+          <DialogDescription className="text-center">
+            املأ التفاصيل لعرض خدمتك.
           </DialogDescription>
         </DialogHeader>
         <OfferForm

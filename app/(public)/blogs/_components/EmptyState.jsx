@@ -13,10 +13,10 @@ export default function EmptyState() {
           <Search className="h-8 w-8 text-blue-500" />
         </div>
         <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-2">
-          No results found
+          لا توجد نتائج
         </h3>
         <p className="text-gray-600 text-sm sm:text-base mb-6 sm:mb-4">
-          Try a different search, or clear filters to see all articles.
+          جرب بحثًا مختلفًا، أو امسح التصفية لعرض جميع المقالات.
         </p>
         <div className="mt-6">
           <Button
@@ -24,7 +24,7 @@ export default function EmptyState() {
             onClick={() => router.push("/blogs")}
             className="inline-flex items-center px-6 py-3 sm:px-4 sm:py-2 rounded-md bg-gray-900 text-white text-sm font-medium hover:text-gray-300 hover:bg-gray-800 transition-colors cursor-pointer min-h-[44px] touch-manipulation"
           >
-            Clear filters
+            مسح التصفية
           </Button>
         </div>
       </div>

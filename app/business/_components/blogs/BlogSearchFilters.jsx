@@ -51,7 +51,7 @@ export default function BlogSearchFilters({
       <div className="relative flex-1 md:max-w-sm">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search blogs..."
+          placeholder="بحث في المدونة..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="pl-10 h-11 md:h-10 text-base md:text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20"
@@ -62,14 +62,14 @@ export default function BlogSearchFilters({
       </div>
 
       <div className="flex gap-3 md:gap-2">
-        <Select value={category} onValueChange={setCategory}>
+        <Select value={category} onValueChange={setCategory} dir="rtl">
           <SelectTrigger className="flex-1 md:w-40 h-11 md:h-10 text-base md:text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20">
             <SelectValue
-              placeholder={loadingCategories ? "Loading..." : "Category"}
+              placeholder={loadingCategories ? "جاري التحميل..." : "الفئة"}
             />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="all">جميع الفئات</SelectItem>
             {categories.map((cat) => (
               <SelectItem key={cat._id} value={cat._id}>
                 {cat.title}
@@ -78,15 +78,15 @@ export default function BlogSearchFilters({
           </SelectContent>
         </Select>
 
-        <Select value={status} onValueChange={setStatus}>
+        <Select value={status} onValueChange={setStatus} dir="rtl">
           <SelectTrigger className="flex-1 md:w-40 h-11 md:h-10 text-base md:text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20">
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder="الحالة" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="published">Published</SelectItem>
-            <SelectItem value="rejected">Rejected</SelectItem>
+            <SelectItem value="all">الكل</SelectItem>
+            <SelectItem value="pending">قيد المراجعة</SelectItem>
+            <SelectItem value="published">منشور</SelectItem>
+            <SelectItem value="rejected">مرفوض</SelectItem>
           </SelectContent>
         </Select>
 
@@ -98,7 +98,7 @@ export default function BlogSearchFilters({
             className="h-11 md:h-10 px-4 md:px-3 text-orange-600 border-orange-200 hover:bg-orange-50 whitespace-nowrap"
           >
             <RefreshCw className="h-4 w-4 mr-2 md:mr-1" />
-            <span className="hidden sm:inline">Retry</span>
+            <span className="hidden sm:inline">إعادة المحاولة</span>
           </Button>
         )}
       </div>

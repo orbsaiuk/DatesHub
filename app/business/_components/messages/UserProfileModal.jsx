@@ -57,7 +57,7 @@ export default function UserProfileModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>User Profile</DialogTitle>
+          <DialogTitle>ملف المستخدم</DialogTitle>
         </DialogHeader>
 
         {loading ? (
@@ -84,7 +84,7 @@ export default function UserProfileModal({
               </div>
               <div className="min-w-0">
                 <p className="font-semibold truncate">
-                  {profile.name || "Unknown"}
+                  {profile.name || "غير معروف"}
                 </p>
                 <span className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted/60 text-foreground/80 text-xs">
                   <Star
@@ -92,7 +92,7 @@ export default function UserProfileModal({
                   />
                   {typeof profile.rating === "number"
                     ? `${profile.rating.toFixed(2)} / 5`
-                    : "No ratings"}
+                    : "لا توجد تقييمات"}
                   <span className="text-muted-foreground">
                     · {profile.ratingCount || 0}
                   </span>
@@ -103,20 +103,20 @@ export default function UserProfileModal({
             {/* Reviews list */}
             <div className="space-y-3 border-t pt-4">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">Past reviews</p>
+                <p className="text-sm font-medium">التقييمات السابقة</p>
                 <p className="text-xs text-muted-foreground">
-                  {totalReviews} total
+                  {totalReviews} إجمالي
                 </p>
               </div>
               {reviews.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No reviews yet</p>
+                <p className="text-sm text-muted-foreground">لا توجد تقييمات بعد</p>
               ) : (
                 <ul className="space-y-3">
                   {reviews.map((r) => (
                     <li key={r._id} className="border rounded-md p-3">
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-medium truncate">
-                          {r.title || "Review"}
+                          {r.title || "تقييم"}
                         </p>
                         <span className="inline-flex items-center gap-1 text-xs">
                           <Star className="fill-yellow-400 text-yellow-400 h-3.5 w-3.5" />
@@ -129,7 +129,7 @@ export default function UserProfileModal({
                         </p>
                       )}
                       <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                        <span>{r.authorName || "Anonymous"}</span>
+                        <span>{r.authorName}</span>
                         <span>
                           {new Date(r.createdAt).toLocaleDateString()}
                         </span>
@@ -182,7 +182,7 @@ export default function UserProfileModal({
           </div>
         ) : (
           <div className="py-8 text-center text-sm text-muted-foreground">
-            User not found
+لم يتم العثور على المستخدم
           </div>
         )}
       </DialogContent>

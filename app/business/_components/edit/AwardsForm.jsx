@@ -183,17 +183,17 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
           {form.awards.map((award, index) => {
             const img = resolveImageUrl(award?.image);
             return (
-              <Card key={award.id || index} className="flex flex-col">
+              <Card key={award.id || index} className="flex flex-col" dir="rtl">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <CardTitle className="text-base">
-                        {award.name || "Untitled Award"}
+                    <div className="text-right flex-1">
+                      <CardTitle className="text-base text-right">
+                        {award.name || "جائزة بدون عنوان"}
                       </CardTitle>
-                      <CardDescription>
+                      <CardDescription className="text-right">
                         {(award.description || "").length > 120
                           ? `${award.description.slice(0, 120)}...`
-                          : award.description || "No description provided"}
+                          : award.description || "لا يوجد وصف"}
                       </CardDescription>
                     </div>
                     <div className="flex items-center gap-1">
@@ -246,7 +246,7 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
                     {img ? (
                       <Image
                         src={img}
-                        alt={award.name || "Award"}
+                        alt={award.name || "جائزة"}
                         className="object-contain h-full w-full"
                         fill
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -287,19 +287,19 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
       >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-center">
               {editingIndex === null ? "إضافة جائزة" : "تحرير جائزة"}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-center">
               قدم تفاصيل الجائزة أدناه. يتم حفظ التغييرات عند الضغط على حفظ.
             </DialogDescription>
           </DialogHeader>
 
           {draft ? (
-            <div className="space-y-4">
+            <div className="space-y-4" dir="rtl">
               <div>
                 <label className="text-sm sm:text-base font-medium">
-                  Award Name <span className="text-red-500">*</span>
+                  اسم الجائزة <span className="text-red-500">*</span>
                 </label>
                 <Input
                   value={draft.name}
@@ -309,16 +309,17 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
                       setDraftErrors((prev) => ({ ...prev, name: undefined }));
                     }
                   }}
-                  placeholder="e.g., Best Event Planner 2024, Excellence in Service"
-                  className="mt-2"
+                  placeholder="مثال: أفضل منظم فعاليات 2024، التميز في الخدمة"
+                  className="mt-2 text-right"
+                  dir="rtl"
                 />
                 {draftErrors.name && (
-                  <p className="text-sm text-destructive mt-1">
+                  <p className="text-sm text-destructive mt-1 text-right">
                     {draftErrors.name}
                   </p>
                 )}
                 {editingIndex !== null && getErrorFor(editingIndex, "name") ? (
-                  <div className="text-xs text-destructive mt-1">
+                  <div className="text-xs text-destructive mt-1 text-right">
                     {getErrorFor(editingIndex, "name")}
                   </div>
                 ) : null}
@@ -326,7 +327,7 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
 
               <div>
                 <label className="text-sm sm:text-base font-medium">
-                  Description <span className="text-red-500">*</span>
+                  الوصف <span className="text-red-500">*</span>
                 </label>
                 <Textarea
                   value={draft.description}
@@ -339,17 +340,18 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
                       }));
                     }
                   }}
-                  placeholder="Describe what this award recognizes, criteria, and significance..."
-                  className="mt-2 min-h-[100px]"
+                  placeholder="اوصف ما تعترف به هذه الجائزة والمعايير والأهمية..."
+                  className="mt-2 min-h-[100px] text-right"
+                  dir="rtl"
                 />
                 {draftErrors.description && (
-                  <p className="text-sm text-destructive mt-1">
+                  <p className="text-sm text-destructive mt-1 text-right">
                     {draftErrors.description}
                   </p>
                 )}
                 {editingIndex !== null &&
                 getErrorFor(editingIndex, "description") ? (
-                  <div className="text-xs text-destructive mt-1">
+                  <div className="text-xs text-destructive mt-1 text-right">
                     {getErrorFor(editingIndex, "description")}
                   </div>
                 ) : null}
@@ -357,7 +359,7 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
 
               <div>
                 <label className="text-sm sm:text-base font-medium">
-                  Award Image <span className="text-red-500">*</span>
+                  صورة الجائزة <span className="text-red-500">*</span>
                 </label>
                 <div className="mt-2">
                   <ImageUploader
@@ -371,11 +373,11 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
                         }));
                       }
                     }}
-                    placeholder="Add award image"
+                    placeholder="أضف صورة الجائزة"
                     maxSizeMB={5}
                   />
                   {draftErrors.image && (
-                    <p className="text-sm text-destructive mt-1">
+                    <p className="text-sm text-destructive mt-1 text-right">
                       {draftErrors.image}
                     </p>
                   )}
@@ -395,7 +397,7 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
               }}
               className="cursor-pointer"
             >
-              Cancel
+              إلغاء
             </Button>
             <Button
               onClick={saveDraft}
@@ -406,7 +408,7 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
                 !draft?.image
               }
             >
-              Save
+              حفظ
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -167,7 +167,7 @@ export default function DirectoryCompanyCard({
         </Link>
       </div>
       <SignedIn>
-        <div className="shrink-0 absolute top-1 right-1 sm:top-0 sm:right-2">
+        <div className="shrink-0 absolute top-1 left-1 sm:top-0 sm:left-2">
           <Button
             variant="ghost"
             size="icon"

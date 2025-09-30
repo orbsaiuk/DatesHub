@@ -91,7 +91,7 @@ export default function ActivityReport({ entity }) {
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-muted-foreground">
+            <tr className="text-right text-muted-foreground">
               <th className="p-3">التاريخ</th>
               <th className="p-3">المشاهدات</th>
               <th className="p-3">الرسائل</th>

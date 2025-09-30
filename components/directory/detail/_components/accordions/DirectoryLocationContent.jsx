@@ -11,7 +11,7 @@ export default function DirectoryLocationContent({ company }) {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3">
         <div className="rounded-md border bg-white p-3 col-span-1 sm:col-span-2">
-          <p className="text-xs text-muted-foreground">Locations</p>
+          <p className="text-xs text-muted-foreground">المواقع</p>
           {Array.isArray(company?.locationList) ? (
             <ul className="mt-1 space-y-1">
               {company.locationList.map((locStr, i) => {
@@ -20,7 +20,7 @@ export default function DirectoryLocationContent({ company }) {
                 return (
                   <li key={i} className="text-xs text-muted-foreground">
                     <span>
-                      {i + 1}. {locStr}
+                      {i + 1}. {locStr} -{" "}
                     </span>
                     {marker ? (
                       <a
@@ -29,7 +29,7 @@ export default function DirectoryLocationContent({ company }) {
                         rel="noopener noreferrer"
                         className="ml-2 text-blue-600 hover:underline"
                       >
-                        Directions
+                        الاتجاهات
                       </a>
                     ) : locStr ? (
                       <a
@@ -38,7 +38,7 @@ export default function DirectoryLocationContent({ company }) {
                         rel="noopener noreferrer"
                         className="ml-2 text-blue-600 hover:underline"
                       >
-                        Search on Maps
+                        البحث في الخرائط
                       </a>
                     ) : null}
                   </li>
@@ -48,7 +48,7 @@ export default function DirectoryLocationContent({ company }) {
           ) : null}
         </div>
         <div className="rounded-md border bg-white p-3">
-          <p className="text-xs text-muted-foreground">Opening Hours</p>
+          <p className="text-xs text-muted-foreground">ساعات العمل</p>
           {hasHours ? (
             <div className="mt-1">
               {company.openingHours.map((line, i) => (

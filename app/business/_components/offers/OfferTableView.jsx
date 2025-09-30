@@ -22,14 +22,14 @@ export default function OfferTableView({
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-muted-foreground border-b">
-              <th className="px-4 py-3 font-medium">Title</th>
-              <th className="px-4 py-3 font-medium">Image</th>
-              <th className="px-4 py-3 font-medium">Description</th>
-              <th className="px-4 py-3 font-medium">Start</th>
-              <th className="px-4 py-3 font-medium">End</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-              <th className="px-4 py-3 font-medium">Views</th>
-              <th className="px-4 py-3 font-medium">Actions</th>
+              <th className="px-4 py-3 font-medium">العنوان</th>
+              <th className="px-4 py-3 font-medium">الصورة</th>
+              <th className="px-4 py-3 font-medium">الوصف</th>
+              <th className="px-4 py-3 font-medium">البداية</th>
+              <th className="px-4 py-3 font-medium">النهاية</th>
+              <th className="px-4 py-3 font-medium">الحالة</th>
+              <th className="px-4 py-3 font-medium">المشاهدات</th>
+              <th className="px-4 py-3 font-medium">الإجراءات</th>
             </tr>
           </thead>
           <tbody>
@@ -96,12 +96,12 @@ export default function OfferTableView({
                     {offer.status === "active" ? (
                       <span className="inline-flex items-center rounded-full bg-green-100 text-green-700 px-2.5 py-1 text-xs font-medium ring-1 ring-green-200">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></div>
-                        Active
+                        نشط
                       </span>
                     ) : (
                       <span className="inline-flex items-center rounded-full bg-gray-100 text-gray-700 px-2.5 py-1 text-xs font-medium ring-1 ring-gray-200">
                         <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1.5"></div>
-                        Inactive
+                        غير نشط
                       </span>
                     )}
                   </td>

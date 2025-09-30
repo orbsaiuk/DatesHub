@@ -41,10 +41,10 @@ export default function BusinessMessagesPageClient({ tenantType, tenantId }) {
       if (data.ok) {
         setConversations(data.items || []);
       } else {
-        setError(data.error || "Failed to load conversations");
+        setError(data.error || "فشل في تحميل المحادثات");
       }
     } catch (err) {
-      setError("Failed to load conversations");
+      setError("فشل في تحميل المحادثات");
       console.error("Failed to load conversations:", err);
     } finally {
       setLoading(false);
@@ -170,7 +170,7 @@ export default function BusinessMessagesPageClient({ tenantType, tenantId }) {
           minute: "2-digit",
         });
       } else if (diffInHours < 48) {
-        return "Yesterday";
+        return "أمس";
       } else {
         return date.toLocaleDateString([], {
           month: "short",
@@ -235,9 +235,9 @@ export default function BusinessMessagesPageClient({ tenantType, tenantId }) {
     return (
       <Card>
         <CardContent className="p-8 text-center">
-          <p className="text-muted-foreground mb-4">Failed to load messages</p>
+          <p className="text-muted-foreground mb-4">فشل في تحميل الرسائل</p>
           <Button onClick={loadConversations} variant="outline">
-            Try Again
+            حاول مرة أخرى
           </Button>
         </CardContent>
       </Card>

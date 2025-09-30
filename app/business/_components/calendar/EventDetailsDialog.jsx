@@ -40,30 +40,30 @@ import {
 } from "@/components/ui/select";
 
 const statusOptions = [
-  { value: "planned", label: "Planned", color: "bg-blue-100 text-blue-800" },
+  { value: "planned", label: "مخطط", color: "bg-blue-100 text-blue-800" },
   {
     value: "confirmed",
-    label: "Confirmed",
+    label: "مؤكد",
     color: "bg-green-100 text-green-800",
   },
   {
     value: "in-progress",
-    label: "In Progress",
+    label: "جاري",
     color: "bg-yellow-100 text-yellow-800",
   },
   {
     value: "completed",
-    label: "Completed",
+    label: "مكتمل",
     color: "bg-emerald-100 text-emerald-800",
   },
-  { value: "cancelled", label: "Cancelled", color: "bg-red-100 text-red-800" },
+  { value: "cancelled", label: "ملغى", color: "bg-red-100 text-red-800" },
 ];
 
 const priorityOptions = [
-  { value: "low", label: "Low", color: "bg-green-100 text-green-800" },
-  { value: "medium", label: "Medium", color: "bg-yellow-100 text-yellow-800" },
-  { value: "high", label: "High", color: "bg-orange-100 text-orange-800" },
-  { value: "urgent", label: "Urgent", color: "bg-red-100 text-red-800" },
+  { value: "low", label: "منخفض", color: "bg-green-100 text-green-800" },
+  { value: "medium", label: "متوسط", color: "bg-yellow-100 text-yellow-800" },
+  { value: "high", label: "عالي", color: "bg-orange-100 text-orange-800" },
+  { value: "urgent", label: "عاجل", color: "bg-red-100 text-red-800" },
 ];
 
 export default function EventDetailsDialog({
@@ -98,21 +98,21 @@ export default function EventDetailsDialog({
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const toastId = toast.loading("Deleting event…");
+      const toastId = toast.loading("جاري حذف الحدث...");
       const response = await fetch(`/api/events/${event.id || event._id}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
-        toast.success("Event deleted", { id: toastId });
+        toast.success("تم حذف الحدث", { id: toastId });
         onDelete();
       } else {
         console.error("Failed to delete event");
-        toast.error("Failed to delete event", { id: toastId });
+        toast.error("فشل في حذف الحدث", { id: toastId });
       }
     } catch (error) {
       console.error("Error deleting event:", error);
-      toast.error("Error deleting event");
+      toast.error("خطأ في حذف الحدث");
     } finally {
       setLoading(false);
     }
@@ -121,7 +121,7 @@ export default function EventDetailsDialog({
   const handleStatusUpdate = async (newStatus) => {
     try {
       setUpdatingStatus(true);
-      const toastId = toast.loading("Updating status…");
+      const toastId = toast.loading("جاري تحديث الحالة...");
       const response = await fetch(`/api/events/${event.id || event._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -129,15 +129,15 @@ export default function EventDetailsDialog({
       });
 
       if (response.ok) {
-        toast.success("Status updated", { id: toastId });
+        toast.success("تم تحديث الحالة", { id: toastId });
         onUpdate();
       } else {
         console.error("Failed to update status");
-        toast.error("Failed to update status", { id: toastId });
+        toast.error("فشل في تحديث الحالة", { id: toastId });
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      toast.error("Error updating status");
+      toast.error("خطأ في تحديث الحالة");
     } finally {
       setUpdatingStatus(false);
     }
@@ -197,22 +197,22 @@ export default function EventDetailsDialog({
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogTitle>هل أنت متأكد؟</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the event "{event.title}" and all associated data.
+                      لا يمكن التراجع عن هذا الإجراء. سيؤدي هذا إلى حذف الحدث "
+                      {event.title}" وجميع البيانات المرتبطة به نهائياً.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel className="cursor-pointer">
-                      Cancel
+                      إلغاء
                     </AlertDialogCancel>
                     <AlertDialogAction
                       onClick={handleDelete}
                       className="bg-destructive text-white hover:bg-destructive/90 cursor-pointer"
                       disabled={loading}
                     >
-                      {loading ? "Deleting..." : "Delete Event"}
+                      {loading ? "جاري الحذف..." : "حذف الحدث"}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -221,20 +221,21 @@ export default function EventDetailsDialog({
           </div>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-6" dir="rtl">
           {/* Quick Status Update */}
           <div className="bg-muted/50 p-4 rounded-lg">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium">Update Status:</label>
+              <label className="text-sm font-medium">تحديث الحالة:</label>
               <Select
                 value={event.status}
                 onValueChange={handleStatusUpdate}
                 disabled={updatingStatus}
+                dir="rtl"
               >
                 <SelectTrigger className="w-40">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent dir="rtl">
                   {statusOptions.map((status) => (
                     <SelectItem key={status.value} value={status.value}>
                       {status.label}
@@ -249,12 +250,12 @@ export default function EventDetailsDialog({
           <div className="space-y-3">
             <h3 className="font-medium flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              Date & Time
+              التاريخ والوقت
             </h3>
-            <div className="flex flex-col md:grid md:grid-cols-2 gap-4 pl-0 md:pl-6">
+            <div className="flex flex-col md:grid md:grid-cols-2 gap-4 pr-0 md:pr-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2">
-                <p className="text-sm text-muted-foreground font-medium min-w-[48px]">
-                  Start:
+                <p className="text-sm text-muted-foreground font-medium min-w-[60px]">
+                  البداية:
                 </p>
                 <div className="flex flex-row items-center gap-1 sm:gap-2">
                   <span className="font-medium text-sm">
@@ -266,8 +267,8 @@ export default function EventDetailsDialog({
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2">
-                <p className="text-sm text-muted-foreground font-medium min-w-[48px]">
-                  End:
+                <p className="text-sm text-muted-foreground font-medium min-w-[60px]">
+                  النهاية:
                 </p>
                 <div className="flex flex-row items-center gap-1 sm:gap-2">
                   <span className="font-medium text-sm">
@@ -287,9 +288,9 @@ export default function EventDetailsDialog({
               <div className="space-y-2">
                 <h3 className="font-medium flex items-center gap-2">
                   <FileText className="w-4 h-4" />
-                  Description
+                  الوصف
                 </h3>
-                <p className="text-sm text-muted-foreground pl-6 whitespace-pre-wrap">
+                <p className="text-sm text-muted-foreground pr-6 whitespace-pre-wrap">
                   {event.description}
                 </p>
               </div>
@@ -300,9 +301,9 @@ export default function EventDetailsDialog({
               <div className="space-y-2">
                 <h3 className="font-medium flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
-                  Location
+                  الموقع
                 </h3>
-                <p className="text-sm pl-6">{event.location}</p>
+                <p className="text-sm pr-6">{event.location}</p>
               </div>
             )}
           </div>
@@ -315,9 +316,9 @@ export default function EventDetailsDialog({
               <div className="space-y-3 border-b pb-4">
                 <h3 className="font-medium flex items-center gap-2">
                   <User className="w-4 h-4" />
-                  Client Information
+                  معلومات العميل
                 </h3>
-                <div className="space-y-2 pl-6">
+                <div className="space-y-2 pr-6">
                   {event.clientContact.name && (
                     <div className="flex items-center gap-2">
                       <User className="w-4 h-4 text-muted-foreground" />

@@ -30,7 +30,7 @@ export default function SocialLinksForm({ form, updateField, errors = {} }) {
   };
 
   const handleClear = () => {
-    setLinks([""]);
+    setLinks([]);
   };
 
   return (
@@ -39,26 +39,28 @@ export default function SocialLinksForm({ form, updateField, errors = {} }) {
         أضف روابط إلى موقعك الإلكتروني أو ملفاتك الشخصية على وسائل التواصل
         الاجتماعي.
       </p>
-      <div className="space-y-2">
-        {(links.length ? links : [""]).map((link, index) => (
-          <div key={index} className="flex gap-2">
-            <Input
-              placeholder="https://your-site-or-social.com"
-              value={link || ""}
-              onChange={(e) => handleChange(index, e.target.value)}
-              aria-invalid={!!errors?.socialLinks?.[index]}
-            />
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => handleRemove(index)}
-              className="cursor-pointer"
-            >
-              إزالة
-            </Button>
-          </div>
-        ))}
-      </div>
+      {links.length > 0 && (
+        <div className="space-y-2">
+          {links.map((link, index) => (
+            <div key={index} className="flex gap-2">
+              <Input
+                placeholder="https://your-site-or-social.com"
+                value={link || ""}
+                onChange={(e) => handleChange(index, e.target.value)}
+                aria-invalid={!!errors?.socialLinks?.[index]}
+              />
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => handleRemove(index)}
+                className="cursor-pointer"
+              >
+                إزالة
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
       <div className="flex gap-2">
         <Button
           type="button"
@@ -66,7 +68,7 @@ export default function SocialLinksForm({ form, updateField, errors = {} }) {
           onClick={handleAdd}
           className="cursor-pointer"
         >
-          إضافة رابط آخر
+          {links.length === 0 ? "أضف رابط" : " إضافة رابط اخر"}
         </Button>
         {links.length > 1 && (
           <Button
@@ -75,7 +77,7 @@ export default function SocialLinksForm({ form, updateField, errors = {} }) {
             onClick={handleClear}
             className="cursor-pointer"
           >
-            مسح
+            مسح الكل
           </Button>
         )}
       </div>

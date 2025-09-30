@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import BlogForm from "@/app/business/_components/blogs/BlogForm";
+import { Plus } from "lucide-react";
 
 export default function AddBlogDialog({
   tenantType,
@@ -72,11 +73,11 @@ export default function AddBlogDialog({
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "Failed to create blog");
 
-      toast.success("Blog post created");
+      toast.success("تم إنشاء المقال بنجاح");
       setOpen(false);
       onCreated?.(result.blog);
     } catch (e) {
-      toast.error(e?.message || "Failed to save blog");
+      toast.error(e?.message || "فشل في حفظ المقال");
     } finally {
       setSaving(false);
     }
@@ -85,14 +86,12 @@ export default function AddBlogDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className={triggerClassName}>New post</Button>
+        <Button className={triggerClassName}>
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+          <span className="font-medium">مقال جديد</span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="w-full max-w-[95vw] sm:max-w-[85vw] lg:max-w-[70vw] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
-        <DialogHeader className="pb-4">
-          <DialogTitle className="text-lg sm:text-xl">
-            Create New Blog Post
-          </DialogTitle>
-        </DialogHeader>
         <BlogForm
           initialValues={initialValues}
           status="pending"

@@ -300,7 +300,7 @@ export async function handleCheckoutCompleted(session) {
     const subscriptionData = {
       tenantType,
       tenantId,
-      planId: plan._id,
+      plan: { _type: "reference", _ref: plan._id },
       stripeSubscriptionId: subscription.id,
       stripeCustomerId: session.customer,
       status: subscription.status,

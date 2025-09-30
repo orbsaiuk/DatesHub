@@ -5,29 +5,29 @@ import { Info } from "lucide-react";
 
 const faqItems = [
   {
-    question: "Can I change my plan anytime?",
+    question: "هل يمكنني تغيير باقتي في أي وقت؟",
     answer:
-      "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.",
+      "نعم، يمكنك الترقية أو التراجع في باقتك في أي وقت. تسري التغييرات فوراً.",
   },
   {
-    question: "What happens to my data if I downgrade?",
+    question: "ماذا يحدث لبياناتي إذا تراجعت في الباقة؟",
     answer:
-      "Your data is safe. However, you may lose access to premium features and have reduced limits.",
+      "بياناتك آمنة. ولكن قد تفقد الوصول إلى الميزات المتقدمة وتقل الحدود.",
   },
   {
-    question: "Is there a free trial?",
+    question: "هل توجد فترة تجريبية مجانية؟",
     answer:
-      "Yes, all accounts start with our Free plan. You can upgrade to unlock more features.",
+      "نعم، جميع الحسابات تبدأ بباقتنا المجانية. يمكنك الترقية لفتح ميزات أكثر.",
   },
   {
-    question: "Do you offer refunds?",
+    question: "هل تقدمون استرداد الأموال؟",
     answer:
-      "We offer a 30-day money-back guarantee for all paid plans. Contact support for assistance.",
+      "نقدم ضمان استرداد الأموال لمدة 30 يوماً لجميع الباقات المدفوعة. تواصل مع الدعم للمساعدة.",
   },
   {
-    question: "Can I cancel my subscription?",
+    question: "هل يمكنني إلغاء اشتراكي؟",
     answer:
-      "Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your billing period.",
+      "نعم، يمكنك إلغاء اشتراكك في أي وقت. ستستمر في الوصول حتى نهاية فترة الفواتير.",
   },
 ];
 
@@ -37,7 +37,7 @@ export default function FAQSection() {
       <CardHeader className="pb-4 sm:pb-6">
         <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
           <Info className="w-5 h-5" />
-          <span>Frequently Asked Questions</span>
+          <span>الأسئلة الشائعة</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 sm:space-y-6">

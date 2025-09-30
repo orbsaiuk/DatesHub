@@ -9,15 +9,6 @@ export default function EmptyState({
 }) {
   const hasFilters = searchQuery || activeFilter !== "all";
 
-  const getDescription = () => {
-    if (hasFilters) {
-      return "جرب تعديل البحث أو المرشحات";
-    }
-    return tenantType === "company"
-      ? "ابدأ محادثة مع عميل لرؤية الرسائل هنا"
-      : "ابدأ محادثة مع شركة شريكة لرؤية الرسائل هنا";
-  };
-
   return (
     <Card>
       <CardContent className="p-6 sm:p-8 text-center">
@@ -25,9 +16,6 @@ export default function EmptyState({
         <h3 className="text-base sm:text-lg font-semibold mb-2">
           {hasFilters ? "لم يتم العثور على رسائل" : "لا توجد رسائل بعد"}
         </h3>
-        <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
-          {getDescription()}
-        </p>
       </CardContent>
     </Card>
   );

@@ -38,7 +38,7 @@ export default function DirectoryAccordions({
           <>
             <AccordionItem value="reviews">
               <AccordionTrigger className="px-4 sm:px-6 font-bold text-lg">
-                Reviews
+                التقييمات
               </AccordionTrigger>
               <AccordionContent className="px-4 sm:px-6">
                 <DirectoryReviewsContent
@@ -53,7 +53,7 @@ export default function DirectoryAccordions({
 
             <AccordionItem value="work-awards">
               <AccordionTrigger className="px-4 sm:px-6 font-bold text-lg">
-                Our Work & Awards
+                أعمالنا والجوائز
               </AccordionTrigger>
               <AccordionContent className="px-4 sm:px-6">
                 <DirectoryWorkAwardsContent
@@ -67,7 +67,7 @@ export default function DirectoryAccordions({
 
         <AccordionItem value="location">
           <AccordionTrigger className="px-4 sm:px-6 font-bold text-lg">
-            Location
+            الموقع
           </AccordionTrigger>
           <AccordionContent className="px-4 sm:px-6">
             <DirectoryLocationContent company={company} />
@@ -76,7 +76,7 @@ export default function DirectoryAccordions({
 
         <AccordionItem value="contact" id="contact-section">
           <AccordionTrigger className="px-4 sm:px-6 font-bold text-lg">
-            Contact
+            التواصل
           </AccordionTrigger>
           <AccordionContent className="px-4 sm:px-6">
             <DirectoryContactContent company={company} />

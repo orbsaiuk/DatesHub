@@ -26,10 +26,10 @@ export default async function SupplierEditPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            Edit Profile
+            تحرير معلومات المورد
           </h1>
           <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">
-            Update your company information and settings
+            قم بتحديث معلومات المورد الخاصة بك هنا.
           </p>
         </div>
       </div>

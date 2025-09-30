@@ -6,8 +6,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const defaultCategories = [{ title: "All Articles", slug: "all" }];
+const defaultCategories = [{ title: "جميع المقالات", slug: "all" }];
 
 export default function BlogFilters({
   categories = [],
@@ -55,14 +62,14 @@ export default function BlogFilters({
     if (categories.length > 0) {
       // ensure first item is All
       const rest = categories.filter((c) => c.slug !== "all");
-      return [{ title: "All Articles", slug: "all" }, ...rest];
+      return [{ title: "جميع المقالات", slug: "all" }, ...rest];
     }
     return defaultCategories;
   }, [categories]);
 
   const activeCategoryTitle =
     displayCategories.find((c) => c.slug === activeCategory)?.title ||
-    "All Articles";
+    "جميع المقالات";
 
   // Visual cue shadow on scroll
   const [scrolled, setScrolled] = useState(false);
@@ -83,22 +90,23 @@ export default function BlogFilters({
         <div className="py-3 sm:py-4 flex flex-col gap-3 sm:gap-4">
           {/* Mobile dropdown for categories */}
           <div className="md:hidden">
-            <label htmlFor="category-mobile" className="sr-only">
-              Select category
-            </label>
-            <select
-              id="category-mobile"
+            <Select
               value={activeCategory}
-              onChange={(e) => handleCategoryChange(e.target.value)}
+              onValueChange={handleCategoryChange}
               disabled={isLoading}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[44px] touch-manipulation"
+              dir="rtl"
             >
-              {displayCategories.map((c) => (
-                <option key={c.slug} value={c.slug}>
-                  {c.title}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full sm:w-[280px] min-h-[40px] touch-manipulation">
+                <SelectValue placeholder="اختر الفئة" />
+              </SelectTrigger>
+              <SelectContent>
+                {displayCategories.map((c) => (
+                  <SelectItem key={c.slug} value={c.slug}>
+                    {c.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Desktop category chips */}
@@ -125,57 +133,6 @@ export default function BlogFilters({
                 </Button>
               );
             })}
-          </div>
-
-          {/* Meta info line */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-gray-500">
-            {isLoading ? (
-              <span className="inline-flex items-center gap-2">
-                <span className="h-4 w-20 sm:w-24 bg-gray-200 rounded animate-pulse" />
-              </span>
-            ) : (
-              <span className="text-xs sm:text-sm">
-                Showing <strong className="text-gray-700">{total}</strong>{" "}
-                article
-                {total === 1 ? "" : "s"}
-                {totalPages > 1 && (
-                  <>
-                    {" "}
-                    • Page{" "}
-                    <strong className="text-gray-700">
-                      {currentPage}
-                    </strong> of{" "}
-                    <strong className="text-gray-700">{totalPages}</strong>
-                  </>
-                )}
-              </span>
-            )}
-            {(activeCategory !== "all" || activeSearch) && (
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-medium text-gray-700 text-xs sm:text-sm">
-                  Filters:
-                </span>
-                <div className="flex flex-wrap gap-1">
-                  {activeCategory !== "all" && (
-                    <span className="bg-gray-100 px-2 py-1 rounded-full text-xs">
-                      {activeCategoryTitle}
-                    </span>
-                  )}
-                  {activeSearch && (
-                    <span className="bg-gray-100 px-2 py-1 rounded-full text-xs max-w-[200px] truncate">
-                      Search: "{activeSearch}"
-                    </span>
-                  )}
-                </div>
-                <Button
-                  variant="outline"
-                  onClick={clearFilters}
-                  className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-gray-800 cursor-pointer px-2 py-1 h-auto min-h-[28px] touch-manipulation"
-                >
-                  <X className="w-3 h-3" /> Clear
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       </div>

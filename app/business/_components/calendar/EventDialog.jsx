@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -21,20 +21,22 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import EventDatePicker from "./EventDatePicker";
+import EventTimePicker from "./EventTimePicker";
 
 const statusOptions = [
-  { value: "planned", label: "Planned" },
-  { value: "confirmed", label: "Confirmed" },
-  { value: "in-progress", label: "In Progress" },
-  { value: "completed", label: "Completed" },
-  { value: "cancelled", label: "Cancelled" },
+  { value: "planned", label: "مخطط" },
+  { value: "confirmed", label: "مؤكد" },
+  { value: "in-progress", label: "جاري" },
+  { value: "completed", label: "مكتمل" },
+  { value: "cancelled", label: "ملغى" },
 ];
 
 const priorityOptions = [
-  { value: "low", label: "Low" },
-  { value: "medium", label: "Medium" },
-  { value: "high", label: "High" },
-  { value: "urgent", label: "Urgent" },
+  { value: "low", label: "منخفض" },
+  { value: "medium", label: "متوسط" },
+  { value: "high", label: "عالي" },
+  { value: "urgent", label: "عاجل" },
 ];
 
 export default function EventDialog({
@@ -47,18 +49,12 @@ export default function EventDialog({
   const [loading, setLoading] = useState(false);
   const eventSchema = z
     .object({
-      title: z.string().min(1, "Title is required"),
+      title: z.string().min(1, "العنوان مطلوب"),
       description: z.string().optional(),
-      startDate: z.string().min(1, "Start date is required"),
-      startTime: z
-        .string()
-        .min(1, "Start time is required")
-        .regex(/^\d{2}:\d{2}$/g, "Invalid time format"),
-      endDate: z.string().min(1, "End date is required"),
-      endTime: z
-        .string()
-        .min(1, "End time is required")
-        .regex(/^\d{2}:\d{2}$/g, "Invalid time format"),
+      startDate: z.string().min(1, "تاريخ البداية مطلوب"),
+      startTime: z.string().min(1, "وقت البداية مطلوب"),
+      endDate: z.string().min(1, "تاريخ النهاية مطلوب"),
+      endTime: z.string().min(1, "وقت النهاية مطلوب"),
       location: z.string().optional(),
       status: z.enum([
         "planned",
@@ -71,7 +67,7 @@ export default function EventDialog({
       clientName: z.string().optional(),
       clientEmail: z
         .string()
-        .email("Invalid email")
+        .email("البريد الإلكتروني غير صالح")
         .optional()
         .or(z.literal("")),
       clientPhone: z.string().optional(),
@@ -79,13 +75,19 @@ export default function EventDialog({
     .refine(
       (data) => {
         // Prevent end selection without start
-        if (!data.startDate || !data.startTime) return false;
+        if (
+          !data.startDate ||
+          !data.startTime ||
+          !data.endDate ||
+          !data.endTime
+        )
+          return false;
         const start = new Date(`${data.startDate}T${data.startTime}:00`);
         const end = new Date(`${data.endDate}T${data.endTime}:00`);
         return end.getTime() > start.getTime();
       },
       {
-        message: "End must be after start",
+        message: "يجب أن تكون النهاية بعد البداية",
         path: ["endTime"],
       }
     );
@@ -102,6 +104,36 @@ export default function EventDialog({
   const startDateVal = watch("startDate");
   const startTimeVal = watch("startTime");
   const endDateVal = watch("endDate");
+  const endTimeVal = watch("endTime");
+
+  // Memoized callbacks to prevent unnecessary re-renders
+  const handleStartDateChange = useCallback(
+    (value) => {
+      setValue("startDate", value);
+    },
+    [setValue]
+  );
+
+  const handleStartTimeChange = useCallback(
+    (value) => {
+      setValue("startTime", value);
+    },
+    [setValue]
+  );
+
+  const handleEndDateChange = useCallback(
+    (value) => {
+      setValue("endDate", value);
+    },
+    [setValue]
+  );
+
+  const handleEndTimeChange = useCallback(
+    (value) => {
+      setValue("endTime", value);
+    },
+    [setValue]
+  );
 
   useEffect(() => {
     if (open) {
@@ -163,7 +195,7 @@ export default function EventDialog({
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`; // Use local date, not UTC
+    return `${year}-${month}-${day}`;
   };
 
   const formatTimeForInput = (date) => {
@@ -180,8 +212,7 @@ export default function EventDialog({
       );
 
       // Combine date and time
-      const startDateTime = new Date(`${data.startDate}T${data.startTime}`);
-
+      const startDateTime = new Date(`${data.startDate}T${data.startTime}:00`);
       const endDateTime = new Date(`${data.endDate}T${data.endTime}:00`);
 
       const eventData = {
@@ -214,17 +245,17 @@ export default function EventDialog({
       });
 
       if (response.ok) {
-        toast.success(event ? "Event updated" : "Event created", {
+        toast.success(event ? "تم تحديث الحدث" : "تم إنشاء الحدث", {
           id: toastId,
         });
         onSave();
       } else {
         console.error("Failed to save event");
-        toast.error("Failed to save event", { id: toastId });
+        toast.error("فشل في حفظ الحدث", { id: toastId });
       }
     } catch (error) {
       console.error("Error saving event:", error);
-      toast.error("Error saving event");
+      toast.error("خطأ في حفظ الحدث");
     } finally {
       setLoading(false);
     }
@@ -234,20 +265,24 @@ export default function EventDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className=" sm:max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{event ? "Edit Event" : "Create New Event"}</DialogTitle>
+          <DialogTitle className="text-center">
+            {event ? "تحرير الحدث" : "إنشاء حدث جديد"}
+          </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" dir="rtl">
           {/* Basic Information */}
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="title">
-                Event Title <span className="text-red-500">*</span>
+                عنوان الحدث <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="title"
                 {...register("title")}
-                placeholder="Enter event title"
+                placeholder="أدخل عنوان الحدث"
+                className="text-right"
+                dir="rtl"
               />
               {errors.title && (
                 <p className="text-sm text-destructive mt-1">
@@ -257,77 +292,72 @@ export default function EventDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">الوصف</Label>
               <Textarea
                 id="description"
                 {...register("description")}
-                placeholder="Event description..."
+                placeholder="وصف الحدث..."
                 rows={3}
+                className="text-right"
+                dir="rtl"
               />
             </div>
           </div>
 
           {/* Date and Time */}
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="startDate">
-                  Start Date <span className="text-red-500">*</span>
-                </Label>
-                <Input id="startDate" type="date" {...register("startDate")} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <EventDatePicker
+                  label="تاريخ البداية"
+                  required={true}
+                  value={startDateVal}
+                  onChange={handleStartDateChange}
+                  placeholder="اختر تاريخ البداية"
+                />
                 {errors.startDate && (
                   <p className="text-sm text-destructive mt-1">
                     {errors.startDate.message}
                   </p>
                 )}
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="startTime">
-                  Start Time <span className="text-red-500">*</span>
-                </Label>
-                <Input id="startTime" type="time" {...register("startTime")} />
+                <EventTimePicker
+                  label="وقت البداية"
+                  required={true}
+                  value={startTimeVal}
+                  onChange={handleStartTimeChange}
+                  placeholder="اختر وقت البداية"
+                />
                 {errors.startTime && (
                   <p className="text-sm text-destructive mt-1">
                     {errors.startTime.message}
                   </p>
                 )}
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="endDate">
-                  End Date <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="endDate"
-                  type="date"
-                  min={startDateVal || undefined}
+              <div className="space-y-4">
+                <EventDatePicker
+                  label="تاريخ النهاية"
+                  required={true}
+                  value={endDateVal}
+                  onChange={handleEndDateChange}
+                  minDate={startDateVal}
                   disabled={!startDateVal || !startTimeVal}
-                  {...register("endDate")}
+                  placeholder="اختر تاريخ النهاية"
                 />
                 {errors.endDate && (
                   <p className="text-sm text-destructive mt-1">
                     {errors.endDate.message}
                   </p>
                 )}
-                {!startDateVal || !startTimeVal ? (
-                  <p className="text-xs text-muted-foreground">
-                    Set start date and time first
-                  </p>
-                ) : null}
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="endTime">
-                  End Time <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="endTime"
-                  type="time"
+                <EventTimePicker
+                  label="وقت النهاية"
+                  required={true}
+                  value={endTimeVal}
+                  onChange={handleEndTimeChange}
                   disabled={!startDateVal || !startTimeVal || !endDateVal}
-                  {...register("endTime")}
+                  placeholder="اختر وقت النهاية"
                 />
                 {errors.endTime && (
                   <p className="text-sm text-destructive mt-1">
@@ -336,22 +366,28 @@ export default function EventDialog({
                 )}
               </div>
             </div>
+            {(!startDateVal || !startTimeVal) && (
+              <p className="text-xs text-muted-foreground">
+                حدد تاريخ ووقت البداية أولاً
+              </p>
+            )}
           </div>
 
           {/* Event Details */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             <div className="space-y-2">
               <Label htmlFor="status">
-                Status <span className="text-red-500">*</span>
+                الحالة <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={watch("status")}
                 onValueChange={(value) => setValue("status", value)}
+                dir="rtl"
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder="اختر الحالة" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent dir="rtl">
                   {statusOptions.map((status) => (
                     <SelectItem key={status.value} value={status.value}>
                       {status.label}
@@ -361,15 +397,16 @@ export default function EventDialog({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="priority">Priority</Label>
+              <Label htmlFor="priority">الأولوية</Label>
               <Select
                 value={watch("priority")}
                 onValueChange={(value) => setValue("priority", value)}
+                dir="rtl"
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select priority" />
+                  <SelectValue placeholder="اختر الأولوية" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent dir="rtl">
                   {priorityOptions.map((priority) => (
                     <SelectItem key={priority.value} value={priority.value}>
                       {priority.label}
@@ -380,61 +417,78 @@ export default function EventDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <Label htmlFor="location">الموقع</Label>
               <Input
                 id="location"
                 {...register("location")}
-                placeholder="Event location"
+                placeholder="موقع الحدث"
+                className="text-right"
+                dir="rtl"
               />
             </div>
           </div>
 
           {/* Client Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Client Information</h3>
+            <h3 className="text-lg font-medium">معلومات العميل</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               <div className="space-y-2">
-                <Label htmlFor="clientName">Client Name</Label>
+                <Label htmlFor="clientName">اسم العميل</Label>
                 <Input
                   id="clientName"
                   {...register("clientName")}
-                  placeholder="Client name"
+                  placeholder="اسم العميل"
+                  className="text-right"
+                  dir="rtl"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="clientEmail">Client Email</Label>
+                <Label htmlFor="clientEmail">البريد الإلكتروني للعميل</Label>
                 <Input
                   id="clientEmail"
                   type="email"
                   {...register("clientEmail")}
                   placeholder="client@example.com"
+                  className="text-right"
+                  dir="rtl"
                 />
+                {errors.clientEmail && (
+                  <p className="text-sm text-destructive mt-1">
+                    {errors.clientEmail.message}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="clientPhone">Client Phone</Label>
+                <Label htmlFor="clientPhone">هاتف العميل</Label>
                 <Input
                   id="clientPhone"
                   {...register("clientPhone")}
-                  placeholder="+44 123 456 7890"
+                  placeholder="+966 123 456 789"
+                  className="text-right"
+                  dir="rtl"
                 />
               </div>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end space-x-2 pt-4">
+          <div className="flex justify-start space-x-2 pt-4" dir="ltr">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              إلغاء
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Saving..." : event ? "Update Event" : "Create Event"}
+              {loading
+                ? "جاري الحفظ..."
+                : event
+                  ? "تحديث الحدث"
+                  : "إنشاء الحدث"}
             </Button>
           </div>
         </form>

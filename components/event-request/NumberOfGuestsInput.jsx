@@ -44,12 +44,12 @@ export default function NumberOfGuestsInput({
   return (
     <EventRequestInput
       name="numberOfGuests"
-      label="Number of Guests"
+      label="عدد الضيوف"
       type="text"
-      placeholder="e.g., 25 or 10-20 or 50-100"
+      placeholder="مثال: 25 أو 10-20 أو 50-100"
       icon={<Users size={16} />}
       required={true}
-      helperText="Enter exact number (e.g., 25) or range (e.g., 10-20)"
+      helperText="أدخل العدد الدقيق (مثال: 25) أو النطاق (مثال: 10-20)"
       error={error}
       hasValue={hasValue}
       register={register}

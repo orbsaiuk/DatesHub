@@ -54,13 +54,13 @@ export default function DirectoryWorkAwardsContent({
   return (
     <div className="space-y-6">
       <section>
-        <p className="text-xs text-muted-foreground mb-2">Our Work</p>
+        <p className="text-xs text-muted-foreground mb-2">أعمالنا</p>
 
         {works.length === 0 ? (
           <Alert className="px-3 py-2">
-            <AlertTitle>No projects to show</AlertTitle>
+            <AlertTitle>لا توجد مشاريع للعرض</AlertTitle>
             <AlertDescription>
-              When this company shares case studies, they will appear here.
+              عندما تشارك هذه الشركة دراسات الحالة، ستظهر هنا.
             </AlertDescription>
           </Alert>
         ) : (
@@ -151,13 +151,13 @@ export default function DirectoryWorkAwardsContent({
       </section>
 
       <section>
-        <p className="text-xs text-muted-foreground mb-2">Awards</p>
+        <p className="text-xs text-muted-foreground mb-2">الجوائز</p>
 
         {awards.length === 0 ? (
           <Alert className="px-3 py-2">
-            <AlertTitle>No awards listed</AlertTitle>
+            <AlertTitle>لا توجد جوائز مدرجة</AlertTitle>
             <AlertDescription>
-              Awards and recognitions will appear here once available.
+              ستظهر الجوائز والتقديرات هنا عند توفرها.
             </AlertDescription>
           </Alert>
         ) : (

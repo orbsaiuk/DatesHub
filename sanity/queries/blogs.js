@@ -37,7 +37,7 @@ export const BLOG_CARD_PROJECTION = `{
       }
     }
   },
-  readingTime,
+  contentHtml,
   createdAt,
   _createdAt,
   featured
@@ -77,6 +77,10 @@ export const FEATURED_BLOGS_QUERY = `
 // Get blog by slug
 export const BLOG_BY_SLUG_QUERY = `
 *[_type == "blog" && slug.current == $slug][0] ${BLOG_DETAIL_PROJECTION}
+`;
+
+export const BLOG_BY_ID_QUERY = `
+*[_type == "blog" && _id == $id][0] ${BLOG_DETAIL_PROJECTION}
 `;
 
 // Get blogs by author (company or supplier)

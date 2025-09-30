@@ -50,14 +50,14 @@ export default function BlogHero() {
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Title with enhanced mobile typography */}
         <h1 className="text-2xl sm:text-4xl  font-bold mb-4 sm:mb-6 lg:mb-8 leading-tight sm:leading-tight tracking-tight">
-          Our Blogs
+          مدونتنا
         </h1>
 
         {/* Description with better mobile readability */}
         <p className="text-sm sm:text-base md:text-lg text-gray-200 mb-8 sm:mb-10 lg:mb-12 max-w-7xl mx-auto leading-relaxed px-2 sm:px-0">
-          Stay inspired with tips, trends, and guides to make every event
-          unforgettable. Whether you're an event planner, a business, or just
-          planning a one-off celebration, we've got you covered.
+          ابقَ ملهمًا بالنصائح والاتجاهات والأدلة لجعل كل حدث لا يُنسى. سواء كنت
+          منظم فعاليات أو شركة أو تخطط لاحتفال لمرة واحدة، نحن نوفر لك كل ما
+          تحتاجه.
         </p>
 
         {/* Enhanced Search Form */}
@@ -70,33 +70,32 @@ export default function BlogHero() {
             <div className="relative">
               <Input
                 type="text"
-                placeholder="Search articles..."
+                placeholder="البحث عن المقالات..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   if (submitting) setSubmitting(false);
                 }}
-                className="w-full px-5 py-4 sm:py-3 pl-12 sm:pl-14 pr-16 sm:pr-20 rounded-full bg-white/95 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:bg-white text-base leading-none min-h-[52px] sm:min-h-[48px] touch-manipulation shadow-lg border border-white/20 transition-all duration-200"
+                className="w-full text-sm sm:text-base px-5 py-4 sm:py-3 pl-12 sm:pl-14 rounded-full bg-white/95 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:bg-white leading-none min-h-[40px] sm:min-h-[48px] touch-manipulation shadow-lg border border-white/20 transition-all duration-200"
                 autoComplete="off"
                 spellCheck="false"
               />
-              <Search className="absolute left-4 sm:left-5 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <Button
                 type="submit"
                 disabled={submitting}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-3 sm:px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer min-h-[40px] touch-manipulation shadow-md border border-blue-500/20"
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-2 sm:px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer min-h-[30px] touch-manipulation shadow-md border border-blue-500/20"
               >
                 {submitting ? (
                   <span className="inline-flex items-center gap-1 sm:gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     <span className="hidden sm:inline text-xs sm:text-sm">
-                      Searching
+                      جاري البحث
                     </span>
                   </span>
                 ) : (
                   <>
-                    <Search className="h-4 w-4 sm:hidden" />
-                    <span className="hidden sm:inline text-sm">Search</span>
+                    <Search className="h-2 w-2 sm:hidden" />
+                    <span className="hidden sm:inline text-sm">بحث</span>
                   </>
                 )}
               </Button>

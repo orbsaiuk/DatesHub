@@ -23,16 +23,19 @@ import { client } from "@/sanity/lib/client";
 import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
 
 const schema = z.object({
-  title: z.string().min(1, "Title is required"),
-  excerpt: z.string().min(1, "Excerpt is required"),
+  title: z.string().min(1, "العنوان مطلوب"),
+  excerpt: z
+    .string()
+    .min(1, "الوصف المختصر مطلوب")
+    .max(200, "الحد الأقصى 200 حرف"),
   content: z
     .object({
-      html: z.string().min(1, "Content is required"),
+      html: z.string().min(1, "المحتوى مطلوب"),
       plainText: z.string().optional(),
     })
-    .or(z.string().min(1, "Content is required")),
-  blogImage: z.any().refine((v) => !!v, { message: "Blog image is required" }),
-  category: z.string().min(1, "Category is required"),
+    .or(z.string().min(1, "المحتوى مطلوب")),
+  blogImage: z.any().refine((v) => !!v, { message: "صورة المقال مطلوبة" }),
+  category: z.string().min(1, "الفئة مطلوبة"),
 });
 
 export default function BlogForm({
@@ -110,26 +113,26 @@ export default function BlogForm({
 
   return (
     <form
-      className="space-y-4 sm:space-y-6"
+      className="space-y-4 sm:space-y-6 mt-4"
       onSubmit={form.handleSubmit(handleSubmit)}
     >
       {/* Main Content */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            {mode === "create" ? "Create New Blog Post" : "Edit Blog Post"}
+          <CardTitle className="text-center">
+            {mode === "create" ? "إنشاء مقال جديد" : "تحرير المقال"}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 sm:space-y-6">
           {/* Title */}
           <div className="space-y-2">
             <Label htmlFor="title">
-              Title <span className="text-red-600">*</span>
+              العنوان <span className="text-red-600">*</span>
             </Label>
             <Input
               id="title"
               {...form.register("title")}
-              placeholder="Enter blog post title..."
+              placeholder="أدخل عنوان المقال..."
               className={`min-h-[44px] ${errors.title ? "border-red-500" : ""}`}
             />
             {errors.title && (
@@ -140,17 +143,17 @@ export default function BlogForm({
           {/* Excerpt */}
           <div className="space-y-2">
             <Label htmlFor="excerpt">
-              Excerpt <span className="text-red-600">*</span>
+              الوصف المختصر <span className="text-red-600">*</span>
             </Label>
             <Textarea
               id="excerpt"
               {...form.register("excerpt")}
-              placeholder="Brief description of your blog post..."
+              placeholder="وصف مختصر لمقالك..."
               rows={3}
               className={`min-h-[88px] ${errors.excerpt ? "border-red-500" : ""}`}
             />
             <p className="text-sm text-muted-foreground">
-              {(form.watch("excerpt") || "").length}/200 characters
+              {(form.watch("excerpt") || "").length}/200 حرف
             </p>
             {errors.excerpt && (
               <p className="text-sm text-red-500">{errors.excerpt.message}</p>
@@ -160,28 +163,30 @@ export default function BlogForm({
           {/* Category */}
           <div className="space-y-2">
             <Label htmlFor="category">
-              Category <span className="text-red-600">*</span>
+              الفئة <span className="text-red-600">*</span>
             </Label>
             <Controller
               control={form.control}
               name="category"
               render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  dir="rtl"
+                >
                   <SelectTrigger
                     className={`min-h-[44px] ${errors.category ? "border-red-500" : ""}`}
                   >
                     <SelectValue
                       placeholder={
-                        loadingCategories
-                          ? "Loading categories..."
-                          : "Select a category"
+                        loadingCategories ? "جاري تحميل الفئات..." : "اختر فئة"
                       }
                     />
                   </SelectTrigger>
                   <SelectContent>
                     {loadingCategories ? (
                       <SelectItem value="__loading" disabled>
-                        Loading categories...
+                        جاري تحميل الفئات...
                       </SelectItem>
                     ) : categories.length > 0 ? (
                       categories.map((category) => (
@@ -191,7 +196,7 @@ export default function BlogForm({
                       ))
                     ) : (
                       <SelectItem value="__none" disabled>
-                        No categories available
+                        لا توجد فئات متاحة
                       </SelectItem>
                     )}
                   </SelectContent>
@@ -206,7 +211,7 @@ export default function BlogForm({
           {/* Content */}
           <div className="space-y-2">
             <Label htmlFor="content">
-              Content <span className="text-red-600">*</span>
+              المحتوى <span className="text-red-600">*</span>
             </Label>
             <div
               className={`border rounded-md ${errors.content ? "border-red-500" : "border-input"}`}
@@ -218,7 +223,7 @@ export default function BlogForm({
                   <RichTextEditor
                     value={field.value}
                     onChange={(val) => field.onChange(val)}
-                    placeholder="Write your blog post content here..."
+                    placeholder="اكتب محتوى مقالك هنا..."
                   />
                 )}
               />
@@ -231,7 +236,7 @@ export default function BlogForm({
           {/* Blog Image */}
           <div className="space-y-2">
             <Label>
-              Blog Image <span className="text-red-600">*</span>
+              صورة المقال <span className="text-red-600">*</span>
             </Label>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 text-center">
               {blogImage ? (
@@ -253,7 +258,7 @@ export default function BlogForm({
                     }
                     className="min-h-[44px] px-4 py-2"
                   >
-                    Remove Image
+                    إزالة الصورة
                   </Button>
                 </div>
               ) : (
@@ -268,7 +273,7 @@ export default function BlogForm({
                       }
                       className="min-h-[44px] px-4 py-2"
                     >
-                      Upload Blog Image
+                      رفع صورة المقال
                     </Button>
                     <input
                       id="blog-image"
@@ -287,7 +292,7 @@ export default function BlogForm({
                         const fileMb = file.size / (1024 * 1024);
                         if (fileMb > MAX_FILE_MB) {
                           form.setError("blogImage", {
-                            message: `Image is too large. Max ${MAX_FILE_MB}MB.`,
+                            message: `الصورة كبيرة جداً. الحد الأقصى ${MAX_FILE_MB} ميجابايت.`,
                           });
                           e.target.value = "";
                           return;
@@ -300,7 +305,7 @@ export default function BlogForm({
                           URL.revokeObjectURL(url);
                           if (width < MIN_WIDTH || height < MIN_HEIGHT) {
                             form.setError("blogImage", {
-                              message: `Image too small. Minimum ${MIN_WIDTH}x${MIN_HEIGHT}px recommended (16:9).`,
+                              message: `الصورة صغيرة جداً. الحد الأدنى الموصى به ${MIN_WIDTH}x${MIN_HEIGHT} بكسل (16:9).`,
                             });
                             e.target.value = "";
                             return;
@@ -314,7 +319,7 @@ export default function BlogForm({
                         img.onerror = () => {
                           URL.revokeObjectURL(url);
                           form.setError("blogImage", {
-                            message: "Invalid image file.",
+                            message: "ملف صورة غير صالح.",
                           });
                           e.target.value = "";
                         };
@@ -323,8 +328,8 @@ export default function BlogForm({
                     />
                   </div>
                   <p className="text-sm text-gray-500">
-                    Recommended: 1200×675 px (16:9), min 1200×675, max{" "}
-                    {MAX_FILE_MB}MB.
+                    موصى به: 1200×675 بكسل (16:9)، الحد الأدنى 1200×675، الحد
+                    الأقصى {MAX_FILE_MB} ميجابايت.
                   </p>
                 </div>
               )}
@@ -346,7 +351,7 @@ export default function BlogForm({
           className="cursor-pointer min-h-[44px] px-4 py-2 w-full sm:w-auto order-2 sm:order-1"
         >
           <X className="h-4 w-4 mr-2" />
-          Cancel
+          إلغاء
         </Button>
 
         {status !== "published" && (
@@ -358,7 +363,7 @@ export default function BlogForm({
           >
             {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             {!isLoading && <Send className="h-4 w-4 mr-2" />}
-            {isLoading ? "Submitting..." : "Submit"}
+            {isLoading ? "جاري الإرسال..." : "إرسال"}
           </Button>
         )}
       </div>

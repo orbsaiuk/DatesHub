@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Clock, Calendar, Eye, Tag } from "lucide-react";
+import { Calendar, Eye } from "lucide-react";
 import { formatContentForDisplay } from "@/lib/contentUtils";
 import Image from "next/image";
 
@@ -21,10 +21,7 @@ export default function BlogPreview({ blog, open, onOpenChange }) {
     contentHtml,
     contentText,
     blogImage,
-    tags = [],
     status,
-    publishedAt,
-    readingTime,
     views = 0,
     _createdAt,
   } = blog;
@@ -55,9 +52,22 @@ export default function BlogPreview({ blog, open, onOpenChange }) {
     }
   };
 
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case "published":
+        return "منشور";
+      case "pending":
+        return "قيد المراجعة";
+      case "rejected":
+        return "مرفوض";
+      default:
+        return status;
+    }
+  };
+
   const formatDate = (dateString) => {
-    if (!dateString) return "Not set";
-    return new Date(dateString).toLocaleDateString("en-US", {
+    if (!dateString) return "غير محدد";
+    return new Date(dateString).toLocaleDateString("ar-EG", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -65,16 +75,11 @@ export default function BlogPreview({ blog, open, onOpenChange }) {
   };
 
   const getContentToDisplay = () => {
-    // Priority: contentHtml > content (legacy) > contentText
     const htmlContent = contentHtml || content;
     if (!htmlContent) return null;
-
-    // If we have HTML content, format it for display
     if (typeof htmlContent === "string") {
       return formatContentForDisplay(htmlContent);
     }
-
-    // Fallback to plain text if available
     return contentText || "";
   };
 
@@ -85,22 +90,16 @@ export default function BlogPreview({ blog, open, onOpenChange }) {
           <DialogHeader className="space-y-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
-                <DialogTitle className="text-2xl font-bold leading-tight text-primary capitalize text-left">
+                <DialogTitle className="text-center text-2xl font-bold leading-tight text-primary capitalize">
                   {title}
                 </DialogTitle>
-                <div className="flex flex-wrap items-center gap-3 text-sm mt-4">
+                <div className="flex flex-wrap items-center justify-end gap-3 text-sm mt-4">
                   <Badge
                     variant={getStatusColor(status)}
                     className={`text-xs font-medium ${getStatusBgColor(status)}`}
                   >
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                    {getStatusLabel(status)}
                   </Badge>
-                  {readingTime && (
-                    <div className="flex items-center gap-1.5 text-muted-foreground">
-                      <Clock className="h-3.5 w-3.5" />
-                      <span>{readingTime} min read</span>
-                    </div>
-                  )}
                   <div className="flex items-center gap-1.5 text-muted-foreground">
                     <Calendar className="h-3.5 w-3.5" />
                     {formatDate(_createdAt)}
@@ -108,7 +107,7 @@ export default function BlogPreview({ blog, open, onOpenChange }) {
                   {status === "published" && (
                     <div className="flex items-center gap-1.5 text-muted-foreground">
                       <Eye className="h-3.5 w-3.5" />
-                      <span>{views} views</span>
+                      <span>{views} مشاهدة</span>
                     </div>
                   )}
                 </div>
@@ -133,7 +132,7 @@ export default function BlogPreview({ blog, open, onOpenChange }) {
 
           {excerpt && (
             <div className="my-6">
-              <div className="p-5 bg-blue-50 rounded-lg border-l-4 border-blue-500 shadow-sm">
+              <div className="p-5 bg-blue-50 rounded-lg border-r-4 border-blue-500 shadow-sm">
                 <p className="text-gray-800 italic text-lg leading-relaxed">
                   {excerpt}
                 </p>
@@ -141,34 +140,12 @@ export default function BlogPreview({ blog, open, onOpenChange }) {
             </div>
           )}
 
-          {/* Content */}
-          {(contentHtml || content || contentText) && (
+          {contentHtml && (
             <div className="my-6">
               <div
                 className="prose prose-blue max-w-none text-gray-800"
                 dangerouslySetInnerHTML={{ __html: getContentToDisplay() }}
               />
-            </div>
-          )}
-
-          {/* Tags */}
-          {tags.length > 0 && (
-            <div className="my-8 bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Tag className="h-4 w-4 text-primary" />
-                <span className="text-sm font-semibold text-primary">Tags</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag, index) => (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    className="text-sm px-3 py-1 bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
-                  >
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
             </div>
           )}
         </div>

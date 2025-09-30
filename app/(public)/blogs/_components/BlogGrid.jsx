@@ -7,10 +7,10 @@ export default function BlogGrid({ blogs = [] }) {
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-8 sm:py-12">
             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-2">
-              No articles found
+              لا توجد مقالات
             </h3>
             <p className="text-gray-600 text-sm sm:text-base">
-              Try adjusting your search or filter criteria.
+              حاول تعديل معايير البحث أو التصفية.
             </p>
           </div>
         </div>

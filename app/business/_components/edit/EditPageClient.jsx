@@ -111,15 +111,9 @@ export default function EditPageClient({ initialEntity, entityType }) {
       ]
         .map((v) => (typeof v === "string" ? v.trim() : v))
         .some(Boolean);
-      const hasSocialLinks = Array.isArray(formData?.socialLinks)
-        ? formData.socialLinks.length > 0
-        : false;
-      const ok = entityType === "company" ? hasAny && hasSocialLinks : hasAny;
-      if (!ok) {
+      if (!hasAny) {
         toast.error(
-          entityType === "company"
-            ? "يرجى تقديم تفاصيل الاتصال ورابط واحد على الأقل لوسائل التواصل الاجتماعي."
-            : "يرجى تقديم تفاصيل اتصال واحدة على الأقل."
+          "يرجى ملء جميع حقول الاتصال المطلوبة (الاسم، الهاتف، البريد الإلكتروني، العنوان)."
         );
         return;
       }
@@ -161,7 +155,7 @@ export default function EditPageClient({ initialEntity, entityType }) {
     },
     {
       id: "section-our-works",
-      label: "أعمالنا",
+      label: "الاعمال",
     },
     {
       id: "section-awards",

@@ -268,7 +268,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
           className="cursor-pointer px-4 py-2"
         >
           <Plus className="h-4 w-4 mr-2" />
-          إضافة مثال عمل
+          إضافة عمل
         </Button>
       </div>
 
@@ -318,12 +318,10 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Remove Work Example
-                            </AlertDialogTitle>
+                            <AlertDialogTitle>ازالة العمل</AlertDialogTitle>
                             <AlertDialogDescription>
-                              هل أنت متأكد أنك تريد إزالة مثال العمل هذا؟ لا
-                              يمكن التراجع عن هذا الإجراء.
+                              هل أنت متأكد أنك تريد إزالة العمل هذا؟ لا يمكن
+                              التراجع عن هذا الإجراء.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -350,11 +348,9 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
       ) : (
         <div className="text-center py-10 sm:py-12 border-2 border-dashed border-muted-foreground/30 rounded-lg">
           <ImageIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground">
-            لم يتم إضافة أمثلة عمل حتى الآن
-          </p>
+          <p className="text-muted-foreground">لم يتم إضافة أعمال حتى الآن</p>
           <p className="text-sm text-muted-foreground mt-1">
-            أضف مثال عملك الأول لعرض خبرتك
+            أضف عملك الأول لعرض خبرتك
           </p>
         </div>
       )}
@@ -372,11 +368,11 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
       >
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>
-              {editingIndex === null ? "إضافة مثال عمل" : "تحرير مثال عمل"}
+            <DialogTitle className="text-center">
+              {editingIndex === null ? "إضافة عمل" : "تحرير عمل"}
             </DialogTitle>
-            <DialogDescription>
-              قدم التفاصيل والصور لمثال العمل هذا.
+            <DialogDescription className="text-center">
+              قدم التفاصيل والصور العمل .
             </DialogDescription>
           </DialogHeader>
 
@@ -384,7 +380,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
             <div className="space-y-4">
               <div>
                 <label className="text-sm sm:text-base font-medium">
-                  Event Title <span className="text-red-500">*</span>
+                  العنوان <span className="text-red-500">*</span>
                 </label>
                 <Input
                   value={draft.title}
@@ -394,7 +390,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                       setDraftErrors((prev) => ({ ...prev, title: undefined }));
                     }
                   }}
-                  placeholder="e.g., Sarah & John's Wedding, Tech Conference 2024"
+                  placeholder="مثال: حفل زفاف في الهواء الطلق"
                   className="mt-2"
                 />
                 {draftErrors.title && (
@@ -411,7 +407,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
 
               <div>
                 <label className="text-sm sm:text-base font-medium">
-                  Description <span className="text-red-500">*</span>
+                  الوصف <span className="text-red-500">*</span>
                 </label>
                 <Textarea
                   value={draft.description}
@@ -424,7 +420,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                       }));
                     }
                   }}
-                  placeholder="Describe the event, challenges overcome, and outcomes achieved..."
+                  placeholder="وصف الحدث، التحديات التي تم التغلب عليها، والنتائج التي تم تحقيقها..."
                   className="mt-2 min-h-[100px]"
                 />
                 {draftErrors.description && (
@@ -442,7 +438,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
 
               <div>
                 <label className="text-sm sm:text-base font-medium">
-                  صور الحدث <span className="text-red-500">*</span>
+                  الصور <span className="text-red-500">*</span>
                 </label>
                 <div className="mt-2">
                   <ImageUploader
@@ -456,7 +452,7 @@ export default function OurWorksForm({ form, updateField, workErrors }) {
                         }));
                       }
                     }}
-                    placeholder="أضف صور الحدث"
+                    placeholder="أضف صور العمل"
                     multiple={true}
                     maxFiles={4}
                     maxSizeMB={5}

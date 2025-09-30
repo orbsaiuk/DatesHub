@@ -20,7 +20,7 @@ export default function ReviewItem({ review }) {
               </h3>
               <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-muted-foreground">
                 <span>
-                  by{" "}
+                  بواسطة{" "}
                   <span className="font-medium text-foreground/90">
                     {review.authorName}
                   </span>

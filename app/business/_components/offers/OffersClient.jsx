@@ -75,7 +75,7 @@ export default function OffersClient({
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       if (end < today) {
-        toast.error("Offer has expired and cannot be activated");
+        toast.error("انتهت صلاحية العرض ولا يمكن تفعيله");
         return;
       }
     }
@@ -92,21 +92,21 @@ export default function OffersClient({
       });
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to update status");
+        throw new Error(errorData.error || "فشل في تحديث الحالة");
       }
       toast.success(
         current === "active"
-          ? "Offer deactivated successfully"
-          : "Offer activated successfully",
+          ? "تم إلغاء تفعيل العرض بنجاح"
+          : "تم تفعيل العرض بنجاح",
         { duration: 3000 }
       );
       setRetryCount(0);
       if (onChanged) onChanged();
     } catch (e) {
-      const errorMsg = e.message || "Failed to update status";
+      const errorMsg = e.message || "فشل في تحديث الحالة";
       toast.error(errorMsg, {
         action: {
-          label: "Retry",
+          label: "إعادة المحاولة",
           onClick: () => toggleStatus(id, current, meta),
         },
       });
@@ -122,13 +122,13 @@ export default function OffersClient({
 
     // Find the offer being deleted for better feedback
     const offerToDelete = (items || []).find((item) => item._id === id);
-    const offerTitle = offerToDelete?.title || "offer";
+    const offerTitle = offerToDelete?.title || "عرض";
 
     setPending({ id, type: "delete" });
     setError(null);
 
     // Show initial progress toast
-    toast.loading(`Deleting "${offerTitle}"...`, { id: `delete-${id}` });
+    toast.loading(`جاري حذف "${offerTitle}"...`, { id: `delete-${id}` });
 
     try {
       const res = await fetch("/api/offers/delete", {
@@ -138,7 +138,7 @@ export default function OffersClient({
       });
       // If already deleted on server, treat as success (idempotent UX)
       if (res.status === 404) {
-        toast.success(`"${offerTitle}" was already deleted`, {
+        toast.success(`"${offerTitle}" تم حذفه مسبقاً`, {
           id: `delete-${id}`,
         });
         setRetryCount(0);
@@ -147,25 +147,25 @@ export default function OffersClient({
       }
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to delete offer");
+        throw new Error(errorData.error || "فشل في حذف العرض");
       }
 
       // Success feedback (update the existing loading toast if present)
-      toast.success(`"${offerTitle}" deleted successfully`, {
+      toast.success(`"${offerTitle}" تم حذفه بنجاح`, {
         id: `delete-${id}`,
       });
       setRetryCount(0);
       if (onChanged) onChanged();
     } catch (e) {
-      const errorMsg = e.message || "Failed to delete offer";
+      const errorMsg = e.message || "فشل في حذف العرض";
 
       // Enhanced error feedback
-      toast.error(`Failed to delete "${offerTitle}"`, {
+      toast.error(`فشل في حذف "${offerTitle}"`, {
         id: `delete-${id}`,
         description: errorMsg,
         duration: 6000,
         action: {
-          label: "Try again",
+          label: "حاول مرة أخرى",
           onClick: () => remove(id),
         },
       });
@@ -191,12 +191,12 @@ export default function OffersClient({
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-2 text-sm">
-          <Badge variant="outline">Total: {stats.total}</Badge>
+          <Badge variant="outline">المجموع: {stats.total}</Badge>
           <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-            Active: {stats.active}
+            نشط: {stats.active}
           </Badge>
           <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
-            Inactive: {stats.inactive}
+            غير نشط: {stats.inactive}
           </Badge>
         </div>
         <AddOfferDialog

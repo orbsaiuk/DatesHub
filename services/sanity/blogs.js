@@ -11,6 +11,7 @@ import {
   POPULAR_BLOG_TAGS_QUERY,
   BLOG_ARCHIVE_QUERY,
   BLOG_CARD_PROJECTION,
+  BLOG_BY_ID_QUERY,
 } from "@/sanity/queries/blogs";
 
 export async function getPublishedBlogs() {
@@ -37,6 +38,16 @@ export async function getBlogBySlug(slug) {
     return await readClient.fetch(BLOG_BY_SLUG_QUERY, { slug });
   } catch (error) {
     console.error("Error fetching blog by slug:", error);
+    return null;
+  }
+}
+
+export async function getBlogById(id) {
+  try {
+    if (!id) return null;
+    return await readClient.fetch(BLOG_BY_ID_QUERY, { id });
+  } catch (error) {
+    console.error("Error fetching blog by id:", error);
     return null;
   }
 }

@@ -36,12 +36,32 @@ import CompanyHomeHero from "@/components/sections/CompanyHomeHero";
 import { SignedOut } from "@clerk/nextjs";
 import { getRecentBlogs } from "@/services/sanity/blogs";
 
-export const metadata = {
-  title: "OrbsAI — اكتشف الشركات",
-  description:
-    "اكتشف وتواصل مع الشركات. تصفح الفئات، شاهد العروض الحصرية، واستكشف ملفات الأعمال التفصيلية على OrbsAI.",
-  alternates: { canonical: "/" },
-};
+export async function generateMetadata() {
+  const { userId } = await auth();
+  let role = null;
+  if (userId) {
+    const profile = await writeClient.fetch(
+      USER_ROLE_AND_MEMBERSHIPS_BY_CLERK_ID_QUERY,
+      { userId }
+    );
+    role = profile?.role || null;
+  }
+  const isCompany = role === "company";
+  if (isCompany) {
+    return {
+      title: "OrbsAI — اكتشف الموردين",
+      description:
+        "اكتشف وتواصل مع الموردين. تصفح الفئات، شاهد العروض الحصرية، واستكشف ملفات الأعمال التفصيلية على OrbsAI.",
+      alternates: { canonical: "/" },
+    };
+  }
+  return {
+    title: "OrbsAI — اكتشف الشركات",
+    description:
+      "اكتشف وتواصل مع الشركات. تصفح الفئات، شاهد العروض الحصرية، واستكشف ملفات الأعمال التفصيلية على OrbsAI.",
+    alternates: { canonical: "/" },
+  };
+}
 
 export default async function Home() {
   const settings = await writeClient.fetch(SITE_SETTINGS_QUERY);

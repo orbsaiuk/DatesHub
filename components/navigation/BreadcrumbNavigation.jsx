@@ -40,7 +40,7 @@ const getCompanyName = async (id) => {
     );
     if (response.ok) {
       const data = await response.json();
-      return data.name || `شركة ${id}`;
+      return data.name || " تحميل...";
     }
   } catch (error) {
     console.error("Error fetching company name:", error);
@@ -55,7 +55,7 @@ const getSupplierName = async (id) => {
     );
     if (response.ok) {
       const data = await response.json();
-      return data.name || data?.supplier?.name || `مورد ${id}`;
+      return data.name || data?.supplier?.name || " تحميل...";
     }
   } catch (error) {
     console.error("Error fetching supplier name:", error);
@@ -81,13 +81,18 @@ const getConversationLabel = async (conversationId) => {
   return "محادثة";
 };
 
-// Function to get blog title from slug (you can enhance this with API calls)
-const getBlogTitle = (slug) => {
-  // This could be enhanced to fetch actual blog title from API
-  return slug
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+// Function to get blog title from ID
+const getBlogTitle = async (id) => {
+  try {
+    const response = await fetch(`/api/blogs/${encodeURIComponent(id)}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.title || `تحميل...`;
+    }
+  } catch (error) {
+    console.error("Error fetching blog title:", error);
+  }
+  return `مقالة ${id}`;
 };
 
 export default function BreadcrumbNavigation({
@@ -100,17 +105,19 @@ export default function BreadcrumbNavigation({
   const [companyNames, setCompanyNames] = useState({});
   const [supplierNames, setSupplierNames] = useState({});
   const [conversationLabels, setConversationLabels] = useState({});
+  const [blogTitles, setBlogTitles] = useState({});
   const [loading, setLoading] = useState(false);
 
   // Use context breadcrumbs first, then prop breadcrumbs, then auto-generate
   const activeBreadcrumbs = contextBreadcrumbs || customBreadcrumbs;
 
-  // Extract company IDs and conversation IDs from pathname to preload labels
+  // Extract company IDs, conversation IDs, and blog IDs from pathname to preload labels
   useEffect(() => {
     const pathSegments = pathname.split("/").filter(Boolean);
     const companyIds = [];
     const conversationIds = [];
     const supplierIds = [];
+    const blogIds = [];
     pathSegments.forEach((segment, index) => {
       if (pathSegments[index - 1] === "companies" && index > 0) {
         companyIds.push(segment);
@@ -120,6 +127,9 @@ export default function BreadcrumbNavigation({
       }
       if (pathSegments[index - 1] === "suppliers" && index > 0) {
         supplierIds.push(segment);
+      }
+      if (pathSegments[index - 1] === "blogs" && index > 0) {
+        blogIds.push(segment);
       }
     });
 
@@ -132,14 +142,11 @@ export default function BreadcrumbNavigation({
         Promise.all(
           missingIds.map(async (id) => {
             const name = await getCompanyName(id);
-            const supplierName = await getSupplierName(id);
-            setSupplierNames((prev) => ({ ...prev, ...supplierName }));
-            return { id, name, supplierName };
+            return { id, name };
           })
         ).then((results) => {
-          const newNames = results.reduce((acc, { id, name, supplierName }) => {
+          const newNames = results.reduce((acc, { id, name }) => {
             acc[id] = name;
-            acc[id] = supplierName;
             return acc;
           }, {});
           setCompanyNames((prev) => ({ ...prev, ...newNames }));
@@ -173,15 +180,32 @@ export default function BreadcrumbNavigation({
         Promise.all(
           missingSupplierIds.map(async (id) => {
             const name = await getSupplierName(id);
-            return { id, name, supplierName };
+            return { id, name };
           })
         ).then((results) => {
-          const newNames = results.reduce((acc, { id, name, supplierName }) => {
+          const newNames = results.reduce((acc, { id, name }) => {
             acc[id] = name;
-            acc[id] = supplierName;
             return acc;
           }, {});
           setSupplierNames((prev) => ({ ...prev, ...newNames }));
+        });
+      }
+    }
+
+    if (blogIds.length > 0) {
+      const missingBlogIds = blogIds.filter((id) => !blogTitles[id]);
+      if (missingBlogIds.length > 0) {
+        Promise.all(
+          missingBlogIds.map(async (id) => {
+            const title = await getBlogTitle(id);
+            return { id, title };
+          })
+        ).then((results) => {
+          const newTitles = results.reduce((acc, { id, title }) => {
+            acc[id] = title;
+            return acc;
+          }, {});
+          setBlogTitles((prev) => ({ ...prev, ...newTitles }));
         });
       }
     }
@@ -259,7 +283,8 @@ export default function BreadcrumbNavigation({
 
   // Build breadcrumbs from path segments
   let currentPath = "";
-  pathSegments.forEach((segment, index) => {
+  for (let index = 0; index < pathSegments.length; index++) {
+    const segment = pathSegments[index];
     currentPath += `/${segment}`;
     const isLast = index === pathSegments.length - 1;
     const nextSegment = pathSegments[index + 1];
@@ -282,10 +307,7 @@ export default function BreadcrumbNavigation({
 
       // Add the company name as the final breadcrumb
       const companyId = nextSegment;
-      const companyName =
-        companyNames[companyId] ||
-        supplierNames[companyId] ||
-        (loading ? "جارٍ التحميل..." : `شركة ${companyId}`);
+      const companyName = companyNames[companyId] || " تحميل...";
 
       breadcrumbs.push({
         label: companyName,
@@ -293,7 +315,29 @@ export default function BreadcrumbNavigation({
         icon: null,
       });
 
-      return; // Skip processing the next segment since we handled it
+      index++; // Skip processing the next segment since we handled it
+      continue;
+    } else if (segment === "suppliers" && nextSegment) {
+      // If this is "suppliers" and there's a supplier ID next,
+      // add suppliers with link to /suppliers and skip to supplier name
+      breadcrumbs.push({
+        label: "الموردين",
+        href: "/suppliers",
+        icon: config.icon,
+      });
+
+      // Add the supplier name as the final breadcrumb
+      const supplierId = nextSegment;
+      const supplierName = supplierNames[supplierId] || " تحميل...";
+
+      breadcrumbs.push({
+        label: supplierName,
+        href: null, // Supplier detail page is always the last item
+        icon: null,
+      });
+
+      index++; // Skip processing the next segment since we handled it
+      continue;
     } else if (segment === "messages" && nextSegment) {
       // Messages list then conversation label
       breadcrumbs.push({
@@ -305,17 +349,29 @@ export default function BreadcrumbNavigation({
       const convId = nextSegment;
       const label = conversationLabels[convId] || "محادثة";
       breadcrumbs.push({ label, href: null, icon: null });
-      return;
-    } else if (
-      (pathSegments[index - 1] === "companies" && index > 0) ||
-      (pathSegments[index - 1] === "messages" && index > 0)
-    ) {
-      // Skip this segment as it was already processed above
-      return;
-    } else if (pathSegments[index - 1] === "blogs" && index > 0) {
-      // For blog post page
-      label = getBlogTitle(segment);
-      href = null; // Blog post page is always the last item
+      index++; // Skip processing the next segment since we handled it
+      continue;
+    } else if (segment === "blogs" && nextSegment) {
+      // If this is "blogs" and there's a blog ID next,
+      // add blogs with link to /blogs and skip to blog title
+      breadcrumbs.push({
+        label: "المدونة",
+        href: "/blogs",
+        icon: config.icon,
+      });
+
+      // Add the blog title as the final breadcrumb
+      const blogId = nextSegment;
+      const blogTitle = blogTitles[blogId] || " تحميل...";
+
+      breadcrumbs.push({
+        label: blogTitle,
+        href: null, // Blog detail page is always the last item
+        icon: null,
+      });
+
+      index++; // Skip processing the next segment since we handled it
+      continue;
     }
 
     breadcrumbs.push({
@@ -323,7 +379,7 @@ export default function BreadcrumbNavigation({
       href,
       icon: config.icon,
     });
-  });
+  }
 
   return (
     <div className={`bg-gray-50/50 border-b border-gray-200 ${className}`}>

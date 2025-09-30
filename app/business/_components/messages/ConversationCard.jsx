@@ -111,14 +111,14 @@ export default function ConversationCard({
                 isUnread && "font-medium"
               )}
             >
-              {conversation.lastMessagePreview || "No messages yet"}
+              {conversation.lastMessagePreview || "لا توجد رسائل بعد"}
             </p>
 
             {/* Badge row */}
             {isUnread && (
               <div className="flex items-center">
                 <Badge variant="destructive" className="text-xs px-2 py-0.5">
-                  {participantUnread.count} new
+                  {participantUnread.count} جديد
                 </Badge>
               </div>
             )}

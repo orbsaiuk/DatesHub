@@ -60,7 +60,7 @@ export default function BusinessConversationPageClient({
           // Mark conversation as read
           await markAsRead();
         } else {
-          setError("Conversation not found");
+          setError("لم يتم العثور على المحادثة");
           return;
         }
       }
@@ -85,7 +85,7 @@ export default function BusinessConversationPageClient({
         );
         setHasPendingEventRequest(hasPending);
       } else {
-        setError(messagesData.error || "Failed to load messages");
+        setError(messagesData.error || "فشل في تحميل الرسائل");
       }
 
       // Load current subscription to determine plan
@@ -108,7 +108,7 @@ export default function BusinessConversationPageClient({
         setIsFreePlan(false);
       }
     } catch (err) {
-      setError("Failed to load conversation");
+      setError("فشل في تحميل المحادثة");
       console.error("Failed to load conversation:", err);
     } finally {
       setLoading(false);
@@ -153,10 +153,10 @@ export default function BusinessConversationPageClient({
         // Dispatch event to update inbox count
         window.dispatchEvent(new CustomEvent("unreadCountUpdate"));
       } else {
-        setError(data.error || "Failed to send message");
+        setError(data.error || "فشل في إرسال الرسالة");
       }
     } catch (error) {
-      setError("Failed to send message");
+      setError("فشل في إرسال الرسالة");
       console.error("Failed to send message:", error);
     } finally {
       setSending(false);
@@ -243,13 +243,13 @@ export default function BusinessConversationPageClient({
               variant="outline"
               className="min-h-[44px] w-full sm:w-auto"
             >
-              Back to Messages
+العودة إلى الرسائل
             </Button>
             <Button
               onClick={loadConversation}
               className="min-h-[44px] w-full sm:w-auto"
             >
-              Try Again
+حاول مرة أخرى
             </Button>
           </div>
         </CardContent>
@@ -288,7 +288,7 @@ export default function BusinessConversationPageClient({
                 otherDisplayName={
                   otherParticipant?.displayName ||
                   otherParticipant?.name ||
-                  "Unknown"
+                  "غير معروف"
                 }
                 formatMessageTime={formatMessageTime}
                 getCategoryName={getCategoryName}
@@ -307,8 +307,8 @@ export default function BusinessConversationPageClient({
         {hasPendingEventRequest && (
           <div className="border-t p-3 sm:p-4 bg-muted/30 text-center">
             <p className="text-sm text-muted-foreground">
-              Please respond to the event request above before you can send
-              messages.
+يرجى الرد على طلب الحدث أعلاه قبل أن تتمكن من إرسال
+              الرسائل.
             </p>
           </div>
         )}

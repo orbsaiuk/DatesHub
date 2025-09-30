@@ -78,22 +78,22 @@ export default function PackagesPage({
         const result = await response.json();
 
         if (result.checkoutUrl) {
-          toast.success(`Redirecting to checkout for ${planName}...`);
+          toast.success(`جاري التوجيه إلى الدفع لـ ${planName}...`);
           window.location.href = result.checkoutUrl;
         } else if (result.subscription) {
           // Free plan - no checkout needed
-          toast.success(`Successfully subscribed to ${planName}!`);
+          toast.success(`تم الاشتراك بنجاح في ${planName}!`);
           setTimeout(() => {
             window.location.reload();
           }, 1500);
         }
       } else {
         const error = await response.json();
-        toast.error(error.error || "Failed to process subscription");
+        toast.error(error.error || "فشل في معالجة الاشتراك");
       }
     } catch (error) {
       console.error("Error upgrading plan:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("حدث خطأ ما. يرجى المحاولة مرة أخرى.");
     } finally {
       setLoading(false);
       setShowUpgradeConfirm(null);
@@ -104,7 +104,13 @@ export default function PackagesPage({
     return currentSubscription?.plan?._id || null;
   };
 
-  const isCurrentPlan = (planId) => {
+  const isCurrentPlan = (planId, plan) => {
+    // No subscription = free is current
+    if (!currentSubscription) {
+      return getPlanTier(plan) === "free";
+    }
+
+    // Otherwise match by plan ID
     return getCurrentPlanId() === planId;
   };
 
@@ -130,15 +136,9 @@ export default function PackagesPage({
     return Math.min((used / limit) * 100, 100);
   };
 
-  const getUsageColor = (percentage) => {
-    if (percentage >= 90) return "bg-red-500";
-    if (percentage >= 75) return "bg-yellow-500";
-    return "bg-green-500";
-  };
-
   const formatPrice = (amount, currency, interval) => {
-    if (amount === 0) return "Free";
-    return `$${amount}/${interval === "month" ? "mo" : "yr"}`;
+    if (amount === 0) return "مجاني";
+    return `$${amount}/${interval === "month" ? "شهرياً" : "سنوياً"}`;
   };
 
   // If both monthly and annual Pro exist, compute savings vs monthly*12
@@ -204,7 +204,7 @@ export default function PackagesPage({
           plans={visiblePlans}
           getPlanTier={getPlanTier}
           getPlanIcon={getPlanIcon}
-          isCurrentPlan={isCurrentPlan}
+          isCurrentPlan={(planId, plan) => isCurrentPlan(planId, plan)}
           canUpgrade={canUpgrade}
           canDowngrade={canDowngrade}
           loading={loading}

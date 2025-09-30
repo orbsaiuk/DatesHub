@@ -27,22 +27,22 @@ export default function UpgradeConfirmDialog({
       <DialogContent className="sm:max-w-md w-[95%] max-w-[425px] rounded-lg">
         <DialogHeader className="space-y-3">
           <DialogTitle className="text-lg sm:text-xl">
-            Confirm Plan Change
+            تأكيد تغيير الباقة
           </DialogTitle>
           <DialogDescription className="text-sm sm:text-base">
-            Are you sure you want to {canUpgrade(plan) ? "upgrade" : "change"}{" "}
-            to the {plan.name} plan?
+            هل أنت متأكد من أنك تريد {canUpgrade(plan) ? "الترقية" : "التغيير"}{" "}
+            إلى باقة {plan.name}؟
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           <div className="bg-muted p-4 rounded-lg space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">New Plan:</span>
+              <span className="text-sm font-medium">الباقة الجديدة:</span>
               <span className="font-medium">{plan.name}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Price:</span>
+              <span className="text-sm font-medium">السعر:</span>
               <span className="font-medium">
                 {formatPrice(
                   plan.price?.amount || 0,
@@ -54,21 +54,21 @@ export default function UpgradeConfirmDialog({
           </div>
         </div>
 
-        <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-0">
+        <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
           <Button
             variant="outline"
             onClick={onClose}
             disabled={loading}
             className="cursor-pointer touch-manipulation h-12 w-full sm:w-auto"
           >
-            Cancel
+            إلغاء
           </Button>
           <Button
             onClick={() => onConfirm(plan._id, plan.name, plan.stripePriceId)}
             disabled={loading}
             className="cursor-pointer touch-manipulation h-12 w-full sm:w-auto"
           >
-            {loading ? "Processing..." : "Confirm"}
+            {loading ? "جاري المعالجة..." : "تأكيد"}
           </Button>
         </DialogFooter>
       </DialogContent>

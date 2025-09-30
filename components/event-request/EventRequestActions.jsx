@@ -12,14 +12,14 @@ export default function EventRequestActions({ onCancel, isLoading, isValid }) {
         disabled={isLoading}
         className="w-full sm:w-auto cursor-pointer"
       >
-        Cancel
+        الغاء
       </Button>
       <Button
         type="submit"
         disabled={!isValid || isLoading}
         className="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-white cursor-pointer"
       >
-        {isLoading ? "Submitting..." : "Submit"}
+        {isLoading ? "جارٍ التسليم..." : "تسليم"}
       </Button>
     </div>
   );

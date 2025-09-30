@@ -5,9 +5,9 @@ import BlogHero from "./_components/BlogHero";
 import BlogsClient from "./_components/BlogsClient";
 
 export const metadata = {
-  title: "Our Blog - OrbsAI",
+  title: "المدونة",
   description:
-    "Stay inspired with tips, trends, and guides to make every event unforgettable. Whether you're an event planner, a business, or just planning a one-off celebration, we've got you covered.",
+    "ابقَ ملهمًا بالنصائح والاتجاهات والأدلة لجعل كل حدث لا يُنسى. سواء كنت منظم فعاليات أو شركة أو تخطط لاحتفال لمرة واحدة، نحن نوفر لك كل ما تحتاجه.",
 };
 
 export default async function BlogPage() {

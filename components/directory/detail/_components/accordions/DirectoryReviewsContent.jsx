@@ -7,6 +7,13 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ReviewDialog from "../ReviewDialog";
 import StarRating from "../StarRating";
 
@@ -89,46 +96,51 @@ export default function DirectoryReviewsContent({
   return (
     <div className="space-y-3" id="reviews">
       <section>
-        <p className="text-xs text-muted-foreground mb-2">Review Highlights</p>
+        <p className="text-xs text-muted-foreground mb-2">أبرز التقييمات</p>
         <div className="flex flex-wrap items-center gap-2 justify-between mb-2">
           <div className="flex items-center gap-2 text-xs">
-            <label className="text-muted-foreground">Sort</label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="rounded-md border px-2 py-1"
+            <label className="text-muted-foreground">ترتيب</label>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[120px] h-8" dir="rtl">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">الأحدث</SelectItem>
+                <SelectItem value="highest">أعلى تقييم</SelectItem>
+                <SelectItem value="lowest">أقل تقييم</SelectItem>
+              </SelectContent>
+            </Select>
+            <label className="ml-3 text-muted-foreground">تصفية</label>
+            <Select
+              value={filterBy.toString()}
+              onValueChange={(value) => setFilterBy(Number(value))}
             >
-              <option value="newest">Newest</option>
-              <option value="highest">Highest rating</option>
-              <option value="lowest">Lowest rating</option>
-            </select>
-            <label className="ml-3 text-muted-foreground">Filter</label>
-            <select
-              value={filterBy}
-              onChange={(e) => setFilterBy(Number(e.target.value))}
-              className="rounded-md border px-2 py-1"
-            >
-              <option value={0}>All ratings</option>
-              {[5, 4, 3, 2, 1].map((r) => (
-                <option key={r} value={r}>
-                  {r} stars
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-[140px] h-8" dir="rtl">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">جميع التقييمات</SelectItem>
+                {[5, 4, 3, 2, 1].map((r) => (
+                  <SelectItem key={r} value={r.toString()}>
+                    {r} نجوم
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <button
             type="button"
             onClick={() => setOpen(true)}
             className="text-xs text-primary hover:underline cursor-pointer"
           >
-            Write a review
+            اكتب تقييماً
           </button>
         </div>
         {displayed.length === 0 ? (
           <Alert className="px-3 py-2">
-            <AlertTitle>No reviews yet</AlertTitle>
+            <AlertTitle>لا توجد تقييمات بعد</AlertTitle>
             <AlertDescription>
-              When customers leave reviews, you will see highlights here.
+              عندما يترك العملاء تقييمات، ستراها هنا.
             </AlertDescription>
           </Alert>
         ) : (

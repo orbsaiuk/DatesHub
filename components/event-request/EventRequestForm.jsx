@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Clock, MapPin, FileText } from "lucide-react";
+import { MapPin, FileText } from "lucide-react";
 import {
   eventRequestSchema,
   defaultEventRequestValues,
@@ -12,6 +12,8 @@ import {
 // Import smaller components
 import FullNameInput from "./FullNameInput";
 import EventRequestInput from "./EventRequestInput";
+import EventRequestDatePicker from "./EventRequestDatePicker";
+import EventRequestTimePicker from "./EventRequestTimePicker";
 import NumberOfGuestsInput from "./NumberOfGuestsInput";
 import CategorySelect from "./CategorySelect";
 import EventRequestTextarea from "./EventRequestTextarea";
@@ -50,22 +52,23 @@ export default function EventRequestForm({
     }
   };
 
-  // Get minimum date (today)
-  const today = new Date().toISOString().split("T")[0];
-
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="text-center pb-6">
         <CardTitle className="text-2xl font-bold text-gray-900">
-          Plan Your Perfect Event – It's Quick & Easy
+          خطط فعاليتك المثاليه – إنه سريع وسهل
         </CardTitle>
         <p className="text-gray-600 mt-2">
-          Tell us the details of your event and we'll connect you with the best
-          suppliers to make it unforgettable.
+          أخبرنا التفاصيل حول فعاليتك وسنقوم بتوصيلك مع أفضل الموردين لجعله غير
+          قابل للنسيان.
         </p>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
+        <form
+          dir="rtl"
+          onSubmit={handleSubmit(onFormSubmit)}
+          className="space-y-6"
+        >
           {/* Full Name and Event Date Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FullNameInput
@@ -74,32 +77,29 @@ export default function EventRequestForm({
               error={errors.fullName}
               hasValue={watchedValues.fullName?.trim()}
             />
-            <EventRequestInput
+            <EventRequestDatePicker
               name="eventDate"
-              label="Event Date"
-              type="date"
-              placeholder="Select the date of your event"
-              icon={<Calendar size={16} />}
+              label="تاريخ الفعالية"
               required={true}
               error={errors.eventDate}
               hasValue={watchedValues.eventDate?.trim()}
-              register={register}
-              min={today}
+              setValue={setValue}
+              value={watchedValues.eventDate}
+              trigger={trigger}
             />
           </div>
 
           {/* Event Time and Number of Guests Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <EventRequestInput
+            <EventRequestTimePicker
               name="eventTime"
-              label="Event Time"
-              type="time"
-              placeholder="Select the time"
-              icon={<Clock size={16} />}
+              label="وقت الفعالية"
               required={true}
               error={errors.eventTime}
               hasValue={watchedValues.eventTime?.trim()}
-              register={register}
+              setValue={setValue}
+              value={watchedValues.eventTime}
+              trigger={trigger}
             />
             <NumberOfGuestsInput
               register={register}
@@ -121,9 +121,9 @@ export default function EventRequestForm({
             />
             <EventRequestInput
               name="serviceRequired"
-              label="Service Required"
+              label="الخدمات المطلوبة"
               type="text"
-              placeholder="e.g., Catering, Photography, DJ"
+              placeholder="مثال: التصوير, الموسيقى"
               icon={<FileText size={16} />}
               required={true}
               error={errors.serviceRequired}
@@ -136,9 +136,9 @@ export default function EventRequestForm({
           <div className="grid grid-cols-1 gap-6">
             <EventRequestInput
               name="eventLocation"
-              label="Event Location"
+              label="موقع الفعالية"
               type="text"
-              placeholder="Enter the city or exact venue location"
+              placeholder="أدخل المدينة أو الموقع الدقيق"
               icon={<MapPin size={16} />}
               required={true}
               error={errors.eventLocation}
@@ -151,8 +151,8 @@ export default function EventRequestForm({
           <div>
             <EventRequestTextarea
               name="eventDescription"
-              label="Event Description"
-              placeholder="Describe your event, theme, or any special requests"
+              label="وصف الفعالية"
+              placeholder="وصف فعاليتك, الموضوع, أو أي طلبات خاصة"
               required={true}
               error={errors.eventDescription}
               hasValue={watchedValues.eventDescription?.trim()}

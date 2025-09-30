@@ -5,8 +5,8 @@ import { getUserSupplier } from "@/services/sanity/entities";
 import BusinessMessagesPageClient from "./BusinessMessagesPageClient";
 
 export const metadata = {
-  title: "Messages",
-  description: "Communicate with partner companies",
+  title: "الرسائل",
+  description: "تواصل مع الشركات الشريكة",
 };
 
 export default async function SupplierMessagesPage() {
@@ -25,9 +25,9 @@ export default async function SupplierMessagesPage() {
       <main className="flex-1">
         <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
           <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2">Messages</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2">الرسائل</h1>
             <p className="text-sm sm:text-base text-muted-foreground">
-              Communicate with partner companies
+              تواصل مع الشركات الشريكة
             </p>
           </div>
 
@@ -36,7 +36,7 @@ export default async function SupplierMessagesPage() {
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Loading messages...
+                  جاري تحميل الرسائل...
                 </p>
               </div>
             }

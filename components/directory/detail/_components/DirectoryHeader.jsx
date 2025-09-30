@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Clock3,
   MapPin,
   ExternalLink,
   BookmarkPlus,
@@ -168,7 +167,7 @@ export default function DirectoryHeader({ company }) {
           </div>
         </div>
         <SignedIn>
-          <div className="shrink-0 absolute top-1 right-1 sm:top-2 sm:right-2">
+          <div className="shrink-0 absolute top-1 left-1 sm:top-2 sm:left-2">
             <Button
               variant="ghost"
               size="icon"

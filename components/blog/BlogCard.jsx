@@ -12,8 +12,8 @@ export default function BlogCard({ blog }) {
   const authorLogoUrl = blog.author?.company?.logo?.asset?.url
     ? urlFor(blog.author.company.logo).width(16).height(16).url()
     : blog.author?.supplier?.logo?.asset?.url
-    ? urlFor(blog.author.supplier.logo).width(16).height(16).url()
-    : null;
+      ? urlFor(blog.author.supplier.logo).width(16).height(16).url()
+      : null;
 
   let authorName =
     blog.author?.company?.name || blog.author?.supplier?.name || null;
@@ -34,7 +34,7 @@ export default function BlogCard({ blog }) {
   return (
     <article className="group">
       <Link
-        href={`/blogs/${blog.slug?.current}`}
+        href={`/blogs/${blog._id}`}
         className="block h-full touch-manipulation"
       >
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden h-full flex flex-col hover:shadow-md transition-shadow duration-200">

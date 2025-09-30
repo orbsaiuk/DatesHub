@@ -30,11 +30,11 @@ export default function ReviewDialog({
     if (submitting) return;
     try {
       if (!rating || rating < 1 || rating > 5) {
-        toast.error("Please select a rating");
+        toast.error("يرجى اختيار تقييم");
         return;
       }
       if (!title.trim() || !content.trim()) {
-        toast.error("Please fill in title and review");
+        toast.error("يرجى ملء العنوان والمراجعة");
         return;
       }
       setSubmitting(true);
@@ -55,7 +55,7 @@ export default function ReviewDialog({
       }
       if (!res.ok) throw new Error("Failed");
       const payload = await res.json().catch(() => null);
-      toast.success("Review submitted");
+      toast.success("تم إرسال التقييم");
       try {
         if (typeof window !== "undefined") {
           window.dispatchEvent(
@@ -66,7 +66,7 @@ export default function ReviewDialog({
       onSubmitted && onSubmitted();
       onClose && onClose();
     } catch (_) {
-      toast.error("Could not submit review. Please try again.");
+      toast.error("لا يمكن إرسال التقييم. يرجى المحاولة مرة أخرى.");
     } finally {
       setSubmitting(false);
     }
@@ -79,23 +79,23 @@ export default function ReviewDialog({
     >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Write a review</DialogTitle>
+          <DialogTitle>اكتب تقييماً</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="text-sm font-medium">Rating</label>
+            <label className="text-sm font-medium">التقييم</label>
             <div className="mt-1">
               <StarRating
                 rating={rating}
                 onChange={(v) => setRating(v)}
                 size={20}
-                ariaLabel="Select rating"
+                ariaLabel="اختر التقييم"
               />
             </div>
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium">Title</label>
+              <label className="text-sm font-medium">العنوان</label>
               <span className="text-xs text-muted-foreground">
                 {title.length}/{titleLimit}
               </span>
@@ -103,12 +103,12 @@ export default function ReviewDialog({
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value.slice(0, titleLimit))}
-              placeholder="Great experience!"
+              placeholder="تجربة رائعة!"
             />
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium">Your review</label>
+              <label className="text-sm font-medium">تقييمك</label>
               <span className="text-xs text-muted-foreground">
                 {content.length}/{contentLimit}
               </span>
@@ -118,7 +118,7 @@ export default function ReviewDialog({
               onChange={(e) =>
                 setContent(e.target.value.slice(0, contentLimit))
               }
-              placeholder="Share details about your experience..."
+              placeholder="شارك تفاصيل تجربتك..."
               rows={5}
             />
           </div>
@@ -130,14 +130,14 @@ export default function ReviewDialog({
               disabled={submitting}
               className="cursor-pointer"
             >
-              Cancel
+              إلغاء
             </Button>
             <Button
               type="submit"
               disabled={submitting}
               className="cursor-pointer"
             >
-              {submitting ? "Submitting..." : "Submit review"}
+              {submitting ? "جاري الإرسال..." : "إرسال التقييم"}
             </Button>
           </div>
         </form>

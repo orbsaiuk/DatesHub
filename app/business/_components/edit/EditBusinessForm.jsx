@@ -9,6 +9,8 @@ import ServicesForm from "./ServicesForm";
 import OurWorksForm from "./OurWorksForm";
 import AwardsForm from "./AwardsForm";
 import ContactInfo from "./ContactInfo";
+import { ArrowLeft } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function EditBusinessForm({
   initialBusiness,
@@ -257,6 +259,11 @@ export default function EditBusinessForm({
       // Process logo upload if it's a File
       const processedLogo = await processImages(form.logo);
 
+      // Filter out empty social links
+      const filteredSocialLinks = Array.isArray(form.socialLinks)
+        ? form.socialLinks.filter((link) => link && link.trim() !== "")
+        : [];
+
       const payload = {
         ...form,
         logo: processedLogo,
@@ -265,7 +272,7 @@ export default function EditBusinessForm({
         ourWorks: processedOurWorks,
         ...(entityType === "company"
           ? {
-              socialLinks: form.socialLinks,
+              socialLinks: filteredSocialLinks,
               companyType: form.companyType,
               totalEmployees: form.totalEmployees,
             }
@@ -427,15 +434,9 @@ export default function EditBusinessForm({
         ]
           .map((v) => (typeof v === "string" ? v.trim() : v))
           .some(Boolean);
-        const hasSocialLinks = Array.isArray(form?.socialLinks)
-          ? form.socialLinks.length > 0
-          : false;
-        const ok = entityType === "company" ? hasAny && hasSocialLinks : hasAny;
-        if (!ok) {
+        if (!hasAny) {
           toast.error(
-            entityType === "company"
-              ? "يرجى تقديم تفاصيل الاتصال ورابط واحد على الأقل لوسائل التواصل الاجتماعي."
-              : "يرجى تقديم تفاصيل اتصال واحدة على الأقل."
+            "يرجى ملء جميع حقول الاتصال المطلوبة (الاسم، الهاتف، البريد الإلكتروني، العنوان)."
           );
           return;
         }
@@ -529,7 +530,7 @@ export default function EditBusinessForm({
                 onClick={goToPreviousSection}
                 className="cursor-pointer px-4 py-2"
               >
-                ← السابق
+                <ArrowRight className="mr-1" /> السابق
               </Button>
             )}
           </div>
@@ -542,7 +543,7 @@ export default function EditBusinessForm({
                 onClick={goToNextSection}
                 className="cursor-pointer w-full sm:w-auto px-4 py-2"
               >
-                التالي →
+                التالي <ArrowLeft className="mr-1" />
               </Button>
             ) : (
               <Button

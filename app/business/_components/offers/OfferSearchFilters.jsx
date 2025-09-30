@@ -25,7 +25,7 @@ export default function OfferSearchFilters({
       <div className="relative flex-1 md:max-w-sm">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search offers..."
+          placeholder="البحث في العروض..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="pl-10 h-12 md:h-10 text-base md:text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20"
@@ -36,14 +36,14 @@ export default function OfferSearchFilters({
       </div>
 
       <div className="flex gap-3 md:gap-2">
-        <Select value={status} onValueChange={setStatus}>
+        <Select value={status} onValueChange={setStatus} dir="rtl">
           <SelectTrigger className="flex-1 md:w-40 h-12 md:h-10 text-base md:text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20">
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder="الحالة" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="all">جميع الحالات</SelectItem>
+            <SelectItem value="active">نشط</SelectItem>
+            <SelectItem value="inactive">غير نشط</SelectItem>
           </SelectContent>
         </Select>
 
@@ -55,8 +55,8 @@ export default function OfferSearchFilters({
             className="h-12 md:h-10 px-4 md:px-3 text-orange-600 border-orange-200 hover:bg-orange-50 whitespace-nowrap"
           >
             <RefreshCw className="h-4 w-4 mr-2 md:mr-1" />
-            <span className="hidden sm:inline">Retry</span>
-            <span className="sm:hidden">Retry</span>
+            <span className="hidden sm:inline">إعادة المحاولة</span>
+            <span className="sm:hidden">إعادة المحاولة</span>
           </Button>
         )}
       </div>

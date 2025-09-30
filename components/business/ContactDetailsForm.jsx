@@ -98,7 +98,7 @@ export default function ContactDetailsForm({
         placeholder={placeholder}
         inputMode={isTel ? "numeric" : undefined}
         pattern={isTel ? "[0-9]*" : undefined}
-        className={`mt-1 ${error ? "border-destructive focus-visible:ring-destructive" : ""}`}
+        className={`mt-1 text-right ${error ? "border-destructive focus-visible:ring-destructive" : ""}`}
       />
     );
   };

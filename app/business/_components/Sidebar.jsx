@@ -28,7 +28,7 @@ const getNavItems = (userRole) => [
     icon: House,
   },
   { href: `/business/${userRole}/edit`, label: "تعديل الملف", icon: User },
-  { href: `/business/${userRole}/calendar`, label: "التقويم", icon: Calendar },
+  { href: `/business/${userRole}/calendar`, label: "الحجوزات", icon: Calendar },
   { href: `/business/${userRole}/offers`, label: "العروض", icon: Gift },
   ...(userRole === "supplier"
     ? []
@@ -123,7 +123,6 @@ export default function Sidebar({ userRole, entity, children }) {
 
   const isBusiness = userRole === "company" || userRole === "supplier";
   const displayEntity = entity?.company || entity?.supplier || entity;
-  const displayLogo = displayEntity?.logo;
   const displayName = displayEntity?.name || "شركة";
 
   // Load initial collapsed state from localStorage
@@ -198,7 +197,7 @@ export default function Sidebar({ userRole, entity, children }) {
       <div className="w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 flex">
         {/* Desktop Sidebar - Part of Header */}
         <aside
-          className={`hidden md:block transition-all duration-300 overflow-hidden border-r ${
+          className={`hidden md:block transition-all duration-300 overflow-hidden border-l ${
             isSidebarCollapsed ? "w-16" : "w-64"
           }`}
         >
@@ -229,7 +228,7 @@ export default function Sidebar({ userRole, entity, children }) {
               {/* Toggle Button */}
               <button
                 onClick={handleToggleCollapse}
-                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                className="cursor-pointer p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
                 title={
                   isSidebarCollapsed
                     ? "توسيع الشريط الجانبي"
@@ -237,9 +236,9 @@ export default function Sidebar({ userRole, entity, children }) {
                 }
               >
                 {isSidebarCollapsed ? (
-                  <ChevronRight className="h-4 w-4" />
-                ) : (
                   <ChevronLeft className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
                 )}
               </button>
             </div>
@@ -290,7 +289,7 @@ export default function Sidebar({ userRole, entity, children }) {
       <div className="flex min-h-[calc(100vh-4rem)]">
         {/* Desktop Sidebar Navigation - Below header but aligned with sidebar */}
         <aside
-          className={`hidden md:block transition-all duration-300 overflow-hidden border-r sticky top-16 self-start h-[calc(100vh-4rem)] ${
+          className={`hidden md:block transition-all duration-300 overflow-hidden border-l sticky top-16 self-start h-[calc(100vh-4rem)] ${
             isSidebarCollapsed ? "w-16" : "w-64"
           }`}
         >

@@ -50,7 +50,7 @@ export default function EventRequestButton({
 
   const handleSubmit = async (formData) => {
     if (!companyTenantId) {
-      toast.error("Company information is missing");
+      toast.error("المعلومات الشركية مفقودة");
       return;
     }
 
@@ -90,7 +90,7 @@ export default function EventRequestButton({
         throw new Error(errorData.error || "Failed to submit event request");
       }
 
-      toast.success("Event request submitted successfully!");
+      toast.success("طلب الحدث تم إرساله بنجاح!");
       setIsOpen(false);
 
       // Call the callbacks if provided
@@ -99,7 +99,7 @@ export default function EventRequestButton({
     } catch (error) {
       console.error("Error submitting event request:", error);
       toast.error(
-        error.message || "Failed to submit event request. Please try again."
+        error.message || "فشل إرسال طلب الحدث. يرجى المحاولة مرة أخرى."
       );
     } finally {
       setIsLoading(false);
@@ -121,13 +121,13 @@ export default function EventRequestButton({
           disabled={!isLoaded}
         >
           <Calendar className="size-4 mr-2" />
-          {!isLoaded ? "Loading..." : "Request Event"}
+          {!isLoaded ? "جارٍ التحميل..." : "طلب حجز فعالية"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">
-            Request Event from {companyName}
+          <DialogTitle className="text-xl font-semibold text-center">
+            طلب حجز فعالية من {companyName}
           </DialogTitle>
         </DialogHeader>
         <div className="mt-4">

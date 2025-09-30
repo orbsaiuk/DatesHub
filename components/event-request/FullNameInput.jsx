@@ -21,18 +21,18 @@ export default function FullNameInput({ register, setValue, error, hasValue }) {
   return (
     <EventRequestInput
       name="fullName"
-      label="Full Name"
+      label="الاسم الكامل"
       type="text"
       placeholder={
         user?.firstName || user?.lastName
-          ? `Auto-filled from your account: ${user.firstName || ""} ${user.lastName || ""}`.trim()
-          : "Enter your full name only"
+          ? `تم التعبئة تلقائيا من حسابك: ${user.firstName || ""} ${user.lastName || ""}`.trim()
+          : "أدخل الاسم الكامل فقط"
       }
       icon={<User size={16} />}
       required={true}
       helperText={
         user?.firstName || user?.lastName
-          ? "✓ Auto-filled from your account. You can edit if needed."
+          ? "✓ تم التعبئة تلقائيا من حسابك. يمكنك تعديله إذا لزم الأمر."
           : null
       }
       error={error}

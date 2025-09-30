@@ -37,11 +37,11 @@ export default function CurrentPlanCard({
         window.open(portalUrl, "_blank");
       } else {
         const error = await response.json();
-        toast.error(error.error || "Failed to open billing portal");
+        toast.error(error.error || "فشل في فتح بوابة الدفع");
       }
     } catch (error) {
       console.error("Error opening billing portal:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("حدث خطأ ما. يرجى المحاولة مرة أخرى.");
     } finally {
       setBillingLoading(false);
     }
@@ -58,7 +58,7 @@ export default function CurrentPlanCard({
             <div className="min-w-0 flex-1">
               <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-2 text-lg sm:text-xl">
                 <span className="leading-tight">
-                  Current Plan: {subscription.plan?.name}
+                  الباقة الحالية: {subscription.plan?.name}
                 </span>
                 <Badge
                   variant={
@@ -74,7 +74,7 @@ export default function CurrentPlanCard({
                   <span className="flex items-center space-x-1">
                     <Calendar className="w-4 h-4 flex-shrink-0" />
                     <span className="leading-tight">
-                      Renews on{" "}
+                      يتجدد في{" "}
                       {new Date(subscription.endDate).toLocaleDateString()}
                     </span>
                   </span>
@@ -92,7 +92,9 @@ export default function CurrentPlanCard({
               className="flex items-center space-x-2 cursor-pointer touch-manipulation w-full sm:w-auto h-10 sm:h-auto px-4 text-sm whitespace-nowrap"
             >
               <Settings className="w-4 h-4 flex-shrink-0" />
-              <span>{billingLoading ? "Loading..." : "Manage Billing"}</span>
+              <span>
+                {billingLoading ? "جاري التحميل..." : "إدارة الفواتير"}
+              </span>
               <ExternalLink className="w-3 h-3 flex-shrink-0" />
             </Button>
           )}
@@ -103,7 +105,7 @@ export default function CurrentPlanCard({
         <CardContent className="pt-0">
           <h4 className="font-medium mb-4 flex items-center space-x-2 text-base sm:text-lg">
             <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span>Usage Overview</span>
+            <span>نظرة عامة على الاستخدام</span>
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {Object.entries(limits).map(([key, value]) => (

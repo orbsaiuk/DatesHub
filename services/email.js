@@ -66,16 +66,16 @@ export async function sendApprovalEmail(reqDoc) {
     if (!to) return { ok: false, reason: "no email address" };
 
     const entityType = reqDoc.tenantType || "company";
-    const entityLabel = entityType === "supplier" ? "مورد" : "شركة";
+    const entityLabel = entityType === "supplier" ? "موردك" : "شركتك";
 
-    const subject = `🎉 تم قبول تسجيل ${entityLabel}ك!`;
+    const subject = `🎉 تم قبول تسجيل ${entityLabel}!`;
     const html = buildBasicHtmlEmail(`مرحباً بك في منصتنا!`, [
       `مرحباً${reqDoc?.name ? ` ${reqDoc.name}` : ""},`,
       "",
-      `أخبار رائعة! تم **قبول** ومعالجة طلب تسجيل ${entityLabel}ك.`,
+      `أخبار رائعة! تم **قبول** ومعالجة طلب تسجيل ${entityLabel}.`,
       "",
       "**ماذا يحدث بعد ذلك:**",
-      `• تم إنشاء ملف ${entityLabel}ك الشخصي وهو متاح الآن`,
+      `• تم إنشاء ملف ${entityLabel} الشخصي وهو متاح الآن`,
       "• يمكنك الآن الوصول إلى لوحة التحكم لإدارة ملفك الشخصي",
       "• ابدأ بالتواصل مع الشركاء والعملاء المحتملين",
       "• حديث معلومات شركتك في أي وقت",
@@ -122,9 +122,9 @@ export async function sendRejectionEmail(reqDoc) {
     }
 
     const entityType = reqDoc.tenantType || "company";
-    const entityLabel = entityType === "supplier" ? "مورد" : "شركة";
+    const entityLabel = entityType === "supplier" ? "موردك" : "شركتك";
 
-    const subject = `مطلوب تحديث: تسجيل ${entityLabel}ك`;
+    const subject = `مطلوب تحديث: تسجيل ${entityLabel}`;
     const html = buildBasicHtmlEmail(`مطلوب تحديث التسجيل`, [
       `مرحباً${reqDoc?.name ? ` ${reqDoc.name}` : ""},`,
       "",

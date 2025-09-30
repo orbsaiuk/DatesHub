@@ -27,7 +27,7 @@ export default function PlanCard({
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
           <Badge className="bg-primary text-primary-foreground px-3 py-1 sm:px-4 sm:py-1 text-xs sm:text-sm">
             <Star className="w-3 h-3 mr-1" />
-            Most Popular
+الأكثر شعبية
           </Badge>
         </div>
       )}
@@ -39,7 +39,7 @@ export default function PlanCard({
             className="bg-green-500 text-white px-2 py-1 sm:px-3 sm:py-1 text-xs"
           >
             <Check className="w-3 h-3 mr-1" />
-            Current Plan
+            الباقة الحالية
           </Badge>
         </div>
       )}
@@ -78,7 +78,7 @@ export default function PlanCard({
                     variant="outline"
                     className="text-xs mt-1 inline-block"
                   >
-                    Up to {feature.limit}
+حتى {feature.limit}
                   </Badge>
                 )}
               </div>
@@ -86,7 +86,7 @@ export default function PlanCard({
           ))}
           {plan.features?.length > 6 && (
             <p className="text-xs text-muted-foreground text-center pt-2">
-              +{plan.features.length - 6} more features
++{plan.features.length - 6} ميزة إضافية
             </p>
           )}
         </div>
@@ -99,7 +99,7 @@ export default function PlanCard({
               disabled
             >
               <Check className="w-4 h-4 mr-2" />
-              Current Plan
+الباقة الحالية
             </Button>
           ) : canUpgradeToThis ? (
             <Button
@@ -112,7 +112,7 @@ export default function PlanCard({
               ) : (
                 <ArrowUp className="w-4 h-4 mr-2" />
               )}
-              Upgrade to {plan.name}
+الترقية إلى {plan.name}
             </Button>
           ) : canDowngradeToThis ? (
             <Button
@@ -121,7 +121,7 @@ export default function PlanCard({
               onClick={onChoose}
               disabled={loading}
             >
-              Downgrade to {plan.name}
+التراجع إلى {plan.name}
             </Button>
           ) : tier === "enterprise" ? (
             <Button
@@ -129,7 +129,7 @@ export default function PlanCard({
               className="w-full h-12 text-sm sm:text-base touch-manipulation"
             >
               <Users className="w-4 h-4 mr-2" />
-              Contact Sales
+تواصل مع المبيعات
             </Button>
           ) : (
             <Button
@@ -137,7 +137,7 @@ export default function PlanCard({
               className="w-full h-12 text-sm sm:text-base"
               disabled
             >
-              Not Available
+غير متاح
             </Button>
           )}
         </div>

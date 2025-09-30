@@ -18,7 +18,6 @@ export default function BlogCard({
   onPreview,
   onDelete, // immediate delete
   onAskDelete, // legacy confirm path
-  onView,
   showActions = true,
   pending = { id: null, type: null },
 }) {
@@ -48,11 +47,37 @@ export default function BlogCard({
     }
   };
 
+  const getStatusBgColor = (status) => {
+    switch (status) {
+      case "published":
+        return "bg-green-50 border-green-200 text-green-700";
+      case "pending":
+        return "bg-amber-50 border-amber-200 text-amber-700";
+      case "rejected":
+        return "bg-red-50 border-red-200 text-red-700";
+      default:
+        return "bg-gray-50 border-gray-200 text-gray-700";
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case "published":
+        return "منشور";
+      case "pending":
+        return "قيد المراجعة";
+      case "rejected":
+        return "مرفوض";
+      default:
+        return status;
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return "Not set";
-    return new Date(dateString).toLocaleDateString("en-US", {
+    return new Date(dateString).toLocaleDateString("ar-EG", {
       year: "numeric",
-      month: "short",
+      month: "long",
       day: "numeric",
     });
   };
@@ -69,7 +94,7 @@ export default function BlogCard({
         <div className="absolute inset-0 z-20 bg-background/80 backdrop-blur-sm flex items-center justify-center">
           <div className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span>Deleting...</span>
+            <span>جاري الحذف...</span>
           </div>
         </div>
       )}
@@ -80,8 +105,11 @@ export default function BlogCard({
               {title}
             </h3>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Badge variant={getStatusColor(status)} className="text-xs">
-                {status.charAt(0).toUpperCase() + status.slice(1)}
+              <Badge
+                variant={getStatusColor(status)}
+                className={`text-xs ${getStatusBgColor(status)}`}
+              >
+                {getStatusLabel(status)}
               </Badge>
             </div>
           </div>
@@ -105,16 +133,7 @@ export default function BlogCard({
                     disabled={deleting}
                   >
                     <Eye className="h-4 w-4 mr-2" />
-                    Preview
-                  </DropdownMenuItem>
-                )}
-                {onView && (
-                  <DropdownMenuItem
-                    onClick={() => onView(blog)}
-                    disabled={deleting}
-                  >
-                    <Eye className="h-4 w-4 mr-2" />
-                    View
+                    معاينة
                   </DropdownMenuItem>
                 )}
                 {(onDelete || onAskDelete) && (
@@ -126,7 +145,7 @@ export default function BlogCard({
                     disabled={deleting}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
+                    حذف
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
@@ -178,28 +197,28 @@ export default function BlogCard({
               <Calendar className="h-3 w-3" />
               <span>
                 {status === "published" && publishedAt
-                  ? `Published ${formatDate(publishedAt)}`
-                  : `Created ${formatDate(_createdAt)}`}
+                  ? `نُشر في ${formatDate(publishedAt)}`
+                  : `أُنشئ في ${formatDate(_createdAt)}`}
               </span>
             </div>
 
             {status === "published" && (
               <div className="flex items-center gap-1">
                 <Eye className="h-3 w-3" />
-                <span>{views} views</span>
+                <span>{views} مشاهدة</span>
               </div>
             )}
           </div>
 
           {status === "rejected" && (
             <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
-              This post was rejected. Please review and resubmit.
+              تم رفض هذا المقال. يرجى المراجعة وإعادة الإرسال.
             </div>
           )}
 
           {status === "pending" && (
             <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-700">
-              This post is under review.
+              هذا المقال قيد المراجعة.
             </div>
           )}
         </div>

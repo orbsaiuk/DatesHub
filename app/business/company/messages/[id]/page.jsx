@@ -5,8 +5,8 @@ import { getUserCompany } from "@/services/sanity/entities";
 import BusinessConversationPageClient from "./BusinessConversationPageClient";
 
 export const metadata = {
-  title: "Conversation",
-  description: "View conversation",
+  title: "المحادثة",
+  description: "عرض المحادثة",
 };
 
 export default async function BusinessConversationPage({ params }) {
@@ -33,7 +33,7 @@ export default async function BusinessConversationPage({ params }) {
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
               <p className="mt-2 text-sm text-muted-foreground">
-                Loading conversation...
+                جاري تحميل المحادثة...
               </p>
             </div>
           }

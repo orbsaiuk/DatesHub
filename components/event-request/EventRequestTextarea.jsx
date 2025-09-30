@@ -13,10 +13,13 @@ export default function EventRequestTextarea({
   register,
 }) {
   return (
-    <div className="space-y-2">
-      <Label htmlFor={name} className="text-sm font-medium text-gray-700">
+    <div className="space-y-2" dir="rtl">
+      <Label
+        htmlFor={name}
+        className="text-sm font-medium text-gray-700 text-right"
+      >
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="text-red-500 mr-1">*</span>}
       </Label>
       <div className="relative">
         <Textarea
@@ -24,8 +27,9 @@ export default function EventRequestTextarea({
           placeholder={placeholder}
           rows={4}
           {...register(name)}
+          dir="rtl"
           className={`
-            resize-none
+            resize-none text-right placeholder:text-right
             ${error ? "border-red-500 focus-visible:ring-red-500" : ""}
             ${hasValue && !error ? "border-green-500" : ""}
           `}

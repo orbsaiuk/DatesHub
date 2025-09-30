@@ -49,7 +49,7 @@ export default function OfferActions({
             isDisabled && "cursor-not-allowed",
             className
           )}
-          title="More actions"
+          title="المزيد من الإجراءات"
           disabled={isDisabled}
         >
           {isDisabled ? (
@@ -71,26 +71,26 @@ export default function OfferActions({
               disabled={isDisabled || cannotActivate}
               title={
                 cannotActivate
-                  ? "Cannot activate: offer end date has passed"
+                  ? "لا يمكن التفعيل: انتهت صلاحية العرض"
                   : undefined
               }
             >
-              {offer.status === "active" ? "Deactivate" : "Activate"}
+              {offer.status === "active" ? "إلغاء التفعيل" : "تفعيل"}
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
                 {offer.status === "active"
-                  ? "Deactivate offer?"
-                  : "Activate offer?"}
+                  ? "إلغاء تفعيل العرض؟"
+                  : "تفعيل العرض؟"}
               </AlertDialogTitle>
               <AlertDialogDescription>
                 {offer.status === "active"
-                  ? "This offer will become inactive and may be auto-deleted after 3 days."
+                  ? "سيصبح هذا العرض غير نشط وقد يتم حذفه تلقائياً بعد 3 أيام."
                   : isExpired
-                    ? `This offer ended on ${format(new Date(offer.endDate), "PP")}. It cannot be reactivated.`
-                    : "This offer will be visible as active."}
+                    ? `انتهى هذا العرض في ${format(new Date(offer.endDate), "PP")}. لا يمكن إعادة تفعيله.`
+                    : "سيظهر هذا العرض كنشط."}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -98,7 +98,7 @@ export default function OfferActions({
                 disabled={isDisabled}
                 className="cursor-pointer h-12 md:h-10"
               >
-                Cancel
+                إلغاء
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={() =>
@@ -112,10 +112,10 @@ export default function OfferActions({
                 {isDisabled && pending.type === "toggle" ? (
                   <span className="inline-flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Working...
+                    جاري العمل...
                   </span>
                 ) : (
-                  "Confirm"
+                  "تأكيد"
                 )}
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -128,21 +128,20 @@ export default function OfferActions({
               variant="ghost"
               className="w-full justify-start text-red-600 hover:text-red-600 hover:bg-red-50 transition-colors duration-200 cursor-pointer h-12 md:h-10"
               disabled={isDisabled}
-              title="Delete offer permanently"
+              title="حذف العرض نهائياً"
             >
-              <span className="inline-flex items-center gap-2">Delete</span>
+              <span className="inline-flex items-center gap-2">حذف</span>
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="max-w-md">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-red-600 flex items-center gap-2">
-                ⚠️ Delete offer permanently?
+                ⚠️ حذف العرض نهائياً؟
               </AlertDialogTitle>
               <AlertDialogDescription className="space-y-2">
                 <div>
-                  This action cannot be undone. The offer will be permanently
-                  removed from your dashboard and will no longer be visible to
-                  potential clients.
+                  لا يمكن التراجع عن هذا الإجراء. سيتم حذف العرض نهائياً من لوحة
+                  التحكم ولن يكون مرئياً للعملاء المحتملين.
                 </div>
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -151,7 +150,7 @@ export default function OfferActions({
                 disabled={isDisabled}
                 className="hover:bg-gray-50 cursor-pointer h-12 md:h-10"
               >
-                Keep offer
+                الاحتفاظ بالعرض
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => onDelete(offer._id)}
@@ -161,11 +160,11 @@ export default function OfferActions({
                 {isDisabled && pending.type === "delete" ? (
                   <span className="inline-flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Deleting...
+                    جاري الحذف...
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-2">
-                    🗑️ Delete permanently
+                    🗑️ حذف نهائياً
                   </span>
                 )}
               </AlertDialogAction>

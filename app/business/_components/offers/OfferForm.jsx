@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ImageUploader from "@/app/business/_components/edit/ImageUploader";
+import OfferDatePicker from "./OfferDatePicker";
 
 export default function OfferForm({
   values,
@@ -34,9 +35,8 @@ export default function OfferForm({
   const todayStr = useMemo(() => new Date().toISOString().split("T")[0], []);
   const minEndStr = useMemo(() => {
     if (!form.startDate) return "";
-    const d = new Date(form.startDate);
-    d.setDate(d.getDate() + 1);
-    return d.toISOString().split("T")[0];
+    // Allow same date for start and end (same-day offers)
+    return form.startDate;
   }, [form.startDate]);
 
   return (
@@ -50,63 +50,55 @@ export default function OfferForm({
     >
       <div className="space-y-1">
         <label className="text-sm font-medium">
-          Title <span className="text-red-600">*</span>
+          العنوان <span className="text-red-600">*</span>
         </label>
         <Input
           value={form.title}
           onChange={(e) => onChange({ ...form, title: e.target.value })}
-          placeholder="Wedding Photography"
+          placeholder="تصوير الأعراس"
           className="h-12 text-base md:h-10 md:text-sm"
         />
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+        <OfferDatePicker
+          label="تاريخ البداية"
+          required={true}
+          value={form.startDate}
+          onChange={(startDate) => {
+            let end = form.endDate;
+            if (end && new Date(end) < new Date(startDate)) {
+              end = "";
+            }
+            onChange({ ...form, startDate, endDate: end });
+          }}
+          minDate={todayStr}
+          placeholder="اختر تاريخ البداية"
+        />
+        <OfferDatePicker
+          label="تاريخ النهاية"
+          required={true}
+          value={form.endDate}
+          onChange={(endDate) => onChange({ ...form, endDate })}
+          minDate={minEndStr || todayStr}
+          disabled={!form.startDate}
+          placeholder="اختر تاريخ النهاية"
+        />
         <div className="space-y-1">
           <label className="text-sm font-medium">
-            Start date <span className="text-red-600">*</span>
-          </label>
-          <Input
-            type="date"
-            value={form.startDate}
-            min={todayStr}
-            onChange={(e) => {
-              const start = e.target.value;
-              let end = form.endDate;
-              if (end && new Date(end) <= new Date(start)) {
-                end = "";
-              }
-              onChange({ ...form, startDate: start, endDate: end });
-            }}
-            className="h-12 text-base md:h-10 md:text-sm"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium">
-            End date <span className="text-red-600">*</span>
-          </label>
-          <Input
-            type="date"
-            value={form.endDate}
-            min={minEndStr || todayStr}
-            disabled={!form.startDate}
-            onChange={(e) => onChange({ ...form, endDate: e.target.value })}
-            className="h-12 text-base md:h-10 md:text-sm disabled:opacity-70"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium">
-            Status <span className="text-red-600">*</span>
+            الحالة <span className="text-red-600">*</span>
           </label>
           <Select
             value={form.status}
             onValueChange={(v) => onChange({ ...form, status: v })}
+            dir="rtl"
           >
             <SelectTrigger className="h-12 md:h-10 text-base md:text-sm">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder="الحالة" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
+              <SelectItem value="active">نشط</SelectItem>
+              <SelectItem value="inactive">غير نشط</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -114,25 +106,25 @@ export default function OfferForm({
 
       <div className="space-y-1">
         <label className="text-sm font-medium">
-          Description <span className="text-red-600">*</span>
+          الوصف <span className="text-red-600">*</span>
         </label>
         <Textarea
           rows={4}
           value={form.description}
           onChange={(e) => onChange({ ...form, description: e.target.value })}
-          placeholder="Describe your offer details"
+          placeholder="اوصف تفاصيل عرضك"
           className="text-base md:text-sm"
         />
       </div>
 
       <div className="space-y-1">
         <label className="text-sm font-medium">
-          Image <span className="text-red-600">*</span>
+          الصورة <span className="text-red-600">*</span>
         </label>
         <ImageUploader
           image={form.image}
           onImageChange={(img) => onChange({ ...form, image: img })}
-          placeholder="Upload offer image"
+          placeholder="رفع صورة العرض"
           multiple={false}
         />
       </div>
@@ -145,14 +137,14 @@ export default function OfferForm({
           disabled={isLoading}
           className="h-12 md:h-10"
         >
-          Cancel
+          إلغاء
         </Button>
         <Button
           type="submit"
           disabled={!isValid || isLoading}
           className="h-12 md:h-10"
         >
-          {isLoading ? "Creating..." : "Create"}
+          {isLoading ? "جاري الإنشاء..." : "إنشاء"}
         </Button>
       </div>
     </form>

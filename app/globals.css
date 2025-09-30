@@ -322,3 +322,33 @@
     padding: 8px;
   }
 }
+
+.quill-toolbar-rtl {
+  direction: rtl;
+  text-align: right;
+  font-family: "Tajawal", "Amiri", Arial, sans-serif;
+}
+.quill-toolbar-rtl .ql-picker {
+  direction: rtl;
+  text-align: left;
+}
+
+.ql-editor {
+  direction: rtl;
+  /* text-align: right; */
+}
+
+.ql-editor ol,
+.ql-editor ul {
+  direction: rtl !important;
+  padding-right: 1.5rem !important;
+}
+
+.ql-editor li > .ql-ui:before {
+  margin-right: -1rem !important;
+}
+
+.ql-tooltip,
+.ql-tooltip.ql-editing {
+  left: 910px !important;
+}

@@ -12,17 +12,14 @@ export default function WhatToReadNext({ blogs }) {
       <div className="max-w-7xl mx-auto">
         {/* Mobile-first responsive title */}
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-6 sm:mb-8 lg:mb-12 text-center leading-tight">
-          What to Read Next
+          ماذا تقرأ بعد ذلك
         </h2>
 
         {/* Mobile-first responsive grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
           {blogs.slice(0, 2).map((blog) => (
             <article key={blog._id} className="group">
-              <Link
-                href={`/blogs/${blog.slug.current}`}
-                className="block h-full"
-              >
+              <Link href={`/blogs/${blog._id}`} className="block h-full">
                 <div className="h-full flex flex-col">
                   {/* Image with responsive aspect ratio */}
                   {blog.blogImage?.asset?.url && (
@@ -97,7 +94,7 @@ export default function WhatToReadNext({ blogs }) {
 
                       {blog.readingTime && (
                         <span className="flex-shrink-0">
-                          {blog.readingTime} min read
+                          {blog.readingTime} دقيقة قراءة
                         </span>
                       )}
                     </div>

@@ -41,7 +41,7 @@ export default function WriteUserReviewModal({
       setTitle("");
       setContent("");
     } catch (_) {
-      setError("Failed to submit review");
+      setError("فشل في إرسال التقييم");
     } finally {
       setSubmitting(false);
     }
@@ -51,7 +51,7 @@ export default function WriteUserReviewModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Write a review</DialogTitle>
+          <DialogTitle>اكتب تقييماً</DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
           <div className="flex items-center gap-2">
@@ -59,7 +59,7 @@ export default function WriteUserReviewModal({
               <button
                 key={s}
                 onClick={() => setRating(s)}
-                aria-label={`Rate ${s} star${s > 1 ? "s" : ""}`}
+                aria-label={`قيم ${s} ${s > 1 ? "نجوم" : "نجمة"}`}
                 type="button"
                 className="cursor-pointer"
               >
@@ -70,23 +70,23 @@ export default function WriteUserReviewModal({
             ))}
           </div>
           <Input
-            placeholder="Title (optional)"
+            placeholder="العنوان (اختياري)"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
           <Textarea
-            placeholder="Share details (optional)"
+            placeholder="شارك التفاصيل (اختياري)"
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600">فشل في إرسال التقييم</p>}
           <div className="flex items-center gap-2">
             <Button
               onClick={handleSubmit}
               disabled={submitting || rating === 0}
               className="cursor-pointer"
             >
-              {submitting ? "Submitting…" : "Submit review"}
+              {submitting ? "جاري الإرسال..." : "إرسال التقييم"}
             </Button>
           </div>
         </div>

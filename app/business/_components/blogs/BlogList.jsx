@@ -23,9 +23,9 @@ export default function BlogList({
   onView,
   onRefresh,
   showCreateButton = true,
-  title = "Blog Posts",
-  emptyStateTitle = "No blog posts yet",
-  emptyStateDescription = "Start sharing your expertise and company updates.",
+  title = "مقالات المدونة",
+  emptyStateTitle = "لا توجد مقالات بعد",
+  emptyStateDescription = "ابدأ في مشاركة خبرتك وتحديثات شركتك.",
 }) {
   const [filteredBlogs, setFilteredBlogs] = useState(blogs);
   const [searchTerm, setSearchTerm] = useState("");
@@ -125,7 +125,7 @@ export default function BlogList({
             {title}
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground">
-            Manage your blog posts and share your expertise
+            إدارة مقالاتك ومشاركة خبرتك
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
@@ -137,7 +137,7 @@ export default function BlogList({
               className="min-h-[44px] px-4 py-2 w-full sm:w-auto justify-center"
             >
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
+              تحديث
             </Button>
           )}
           {showCreateButton && onCreateNew && (
@@ -146,7 +146,7 @@ export default function BlogList({
               className="min-h-[44px] px-4 py-2 w-full sm:w-auto justify-center"
             >
               <Plus className="h-4 w-4 mr-2" />
-              New Post
+              مقال جديد
             </Button>
           )}
         </div>
@@ -160,7 +160,7 @@ export default function BlogList({
               <div className="text-lg sm:text-2xl font-bold">
                 {statusCounts.all}
               </div>
-              <p className="text-xs text-muted-foreground">Total Posts</p>
+              <p className="text-xs text-muted-foreground">إجمالي المقالات</p>
             </CardContent>
           </Card>
           <Card>
@@ -168,7 +168,7 @@ export default function BlogList({
               <div className="text-lg sm:text-2xl font-bold text-yellow-600">
                 {statusCounts.pending}
               </div>
-              <p className="text-xs text-muted-foreground">Pending Review</p>
+              <p className="text-xs text-muted-foreground">قيد المراجعة</p>
             </CardContent>
           </Card>
           <Card>
@@ -176,7 +176,7 @@ export default function BlogList({
               <div className="text-lg sm:text-2xl font-bold text-green-600">
                 {statusCounts.published}
               </div>
-              <p className="text-xs text-muted-foreground">Published</p>
+              <p className="text-xs text-muted-foreground">منشور</p>
             </CardContent>
           </Card>
           <Card>
@@ -184,7 +184,7 @@ export default function BlogList({
               <div className="text-lg sm:text-2xl font-bold text-red-600">
                 {statusCounts.rejected}
               </div>
-              <p className="text-xs text-muted-foreground">Rejected</p>
+              <p className="text-xs text-muted-foreground">مرفوض</p>
             </CardContent>
           </Card>
         </div>
@@ -200,7 +200,7 @@ export default function BlogList({
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search posts..."
+                    placeholder="بحث في المقالات..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10 min-h-[44px]"
@@ -214,20 +214,20 @@ export default function BlogList({
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-full sm:w-[180px] min-h-[44px]">
                     <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Filter by status" />
+                    <SelectValue placeholder="تصفية حسب الحالة" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">
-                      All Status ({statusCounts.all})
+                      جميع الحالات ({statusCounts.all})
                     </SelectItem>
                     <SelectItem value="pending">
-                      Pending ({statusCounts.pending})
+                      قيد المراجعة ({statusCounts.pending})
                     </SelectItem>
                     <SelectItem value="published">
-                      Published ({statusCounts.published})
+                      منشور ({statusCounts.published})
                     </SelectItem>
                     <SelectItem value="rejected">
-                      Rejected ({statusCounts.rejected})
+                      مرفوض ({statusCounts.rejected})
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -235,14 +235,14 @@ export default function BlogList({
                 {/* Sort */}
                 <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger className="w-full sm:w-[180px] min-h-[44px]">
-                    <SelectValue placeholder="Sort by" />
+                    <SelectValue placeholder="ترتيب حسب" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="newest">Newest First</SelectItem>
-                    <SelectItem value="oldest">Oldest First</SelectItem>
-                    <SelectItem value="title">Title A-Z</SelectItem>
-                    <SelectItem value="status">Status</SelectItem>
-                    <SelectItem value="views">Most Views</SelectItem>
+                    <SelectItem value="newest">الأحدث أولاً</SelectItem>
+                    <SelectItem value="oldest">الأقدم أولاً</SelectItem>
+                    <SelectItem value="title">العنوان أ-ي</SelectItem>
+                    <SelectItem value="status">الحالة</SelectItem>
+                    <SelectItem value="views">الأكثر مشاهدة</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -275,7 +275,7 @@ export default function BlogList({
           {showCreateButton && onCreateNew && (
             <Button onClick={onCreateNew}>
               <Plus className="h-4 w-4 mr-2" />
-              Create Your First Post
+              أنشئ مقالك الأول
             </Button>
           )}
         </div>
@@ -285,9 +285,11 @@ export default function BlogList({
           <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
             <Search className="h-8 w-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-semibold mb-2">No posts found</h3>
+          <h3 className="text-lg font-semibold mb-2">
+            لم يتم العثور على مقالات
+          </h3>
           <p className="text-muted-foreground mb-4">
-            Try adjusting your search or filter criteria.
+            حاول تعديل معايير البحث أو التصفية.
           </p>
           <Button
             variant="outline"
@@ -298,7 +300,7 @@ export default function BlogList({
             }}
             className="min-h-[44px] px-4 py-2"
           >
-            Clear Filters
+            مسح المرشحات
           </Button>
         </div>
       )}

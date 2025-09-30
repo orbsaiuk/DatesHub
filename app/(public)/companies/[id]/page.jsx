@@ -15,6 +15,6 @@ export async function generateMetadata({ params }) {
   return await buildDetailMetadata({ id, basePath: "/companies" });
 }
 
-export default function SupplierDetailsPage(props) {
+export default function CompanyDetailsPage(props) {
   return <DirectoryDetailPage {...props} basePath="/companies" />;
 }

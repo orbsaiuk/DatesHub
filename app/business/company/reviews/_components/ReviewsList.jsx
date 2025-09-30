@@ -75,10 +75,10 @@ export default function ReviewsList({ reviews }) {
           <span className="text-xl sm:text-2xl">⭐</span>
         </div>
         <h3 className="text-base sm:text-lg font-semibold mb-2">
-          No reviews yet
+          لا توجد تقييمات بعد
         </h3>
         <p className="text-muted-foreground">
-          When customers leave reviews, they'll appear here.
+          عندما يترك العملاء تقييمات، ستظهر هنا.
         </p>
       </div>
     );
@@ -88,33 +88,33 @@ export default function ReviewsList({ reviews }) {
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-sm text-muted-foreground">
-          Showing {(currentPage - 1) * pageSize + 1}-
-          {Math.min(currentPage * pageSize, sorted.length)} of {sorted.length}
+          عرض {(currentPage - 1) * pageSize + 1}-
+          {Math.min(currentPage * pageSize, sorted.length)} من {sorted.length}
         </p>
         <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-          <Select value={ratingFilter} onValueChange={handleChangeFilter}>
+          <Select value={ratingFilter} onValueChange={handleChangeFilter} dir="rtl">
             <SelectTrigger className="w-full sm:w-40">
-              <SelectValue placeholder="Filter" />
+              <SelectValue placeholder="تصفية" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All ratings</SelectItem>
-              <SelectItem value="5">5 stars</SelectItem>
-              <SelectItem value="4">4 stars</SelectItem>
-              <SelectItem value="3">3 stars</SelectItem>
-              <SelectItem value="2">2 stars</SelectItem>
-              <SelectItem value="1">1 star</SelectItem>
+              <SelectItem value="all">جميع التقييمات</SelectItem>
+              <SelectItem value="5">5 نجوم</SelectItem>
+              <SelectItem value="4">4 نجوم</SelectItem>
+              <SelectItem value="3">3 نجوم</SelectItem>
+              <SelectItem value="2">نجمتان</SelectItem>
+              <SelectItem value="1">نجمة واحدة</SelectItem>
             </SelectContent>
           </Select>
 
           <Select value={sortBy} onValueChange={handleChangeSort}>
             <SelectTrigger className="w-full sm:w-40">
-              <SelectValue placeholder="Sort by" />
+              <SelectValue placeholder="ترتيب حسب" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="newest">Newest</SelectItem>
-              <SelectItem value="oldest">Oldest</SelectItem>
-              <SelectItem value="highest">Highest rating</SelectItem>
-              <SelectItem value="lowest">Lowest rating</SelectItem>
+              <SelectItem value="newest">الأحدث</SelectItem>
+              <SelectItem value="oldest">الأقدم</SelectItem>
+              <SelectItem value="highest">أعلى تقييم</SelectItem>
+              <SelectItem value="lowest">أقل تقييم</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -126,10 +126,10 @@ export default function ReviewsList({ reviews }) {
             <span className="text-xl sm:text-2xl">🔍</span>
           </div>
           <h3 className="text-base sm:text-lg font-semibold mb-2">
-            No reviews match your filters
+            لا توجد تقييمات تطابق المرشحات
           </h3>
           <p className="text-muted-foreground">
-            Try adjusting the rating filter or sort order.
+            جرب تعديل مرشح التقييم أو ترتيب الفرز.
           </p>
         </div>
       ) : (

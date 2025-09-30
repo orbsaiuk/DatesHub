@@ -44,12 +44,12 @@ export default function OfferCard({
             {offer.status === "active" ? (
               <span className="inline-flex items-center rounded-full bg-green-100/90 text-green-700 px-2.5 py-1 text-xs font-medium ring-1 ring-green-200 backdrop-blur">
                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5" />
-                Active
+                نشط
               </span>
             ) : (
               <span className="inline-flex items-center rounded-full bg-gray-100/90 text-gray-700 px-2.5 py-1 text-xs font-medium ring-1 ring-gray-200 backdrop-blur">
                 <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1.5" />
-                Inactive
+                غير نشط
               </span>
             )}
           </div>
@@ -105,7 +105,9 @@ export default function OfferCard({
           {/* Mobile info grid */}
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Start Date</p>
+              <p className="text-xs text-muted-foreground mb-1">
+                تاريخ البداية
+              </p>
               <p className="text-sm font-medium">
                 {offer.startDate
                   ? new Date(offer.startDate).toLocaleDateString()
@@ -113,7 +115,9 @@ export default function OfferCard({
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground mb-1">End Date</p>
+              <p className="text-xs text-muted-foreground mb-1">
+                تاريخ النهاية
+              </p>
               <p className="text-sm font-medium">
                 {offer.endDate
                   ? new Date(offer.endDate).toLocaleDateString()

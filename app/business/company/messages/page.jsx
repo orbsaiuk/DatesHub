@@ -5,8 +5,8 @@ import { getUserCompany } from "@/services/sanity/entities";
 import BusinessMessagesPageClient from "./BusinessMessagesPageClient";
 
 export const metadata = {
-  title: "Messages",
-  description: "Communicate with your clients and prospects",
+  title: "الرسائل",
+  description: "تواصل مع عملائك والعملاء المحتملين",
 };
 
 export default async function CompanyMessagesPage() {
@@ -25,9 +25,9 @@ export default async function CompanyMessagesPage() {
       <main className="flex-1">
         <div className="max-w-4xl mx-auto">
           <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2">Messages</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2">الرسائل</h1>
             <p className="text-sm sm:text-base text-muted-foreground">
-              Communicate with your clients and prospects
+            تواصل مع عملائك
             </p>
           </div>
 
@@ -36,7 +36,7 @@ export default async function CompanyMessagesPage() {
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Loading messages...
+                  جاري تحميل الرسائل...
                 </p>
               </div>
             }

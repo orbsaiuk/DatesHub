@@ -1,6 +1,7 @@
 "use client";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import "moment/locale/ar"; // Import Arabic locale
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
@@ -9,33 +10,33 @@ import { Plus } from "lucide-react";
 import EventDialog from "./EventDialog";
 import EventDetailsDialog from "./EventDetailsDialog";
 
+// Set moment to use Arabic locale
+moment.locale("ar");
 const localizer = momentLocalizer(moment);
 
 const eventStyleGetter = (event) => {
   let backgroundColor = "#3174ad"; // default
   let color = "white";
 
-  // Priority-based colors
   if (event.priority) {
     switch (event.priority) {
       case "low":
-        backgroundColor = "#10b981"; // emerald
+        backgroundColor = "#10b981";
         break;
       case "medium":
-        backgroundColor = "#3b82f6"; // blue
+        backgroundColor = "#3b82f6";
         break;
       case "high":
-        backgroundColor = "#f59e0b"; // amber
+        backgroundColor = "#f59e0b";
         break;
       case "urgent":
-        backgroundColor = "#ef4444"; // red
+        backgroundColor = "#ef4444";
         break;
       default:
         backgroundColor = "#3174ad";
     }
   }
 
-  // Status overrides (e.g., cancelled/completed)
   if (event.status === "cancelled") {
     backgroundColor = "#ef4444";
   } else if (event.status === "completed") {
@@ -63,8 +64,19 @@ const EventComponent = ({ event }) => {
     cancelled: "bg-red-100 text-red-800",
   };
 
+  const statusTranslations = {
+    planned: "مخطط",
+    confirmed: "مؤكد",
+    "in-progress": "جاري",
+    completed: "مكتمل",
+    cancelled: "ملغى",
+  };
+
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-1 p-0.5 sm:p-1">
+    <div
+      className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-1 p-0.5 sm:p-1"
+      dir="rtl"
+    >
       <span className="truncate capitalize font-medium flex-1 min-w-0 text-[11px] sm:text-[13px]">
         {event.title}
       </span>
@@ -75,7 +87,7 @@ const EventComponent = ({ event }) => {
             px-1.5 sm:px-2 py-0 text-[9px] sm:text-[10px] leading-tight shrink-0 whitespace-nowrap 
             rounded-sm sm:rounded font-medium`}
         >
-          {event.status.toUpperCase()}
+          {statusTranslations[event.status] || event.status}
         </Badge>
       )}
     </div>
@@ -124,11 +136,36 @@ export default function EventCalendar() {
     fetchEvents();
   }, []);
 
-  const handleSelectSlot = ({ start, end }) => {
-    setSelectedSlot({ start, end });
+  // ---------- UPDATED: robust RTL slot handling ----------
+  // Use the full slotInfo (may include `slots` array). For month view,
+  // `onSelecting` is unreliable, but `onSelectSlot` provides `slots` — we use min/max of slots.
+  const handleSelectSlot = (slotInfo) => {
+    // slotInfo shape: { start, end, slots, action, ... }
+    const { start, end, slots } = slotInfo || {};
+
+    let normalizedStart = start;
+    let normalizedEnd = end;
+
+    if (Array.isArray(slots) && slots.length > 0) {
+      // compute min / max from slots array (works even if user dragged right -> left)
+      const slotDates = slots.map((s) => new Date(s).getTime());
+      const minTime = Math.min(...slotDates);
+      const maxTime = Math.max(...slotDates);
+      normalizedStart = new Date(minTime);
+      normalizedEnd = new Date(maxTime);
+    } else {
+      // fallback: swap if start > end
+      if (moment(start).isAfter(moment(end))) {
+        normalizedStart = end;
+        normalizedEnd = start;
+      }
+    }
+
+    setSelectedSlot({ start: normalizedStart, end: normalizedEnd });
     setSelectedEvent(null);
     setShowEventDialog(true);
   };
+  // ------------------------------------------------------
 
   const handleSelectEvent = (event) => {
     setSelectedEvent(event);
@@ -166,7 +203,7 @@ export default function EventCalendar() {
         <div className="flex flex-col items-center space-y-3">
           <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 border-b-2 border-primary"></div>
           <p className="text-sm sm:text-base text-muted-foreground font-medium">
-            جاري تحميل التقويم...
+            جاري تحميل الحجوزات...
           </p>
         </div>
       </div>
@@ -174,8 +211,12 @@ export default function EventCalendar() {
   }
 
   return (
-    <div className="w-full max-w-full space-y-2 sm:space-y-4 p-2 sm:p-4">
-      {/* Header Section - Mobile First */}
+    // Add dir="rtl" to the wrapper so the browser pointer coordinates match visual RTL layout
+    <div
+      className="w-full max-w-full space-y-2 sm:space-y-4 p-2 sm:p-4"
+      dir="rtl"
+    >
+      {/* Header Section */}
       <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div className="space-y-1">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
@@ -186,7 +227,6 @@ export default function EventCalendar() {
           </p>
         </div>
 
-        {/* Mobile-friendly button */}
         <Button
           onClick={() => {
             setSelectedSlot(null);
@@ -201,7 +241,7 @@ export default function EventCalendar() {
         </Button>
       </div>
 
-      {/* Calendar Container - Fully Responsive */}
+      {/* Calendar */}
       <div className="w-full bg-white rounded-lg border shadow-sm overflow-hidden">
         <div className="w-full overflow-x-auto">
           <div className="min-w-[320px] p-2 sm:p-4">
@@ -212,12 +252,32 @@ export default function EventCalendar() {
               <Calendar
                 localizer={localizer}
                 events={events}
+                culture="ar"
                 startAccessor="start"
                 endAccessor="end"
                 selectable
+                // ---------- RTL prop: enable internal RTL layout handling ----------
+                rtl
+                // pass elementProps so the calendar root element has dir="rtl" too
+                elementProps={{ dir: "rtl" }}
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleSelectEvent}
                 eventPropGetter={eventStyleGetter}
+                messages={{
+                  allDay: "طوال اليوم",
+                  previous: "السابق",
+                  next: "التالي",
+                  today: "اليوم",
+                  month: "شهر",
+                  week: "أسبوع",
+                  day: "يوم",
+                  agenda: "جدول الأعمال",
+                  date: "التاريخ",
+                  time: "الوقت",
+                  event: "حدث",
+                  noEventsInRange: "لا توجد أحداث في هذا النطاق",
+                  showMore: (total) => `+${total} المزيد`,
+                }}
                 components={{
                   event: EventComponent,
                   toolbar: ({ label, onNavigate, onView }) => (
@@ -240,18 +300,23 @@ export default function EventCalendar() {
                         </button>
                       </div>
                       <div className="flex justify-center sm:justify-end">
-                        <div className="flex bg-gray-100 rounded p-1">
-                          {["month", "week", "day", "agenda"].map((view) => (
+                        <div className="flex bg-gray-100 rounded p-1" dir="rtl">
+                          {[
+                            { key: "month", label: "شهر" },
+                            { key: "week", label: "أسبوع" },
+                            { key: "day", label: "يوم" },
+                            { key: "agenda", label: "جدول" },
+                          ].map((view) => (
                             <button
-                              key={view}
-                              onClick={() => onView(view)}
-                              className={`px-2 py-1 text-xs sm:text-sm rounded capitalize ${
-                                currentView === view
+                              key={view.key}
+                              onClick={() => onView(view.key)}
+                              className={`px-2 py-1 text-xs sm:text-sm rounded ${
+                                currentView === view.key
                                   ? "bg-white shadow-sm font-medium"
                                   : "hover:bg-gray-200 cursor-pointer"
                               }`}
                             >
-                              {view}
+                              {view.label}
                             </button>
                           ))}
                         </div>
@@ -276,7 +341,7 @@ export default function EventCalendar() {
         </div>
       </div>
 
-      {/* Event Creation/Edit Dialog */}
+      {/* Event Dialogs */}
       <EventDialog
         open={showEventDialog}
         onOpenChange={setShowEventDialog}
@@ -285,7 +350,6 @@ export default function EventCalendar() {
         onSave={handleEventSaved}
       />
 
-      {/* Event Details Dialog */}
       <EventDetailsDialog
         open={showEventDetails}
         onOpenChange={setShowEventDetails}
