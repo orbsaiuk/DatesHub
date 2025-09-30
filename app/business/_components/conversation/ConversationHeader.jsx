@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft, Building2, User, Star } from "lucide-react";
+import { ArrowRight, Building2, User, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
@@ -51,7 +51,7 @@ export default function ConversationHeader({ otherParticipant, onBackClick }) {
         onClick={onBackClick}
         className="hover:bg-muted/50 min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px] cursor-pointer"
       >
-        <ArrowLeft className="h-5 w-5 sm:h-4 sm:w-4" />
+        <ArrowRight className="h-5 w-5 sm:h-4 sm:w-4" />
       </Button>
 
       <div
@@ -96,7 +96,7 @@ export default function ConversationHeader({ otherParticipant, onBackClick }) {
                 />
                 {typeof userRating === "number"
                   ? `${userRating.toFixed(2)} / 5`
-                  : "No ratings"}
+                  : "لا توجد تقييمات"}
                 <span className="text-muted-foreground">
                   · {userRatingCount}
                 </span>
@@ -110,7 +110,7 @@ export default function ConversationHeader({ otherParticipant, onBackClick }) {
                   setOpenWriteReview(true);
                 }}
               >
-                Write review
+                اكتب تقييماً
               </Button>
             </div>
           )}

@@ -20,9 +20,9 @@ export default function MessageGroup({
       const now = new Date();
 
       if (isToday(messageDate)) {
-        return "Today";
+        return "اليوم";
       } else if (isYesterday(messageDate)) {
-        return "Yesterday";
+        return "أمس";
       } else {
         // Check if it's within the last 7 days
         const diffInDays = Math.floor(

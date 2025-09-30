@@ -75,7 +75,9 @@ export default function CurrentPlanCard({
                     <Calendar className="w-4 h-4 flex-shrink-0" />
                     <span className="leading-tight">
                       يتجدد في{" "}
-                      {new Date(subscription.endDate).toLocaleDateString()}
+                      {new Date(subscription.endDate).toLocaleDateString(
+                        "ar-EG"
+                      )}
                     </span>
                   </span>
                 )}

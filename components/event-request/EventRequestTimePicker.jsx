@@ -1,16 +1,18 @@
 "use client";
 
-import * as React from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
+import { format } from "date-fns";
+import { ar } from "date-fns/locale";
 import { Clock } from "lucide-react";
-
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function EventRequestTimePicker({
   name,
@@ -22,131 +24,75 @@ export default function EventRequestTimePicker({
   value,
   trigger,
 }) {
-  const [time, setTime] = React.useState(value || "");
-  const [open, setOpen] = React.useState(false);
+  const [time, setTime] = useState(value || undefined);
 
-  // Generate hours (0-23) and minutes (0-59)
-  const hours = Array.from({ length: 24 }, (_, i) =>
-    i.toString().padStart(2, "0")
-  );
-  const minutes = Array.from({ length: 60 }, (_, i) =>
-    i.toString().padStart(2, "0")
-  );
+  // Generate time options (every 15 minutes)
+  const timeOptions = useMemo(() => {
+    const options = [];
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute += 15) {
+        const timeString = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
+        const displayTime = format(
+          new Date(`2000-01-01T${timeString}`),
+          "h:mm a",
+          { locale: ar }
+        );
+        options.push({ value: timeString, label: displayTime });
+      }
+    }
+    return options;
+  }, []);
 
-  const handleTimeSelect = (selectedHour, selectedMinute) => {
-    const timeString = `${selectedHour}:${selectedMinute}`;
-    setTime(timeString);
-    setValue(name, timeString);
-    trigger(name); // Trigger validation
-    setOpen(false);
-  };
+  const handleTimeSelect = useCallback(
+    (selectedTime) => {
+      setTime(selectedTime);
+      setValue(name, selectedTime);
+      trigger(name); // Trigger validation
+    },
+    [setValue, name, trigger]
+  );
 
   // Update local state when value prop changes
-  React.useEffect(() => {
-    if (value !== time) {
-      setTime(value || "");
+  useEffect(() => {
+    if (value && value !== time) {
+      setTime(value);
     }
-  }, [value, time]);
-
-  // Parse current time for display
-  const [currentHour, currentMinute] = time ? time.split(":") : ["", ""];
-
-  // Convert 24-hour format to 12-hour format for Arabic display
-  const formatTimeForDisplay = (timeStr) => {
-    if (!timeStr) return "اختر الوقت";
-
-    const [hour, minute] = timeStr.split(":");
-    const hourNum = parseInt(hour, 10);
-    const period = hourNum >= 12 ? "مساءً" : "صباحاً";
-    const displayHour =
-      hourNum === 0 ? 12 : hourNum > 12 ? hourNum - 12 : hourNum;
-
-    return `${displayHour}:${minute} ${period}`;
-  };
+  }, [value]);
 
   return (
     <div className="space-y-2" dir="rtl">
       <Label
         htmlFor={name}
-        className="text-sm font-medium text-gray-700 text-right"
+        className="text-sm font-medium text-gray-700 text-right block"
       >
         {label}
-        {required && <span className="text-red-500 mr-1">*</span>}
+        {required && <span className="text-red-600 mr-1">*</span>}
       </Label>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            id={name}
-            variant="outline"
-            className={cn(
-              "w-full text-right font-normal",
-              !time && "text-muted-foreground",
-              error ? "border-red-500 focus-visible:ring-red-500" : "",
-              hasValue && !error ? "border-green-500" : ""
-            )}
-            dir="rtl"
-          >
-            <Clock className="ml-2 h-4 w-4" />
-            <span>{formatTimeForDisplay(time)}</span>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-64 p-0" align="start">
-          <div className="flex" dir="rtl">
-            {/* Hours */}
-            <div className="flex-1">
-              <div className="p-2 text-center text-sm font-medium border-b">
-                الساعة
-              </div>
-              <div className="h-48 overflow-y-auto">
-                <div className="p-1">
-                  {hours.map((hour) => (
-                    <button
-                      key={hour}
-                      className={cn(
-                        "w-full px-2 py-1 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground",
-                        currentHour === hour &&
-                          "bg-primary text-primary-foreground"
-                      )}
-                      onClick={() =>
-                        handleTimeSelect(hour, currentMinute || "00")
-                      }
-                    >
-                      {hour}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
 
-            {/* Minutes */}
-            <div className="flex-1 border-r">
-              <div className="p-2 text-center text-sm font-medium border-b">
-                الدقيقة
-              </div>
-              <div className="h-48 overflow-y-auto">
-                <div className="p-1">
-                  {minutes.map((minute) => (
-                    <button
-                      key={minute}
-                      className={cn(
-                        "w-full px-2 py-1 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground",
-                        currentMinute === minute &&
-                          "bg-primary text-primary-foreground"
-                      )}
-                      onClick={() =>
-                        handleTimeSelect(currentHour || "00", minute)
-                      }
-                    >
-                      {minute}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
+      <Select value={time} onValueChange={handleTimeSelect} dir="rtl">
+        <SelectTrigger
+          id={name}
+          className={cn(
+            "w-full h-12 md:h-10 text-base md:text-sm",
+            error ? "border-red-500 focus-visible:ring-red-500" : "",
+            hasValue && !error ? "border-green-500" : ""
+          )}
+        >
+          <div className="flex items-center">
+            <Clock className="ml-2 h-4 w-4" />
+            <SelectValue placeholder="اختر الوقت" />
           </div>
-        </PopoverContent>
-      </Popover>
-      {error && <p className="text-xs text-red-600 mt-1">{error.message}</p>}
+        </SelectTrigger>
+        <SelectContent dir="rtl" className="max-h-60">
+          {timeOptions.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {error && <p className="text-sm text-red-500 mt-1">{error.message}</p>}
     </div>
   );
 }

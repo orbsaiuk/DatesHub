@@ -141,7 +141,7 @@ export async function POST(request) {
           kind: "user",
           clerkId: userId,
         },
-        text: `New Event Request: ${serviceRequired}`,
+        text: `طلب فعالية جديد: ${serviceRequired}`,
         messageType: "event_request",
         eventRequestData: {
           eventRequestId: result._id,

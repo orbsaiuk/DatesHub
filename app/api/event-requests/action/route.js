@@ -78,8 +78,8 @@ export async function POST(request) {
       // Send a follow-up message in the conversation
       const followUpText =
         action === "accepted"
-          ? `✅ Event request accepted! ${companyResponse ? `\n\n${companyResponse}` : ""}`
-          : `❌ Event request declined. ${companyResponse ? `\n\nReason: ${companyResponse}` : ""}`;
+          ? `✅ تم قبول طلب الفعالية! ${companyResponse ? `\n\n${companyResponse}` : ""}`
+          : `❌ تم رفض طلب الفعالية. ${companyResponse ? `\n\nالسبب: ${companyResponse}` : ""}`;
 
       const followUpMessage = {
         _type: "message",

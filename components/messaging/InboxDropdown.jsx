@@ -112,14 +112,14 @@ export default function InboxDropdown() {
       const diffInHours = (now - date) / (1000 * 60 * 60);
 
       if (diffInHours < 24) {
-        return date.toLocaleTimeString([], {
+        return date.toLocaleTimeString("ar-EG", {
           hour: "2-digit",
           minute: "2-digit",
         });
       } else if (diffInHours < 48) {
         return "أمس";
       } else {
-        return date.toLocaleDateString([], {
+        return date.toLocaleDateString("ar-EG", {
           month: "short",
           day: "numeric",
         });
@@ -159,7 +159,9 @@ export default function InboxDropdown() {
           <h3 className="font-semibold text-sm">الرسائل</h3>
           {unreadCount > 0 && (
             <p className="text-xs text-muted-foreground mt-1">
-              {unreadCount} رسالة غير مقروءة
+              {unreadCount > 1
+                ? `رسائل غير مقروءة ${unreadCount}`
+                : `رسالة غير مقروءة`}
             </p>
           )}
         </div>
@@ -190,6 +192,7 @@ export default function InboxDropdown() {
                   key={conversation._id}
                   className="p-0 cursor-pointer"
                   onSelect={() => handleConversationClick(conversation._id)}
+                  dir="rtl"
                 >
                   <div className="flex items-start gap-3 p-3 w-full hover:bg-muted/50">
                     {/* Avatar */}

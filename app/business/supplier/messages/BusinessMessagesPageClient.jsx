@@ -165,14 +165,14 @@ export default function BusinessMessagesPageClient({ tenantType, tenantId }) {
       const diffInHours = (now - date) / (1000 * 60 * 60);
 
       if (diffInHours < 24) {
-        return date.toLocaleTimeString([], {
+        return date.toLocaleTimeString("ar-EG", {
           hour: "2-digit",
           minute: "2-digit",
         });
       } else if (diffInHours < 48) {
-        return "Yesterday";
+        return "أمس";
       } else {
-        return date.toLocaleDateString([], {
+        return date.toLocaleDateString("ar-EG", {
           month: "short",
           day: "numeric",
           year:

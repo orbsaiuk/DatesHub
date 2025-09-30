@@ -2,7 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 
-export default function EventRequestActions({ onCancel, isLoading, isValid }) {
+export default function EventRequestActions({
+  onCancel,
+  isLoading,
+  isValid,
+  errors,
+}) {
+  // Check if there are any validation errors
+  const hasErrors = errors && Object.keys(errors).length > 0;
+
   return (
     <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4">
       <Button
@@ -16,8 +24,8 @@ export default function EventRequestActions({ onCancel, isLoading, isValid }) {
       </Button>
       <Button
         type="submit"
-        disabled={!isValid || isLoading}
-        className="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-white cursor-pointer"
+        disabled={isLoading}
+        className="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-white cursor-pointer disabled:opacity-50"
       >
         {isLoading ? "جارٍ التسليم..." : "تسليم"}
       </Button>

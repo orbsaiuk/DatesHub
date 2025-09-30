@@ -29,7 +29,7 @@ export default function EventRequestForm({
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
     reset,
     watch,
     setValue,
@@ -37,7 +37,8 @@ export default function EventRequestForm({
   } = useForm({
     resolver: zodResolver(eventRequestSchema),
     defaultValues: initialValues,
-    mode: "onChange",
+    mode: "all", // Validate on blur, change, and submit
+    reValidateMode: "onChange", // Re-validate on change
   });
 
   // Watch all form values for live validation feedback
@@ -115,6 +116,7 @@ export default function EventRequestForm({
             <CategorySelect
               companyTenantId={companyTenantId}
               setValue={setValue}
+              trigger={trigger}
               error={errors.category}
               hasValue={watchedValues.category}
               value={watchedValues.category}
@@ -165,6 +167,7 @@ export default function EventRequestForm({
             onCancel={onCancel}
             isLoading={isLoading}
             isValid={isValid}
+            errors={errors}
           />
         </form>
       </CardContent>

@@ -42,8 +42,8 @@ export default function EventRequestActions({
       if (response.ok && data.success) {
         toast.success(
           action === "accept"
-            ? "Event request accepted successfully!"
-            : "Event request declined"
+            ? "تم قبول طلب الفعالية بنجاح!"
+            : "تم رفض طلب الفعالية"
         );
 
         // Reset form state
@@ -54,15 +54,15 @@ export default function EventRequestActions({
           onActionComplete(action, data.eventRequest);
         }
       } else {
-        throw new Error(data.error || "Failed to process event request");
+        throw new Error(data.error || "فشل في معالجة طلب الفعالية");
       }
     } catch (error) {
       console.error("Error processing event request:", error);
-      let errorMessage = "Failed to process event request";
+      let errorMessage = "فشل في معالجة طلب الفعالية";
       if (error.message.includes("Unauthorized")) {
-        errorMessage = "You don't have permission to respond to this request";
+        errorMessage = "ليس لديك إذن للرد على هذا الطلب";
       } else if (error.message.includes("not found")) {
-        errorMessage = "Event request not found";
+        errorMessage = "لم يتم العثور على طلب الفعالية";
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -77,7 +77,7 @@ export default function EventRequestActions({
     <div className="mt-3 space-y-3">
       {disabled && (
         <div className="text-xs text-muted-foreground">
-          Your current plan doesn't allow responding to event requests.{" "}
+          باقتك الحالية لا تسمح بالرد على طلبات الفعاليات.{" "}
           <a
             href="/business/company/packages"
             className="text-primary underline"
@@ -85,7 +85,7 @@ export default function EventRequestActions({
               // allow normal navigation
             }}
           >
-            Upgrade your plan
+            قم بترقية باقتك
           </a>
           .
         </div>
@@ -98,11 +98,11 @@ export default function EventRequestActions({
           size="sm"
         >
           {isResponding && activeAction === "accept" ? (
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            <Loader2 className="h-4 w-4 animate-spin ml-2" />
           ) : (
-            <Check className="h-4 w-4 mr-2" />
+            <Check className="h-4 w-4 ml-2" />
           )}
-          Accept
+          قبول
         </Button>
         <Button
           onClick={() => handleAction("decline")}
@@ -112,11 +112,11 @@ export default function EventRequestActions({
           size="sm"
         >
           {isResponding && activeAction === "decline" ? (
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            <Loader2 className="h-4 w-4 animate-spin ml-2" />
           ) : (
-            <X className="h-4 w-4 mr-2" />
+            <X className="h-4 w-4 ml-2" />
           )}
-          Decline
+          رفض
         </Button>
       </div>
     </div>

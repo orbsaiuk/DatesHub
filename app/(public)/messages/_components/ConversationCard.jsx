@@ -1,5 +1,5 @@
 "use client";
-import { Building2, User, MailOpen } from "lucide-react";
+import { Building2, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -64,9 +64,6 @@ export default function ConversationCard({
                 {displayName}
               </h3>
               <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                {isUnread && (
-                  <MailOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-500" />
-                )}
                 <span className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
                   {formatTime(conversation.lastMessageAt)}
                 </span>
@@ -79,14 +76,14 @@ export default function ConversationCard({
                 isUnread && "font-medium"
               )}
             >
-              {conversation.lastMessagePreview || "No messages yet"}
+              {conversation.lastMessagePreview || "لا توجد رسائل بعد"}
             </p>
 
             {/* Badge row */}
             {isUnread && (
               <div className="flex items-center">
                 <Badge variant="destructive" className="text-xs px-2 py-0.5">
-                  {userUnread.count} new
+                  {userUnread.count} جديد
                 </Badge>
               </div>
             )}

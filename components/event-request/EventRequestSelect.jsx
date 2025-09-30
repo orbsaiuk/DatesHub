@@ -19,6 +19,7 @@ export default function EventRequestSelect({
   error = null,
   hasValue = false,
   setValue,
+  trigger,
   value,
   loading = false,
 }) {
@@ -42,7 +43,10 @@ export default function EventRequestSelect({
         ) : (
           <Select
             value={value || ""}
-            onValueChange={(selectedValue) => setValue(name, selectedValue)}
+            onValueChange={(selectedValue) => {
+              setValue(name, selectedValue);
+              if (trigger) trigger(name); // Trigger validation
+            }}
             dir="rtl"
           >
             <SelectTrigger

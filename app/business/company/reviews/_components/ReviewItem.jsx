@@ -26,7 +26,9 @@ export default function ReviewItem({ review }) {
                   </span>
                 </span>
                 <span className="hidden sm:inline">•</span>
-                <span>{new Date(review.createdAt).toLocaleDateString()}</span>
+                <span>
+                  {new Date(review.createdAt).toLocaleDateString("ar-EG")}
+                </span>
               </div>
             </div>
             <div className="flex items-center gap-2 md:text-right">

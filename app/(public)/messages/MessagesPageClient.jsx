@@ -37,10 +37,10 @@ export default function MessagesPageClient() {
       if (data.ok) {
         setConversations(data.items || []);
       } else {
-        setError(data.error || "Failed to load conversations");
+        setError(data.error || "فشل في تحميل المحادثات");
       }
     } catch (err) {
-      setError("Failed to load conversations");
+      setError("فشل في تحميل المحادثات");
       console.error("Failed to load conversations:", err);
     } finally {
       setLoading(false);
@@ -145,14 +145,14 @@ export default function MessagesPageClient() {
       const diffInHours = (now - date) / (1000 * 60 * 60);
 
       if (diffInHours < 24) {
-        return date.toLocaleTimeString([], {
+        return date.toLocaleTimeString("ar-EG", {
           hour: "2-digit",
           minute: "2-digit",
         });
       } else if (diffInHours < 48) {
-        return "Yesterday";
+        return "أمس";
       } else {
-        return date.toLocaleDateString([], {
+        return date.toLocaleDateString("ar-EG", {
           month: "short",
           day: "numeric",
           year:
@@ -215,9 +215,9 @@ export default function MessagesPageClient() {
     return (
       <Card>
         <CardContent className="p-8 text-center">
-          <p className="text-muted-foreground mb-4">Failed to load messages</p>
+          <p className="text-muted-foreground mb-4">فشل في تحميل الرسائل</p>
           <Button onClick={loadConversations} variant="outline">
-            Try Again
+            حاول مرة أخرى
           </Button>
         </CardContent>
       </Card>

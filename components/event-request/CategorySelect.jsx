@@ -7,6 +7,7 @@ import { Tag } from "lucide-react";
 export default function CategorySelect({
   companyTenantId,
   setValue,
+  trigger,
   error,
   hasValue,
   value,
@@ -60,6 +61,7 @@ export default function CategorySelect({
       error={error}
       hasValue={hasValue}
       setValue={setValue}
+      trigger={trigger}
       value={value}
       loading={loading}
     />

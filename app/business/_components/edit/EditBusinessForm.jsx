@@ -530,7 +530,7 @@ export default function EditBusinessForm({
                 onClick={goToPreviousSection}
                 className="cursor-pointer px-4 py-2"
               >
-                <ArrowRight className="mr-1" /> السابق
+                <ArrowRight className="ml-1" /> السابق
               </Button>
             )}
           </div>
@@ -543,7 +543,7 @@ export default function EditBusinessForm({
                 onClick={goToNextSection}
                 className="cursor-pointer w-full sm:w-auto px-4 py-2"
               >
-                التالي <ArrowLeft className="mr-1" />
+                التالي <ArrowLeft className="ml-1" />
               </Button>
             ) : (
               <Button
@@ -551,7 +551,7 @@ export default function EditBusinessForm({
                 disabled={saving}
                 className="cursor-pointer w-full sm:w-auto px-4 py-2"
               >
-                <Check className="h-4 w-4 mr-1" />
+                <Check className="h-4 w-4 ml-1" />
                 {saving ? "جاري الحفظ..." : "حفظ جميع التغييرات"}
               </Button>
             )}

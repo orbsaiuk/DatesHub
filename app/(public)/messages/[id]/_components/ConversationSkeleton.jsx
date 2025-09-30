@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -14,7 +14,7 @@ export default function ConversationSkeleton() {
           disabled
           className="min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px]"
         >
-          <ArrowLeft className="h-5 w-5 sm:h-4 sm:w-4" />
+          <ArrowRight className="h-5 w-5 sm:h-4 sm:w-4" />
         </Button>
 
         <div className="flex items-center gap-3">

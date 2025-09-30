@@ -70,7 +70,7 @@ export default async function CompanyWorkPage() {
                   {project.summary}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {new Date(project.date).toLocaleDateString()}
+                  {new Date(project.date).toLocaleDateString("ar-EG")}
                 </p>
               </div>
             </div>

@@ -80,7 +80,7 @@ export default function EventDetailsDialog({
   if (!event) return null;
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString("en-GB", {
+    return new Date(date).toLocaleDateString("ar-EG", {
       weekday: "long",
       year: "numeric",
       month: "long",
@@ -89,7 +89,7 @@ export default function EventDetailsDialog({
   };
 
   const formatTime = (date) => {
-    return new Date(date).toLocaleTimeString("en-GB", {
+    return new Date(date).toLocaleTimeString("ar-EG", {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -360,12 +360,12 @@ export default function EventDetailsDialog({
                 Created:{" "}
                 {new Date(
                   event._createdAt || event.createdAt || Date.now()
-                ).toLocaleDateString("en-GB")}
+                ).toLocaleDateString("ar-EG")}
               </p>
               {event._updatedAt !== event._createdAt && (
                 <p className="text-xs text-muted-foreground">
                   Last updated:{" "}
-                  {new Date(event._updatedAt).toLocaleDateString("en-GB")}
+                  {new Date(event._updatedAt).toLocaleDateString("ar-EG")}
                 </p>
               )}
             </div>

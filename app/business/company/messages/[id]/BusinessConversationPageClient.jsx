@@ -217,7 +217,7 @@ export default function BusinessConversationPageClient({
     if (!dateString) return "";
     try {
       const date = new Date(dateString);
-      return date.toLocaleTimeString([], {
+      return date.toLocaleTimeString("ar-EG", {
         hour: "2-digit",
         minute: "2-digit",
       });
@@ -243,13 +243,13 @@ export default function BusinessConversationPageClient({
               variant="outline"
               className="min-h-[44px] w-full sm:w-auto"
             >
-العودة إلى الرسائل
+              العودة إلى الرسائل
             </Button>
             <Button
               onClick={loadConversation}
               className="min-h-[44px] w-full sm:w-auto"
             >
-حاول مرة أخرى
+              حاول مرة أخرى
             </Button>
           </div>
         </CardContent>
@@ -300,8 +300,7 @@ export default function BusinessConversationPageClient({
         {hasPendingEventRequest && (
           <div className="border-t p-3 sm:p-4 bg-muted/30 text-center">
             <p className="text-sm text-muted-foreground">
-يرجى الرد على طلب الفعالية أعلاه قبل أن تتمكن من إرسال
-              الرسائل.
+              يرجى الرد على طلب الفعالية أعلاه قبل أن تتمكن من إرسال الرسائل.
             </p>
           </div>
         )}

@@ -1,6 +1,20 @@
 "use client";
 import { formatTime } from "@/lib/dateUtils";
 
+const formatEventDate = (dateString) => {
+  if (!dateString) return dateString;
+  try {
+    return new Date(dateString).toLocaleDateString("ar-EG", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  } catch (error) {
+    return dateString;
+  }
+};
+
 export default function MessageItem({
   message,
   isCurrentUser,
@@ -9,7 +23,7 @@ export default function MessageItem({
   formatMessageTime,
   getCategoryName,
 }) {
-  const senderName = isCurrentUser ? "You" : otherDisplayName;
+  const senderName = isCurrentUser ? "أنت" : otherDisplayName;
   const body = message.text || "";
 
   return (
@@ -43,15 +57,15 @@ export default function MessageItem({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   <div>
                     <span className="text-muted-foreground font-medium block sm:inline">
-                      Event Date:{" "}
+                      تاريخ الفعالية:{" "}
                     </span>
                     <span className="font-medium">
-                      {message.eventRequestData.eventDate}
+                      {formatEventDate(message.eventRequestData.eventDate)}
                     </span>
                   </div>
                   <div>
                     <span className="text-muted-foreground font-medium block sm:inline">
-                      Event Time:{" "}
+                      وقت الفعالية:{" "}
                     </span>
                     <span className="font-medium">
                       {formatTime(message.eventRequestData.eventTime)}
@@ -59,7 +73,7 @@ export default function MessageItem({
                   </div>
                   <div>
                     <span className="text-muted-foreground font-medium block sm:inline">
-                      Guests:{" "}
+                      عدد الضيوف:{" "}
                     </span>
                     <span className="font-medium">
                       {message.eventRequestData.numberOfGuests}
@@ -67,7 +81,7 @@ export default function MessageItem({
                   </div>
                   <div>
                     <span className="text-muted-foreground font-medium block sm:inline">
-                      Category:{" "}
+                      الفئة:{" "}
                     </span>
                     <span className="font-medium">
                       {getCategoryName(message.eventRequestData.category)}
@@ -75,7 +89,7 @@ export default function MessageItem({
                   </div>
                   <div>
                     <span className="text-muted-foreground font-medium block sm:inline">
-                      Service:{" "}
+                      الخدمة:{" "}
                     </span>
                     <span className="font-medium">
                       {message.eventRequestData.serviceRequired}
@@ -83,7 +97,7 @@ export default function MessageItem({
                   </div>
                   <div>
                     <span className="text-muted-foreground font-medium block sm:inline">
-                      Location:{" "}
+                      الموقع:{" "}
                     </span>
                     <span className="font-medium break-words">
                       {message.eventRequestData.eventLocation}
@@ -93,7 +107,7 @@ export default function MessageItem({
                 {message.eventRequestData.eventDescription && (
                   <div className="pt-3 border-t border-muted-foreground/20">
                     <div className="text-muted-foreground font-medium mb-2">
-                      Description:
+                      الوصف:
                     </div>
                     <p className="whitespace-pre-wrap text-foreground/90 leading-relaxed">
                       {message.eventRequestData.eventDescription}

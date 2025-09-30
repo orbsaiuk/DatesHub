@@ -54,7 +54,7 @@ export default async function CompanyAwardsPage() {
                   <h3 className="font-semibold text-lg">{award.title}</h3>
                   <p className="text-muted-foreground">{award.issuer}</p>
                   <p className="text-sm text-muted-foreground mt-2">
-                    {new Date(award.date).toLocaleDateString()}
+                    {new Date(award.date).toLocaleDateString("ar-EG")}
                   </p>
                 </div>
               </div>

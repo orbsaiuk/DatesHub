@@ -109,7 +109,9 @@ export default function UserProfileModal({
                 </p>
               </div>
               {reviews.length === 0 ? (
-                <p className="text-sm text-muted-foreground">لا توجد تقييمات بعد</p>
+                <p className="text-sm text-muted-foreground">
+                  لا توجد تقييمات بعد
+                </p>
               ) : (
                 <ul className="space-y-3">
                   {reviews.map((r) => (
@@ -131,7 +133,7 @@ export default function UserProfileModal({
                       <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
                         <span>{r.authorName}</span>
                         <span>
-                          {new Date(r.createdAt).toLocaleDateString()}
+                          {new Date(r.createdAt).toLocaleDateString("ar-EG")}
                         </span>
                       </div>
                     </li>
@@ -182,7 +184,7 @@ export default function UserProfileModal({
           </div>
         ) : (
           <div className="py-8 text-center text-sm text-muted-foreground">
-لم يتم العثور على المستخدم
+            لم يتم العثور على المستخدم
           </div>
         )}
       </DialogContent>

@@ -1,14 +1,14 @@
 import { z } from "zod";
 
-// Event request form validation schema
 export const eventRequestSchema = z.object({
   fullName: z
     .string()
-    .min(2, "Full name must be at least 2 characters")
-    .max(100, "Full name cannot exceed 100 characters")
+    .min(1, "الاسم الكامل مطلوب")
+    .min(2, "الاسم الكامل يجب أن يكون على الأقل حرفين")
+    .max(100, "الاسم الكامل لا يمكن أن يتجاوز 100 حرف")
     .regex(
-      /^[a-zA-Z\s'-]+$/,
-      "Full name can only contain letters, spaces, hyphens, and apostrophes"
+      /^[\u0600-\u06FFa-zA-Z\s'-]+$/,
+      "الاسم الكامل يمكن أن يحتوي فقط على أحرف ومسافات وشرطات"
     )
     .refine((value) => {
       // Additional check to prevent contact info in name field
@@ -17,30 +17,33 @@ export const eventRequestSchema = z.object({
         /\d{3,}/, // 3 or more consecutive digits
       ];
       return !contactPatterns.some((pattern) => pattern.test(value));
-    }, "Please enter only your name without contact information"),
+    }, "الرجاء إدخال الاسم فقط بدون معلومات الاتصال"),
 
   eventDate: z
     .string()
-    .min(1, "Event date is required")
+    .min(1, "تاريخ الفعالية مطلوب")
     .refine((dateString) => {
+      if (!dateString) return false;
       const eventDate = new Date(dateString);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       return eventDate >= today;
-    }, "Event date cannot be in the past"),
+    }, "تاريخ الفعالية لا يمكن أن يكون في الماضي"),
 
   eventTime: z
     .string()
-    .min(1, "Event time is required")
+    .min(1, "وقت الفعالية مطلوب")
     .regex(
       /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/,
-      "Please enter a valid time format (HH:MM)"
+      "الرجاء إدخال وقت صحيح (ساعة:دقيقة)"
     ),
 
   numberOfGuests: z
     .string()
-    .min(1, "Number of guests is required")
+    .min(1, "عدد الضيوف مطلوب")
     .refine((val) => {
+      if (!val || val.trim() === "") return false;
+
       // Reject incomplete ranges like "20-" or "-20"
       if (val.includes("-")) {
         if (val.startsWith("-") || val.endsWith("-")) {
@@ -54,29 +57,30 @@ export const eventRequestSchema = z.object({
 
       if (rangePattern.test(val)) {
         const [, min, max] = val.match(rangePattern);
-        const minNum = parseInt(min);
-        const maxNum = parseInt(max);
+        const minNum = parseInt(min, 10);
+        const maxNum = parseInt(max, 10);
         return minNum >= 1 && maxNum <= 10000 && minNum <= maxNum;
       } else if (exactPattern.test(val)) {
-        const num = parseInt(val);
+        const num = parseInt(val, 10);
         return num >= 1 && num <= 10000;
       }
 
       return false;
-    }, "Please enter exact number (e.g., 25) or complete range (e.g., 10-20)"),
+    }, "الرجاء إدخال رقم محدد (مثال: 25) أو نطاق كامل (مثال: 10-20)"),
 
-  category: z.string().min(1, "Please select a service category"),
+  category: z.string().min(1, "الرجاء اختيار فئة الخدمة"),
 
   serviceRequired: z
     .string()
-    .min(2, "Service required must be at least 2 characters")
-    .max(200, "Service required cannot exceed 200 characters")
+    .min(1, "الخدمات المطلوبة مطلوبة")
+    .min(2, "الخدمات المطلوبة يجب أن تكون على الأقل حرفين")
+    .max(200, "الخدمات المطلوبة لا يمكن أن تتجاوز 200 حرف")
     .refine((value) => {
       // Check for email patterns
       const emailPattern =
         /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
       return !emailPattern.test(value);
-    }, "Please do not include email addresses in service description")
+    }, "الرجاء عدم تضمين عناوين البريد الإلكتروني في وصف الخدمة")
     .refine((value) => {
       // Check for phone number patterns
       const phonePatterns = [
@@ -86,23 +90,25 @@ export const eventRequestSchema = z.object({
         /\b\d{10,11}\b/,
       ];
       return !phonePatterns.some((pattern) => pattern.test(value));
-    }, "Please do not include phone numbers in service description"),
+    }, "الرجاء عدم تضمين أرقام الهاتف في وصف الخدمة"),
 
   eventLocation: z
     .string()
-    .min(5, "Event location must be at least 5 characters")
-    .max(300, "Event location cannot exceed 300 characters"),
+    .min(1, "موقع الفعالية مطلوب")
+    .min(5, "موقع الفعالية يجب أن يكون على بالتفصيل")
+    .max(300, "موقع الفعالية لا يمكن أن يتجاوز 300 حرف"),
 
   eventDescription: z
     .string()
-    .min(10, "Event description must be at least 10 characters")
-    .max(1000, "Event description cannot exceed 1,000 characters")
+    .min(1, "وصف الفعالية مطلوب")
+    .min(10, "وصف الفعالية يجب أن يكون على الأقل 10 أحرف")
+    .max(1000, "وصف الفعالية لا يمكن أن يتجاوز 1000 حرف")
     .refine((value) => {
       // Check for email patterns
       const emailPattern =
         /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
       return !emailPattern.test(value);
-    }, "Please do not include email addresses in the description")
+    }, "الرجاء عدم تضمين عناوين البريد الإلكتروني في الوصف")
     .refine((value) => {
       // Check for phone number patterns (various formats)
       const phonePatterns = [
@@ -114,7 +120,7 @@ export const eventRequestSchema = z.object({
         /\b\d{10}\b/, // 1234567890 (10 digits)
       ];
       return !phonePatterns.some((pattern) => pattern.test(value));
-    }, "Please do not include phone numbers in the description")
+    }, "الرجاء عدم تضمين أرقام الهاتف في الوصف")
     .refine((value) => {
       // Check for other contact patterns
       const contactPatterns = [
@@ -122,15 +128,16 @@ export const eventRequestSchema = z.object({
         /\b(my|our)\s+(number|phone|email|contact)\s+(is|:)\b/i,
         /\b(tel|phone|mobile|cell)[:.]?\s*\d/i,
         /\b(email|mail)[:.]?\s*\w+@/i,
+        /\b(اتصل|تواصل|رقم|هاتف|جوال|ايميل|بريد)\b/i, // Arabic contact keywords
       ];
       return !contactPatterns.some((pattern) => pattern.test(value));
-    }, "Please do not include contact information in the description")
+    }, "الرجاء عدم تضمين معلومات الاتصال في الوصف")
     .refine((value) => {
       // Limit the total count of digits to a maximum of 8
       const digitMatches = value.match(/\d/g);
       const totalDigits = digitMatches ? digitMatches.length : 0;
       return totalDigits <= 8;
-    }, "Please do not include more than 8 digits in the description"),
+    }, "الرجاء عدم تضمين أكثر من 8 أرقام في الوصف"),
 });
 
 // Default initial values for the form

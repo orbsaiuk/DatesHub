@@ -90,7 +90,7 @@ export default function EventRequestButton({
         throw new Error(errorData.error || "Failed to submit event request");
       }
 
-      toast.success("طلب الحدث تم إرساله بنجاح!");
+      toast.success("طلب الحجز تم إرساله بنجاح!");
       setIsOpen(false);
 
       // Call the callbacks if provided

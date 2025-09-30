@@ -53,7 +53,7 @@ export default function ConversationPageClient({ conversationId }) {
           // Mark conversation as read
           await markAsRead();
         } else {
-          setError("Conversation not found");
+          setError("لم يتم العثور على المحادثة");
           return;
         }
       }
@@ -68,10 +68,10 @@ export default function ConversationPageClient({ conversationId }) {
         // Messages come newest first from API, reverse for chronological order
         setMessages((messagesData.items || []).reverse());
       } else {
-        setError(messagesData.error || "Failed to load messages");
+        setError(messagesData.error || "فشل في تحميل الرسائل");
       }
     } catch (err) {
-      setError("Failed to load conversation");
+      setError("فشل في تحميل المحادثة");
       console.error("Failed to load conversation:", err);
     } finally {
       setLoading(false);
@@ -116,10 +116,10 @@ export default function ConversationPageClient({ conversationId }) {
         // Dispatch event to update inbox count
         window.dispatchEvent(new CustomEvent("unreadCountUpdate"));
       } else {
-        setError(data.error || "Failed to send message");
+        setError(data.error || "فشل في إرسال الرسالة");
       }
     } catch (error) {
-      setError("Failed to send message");
+      setError("فشل في إرسال الرسالة");
       console.error("Failed to send message:", error);
     } finally {
       setSending(false);
@@ -174,7 +174,7 @@ export default function ConversationPageClient({ conversationId }) {
     if (!dateString) return "";
     try {
       const date = new Date(dateString);
-      return date.toLocaleTimeString([], {
+      return date.toLocaleTimeString("ar-EG", {
         hour: "2-digit",
         minute: "2-digit",
       });
@@ -200,13 +200,13 @@ export default function ConversationPageClient({ conversationId }) {
               variant="outline"
               className="min-h-[44px] w-full sm:w-auto"
             >
-              Back to Messages
+              العودة إلى الرسائل
             </Button>
             <Button
               onClick={loadConversation}
               className="min-h-[44px] w-full sm:w-auto"
             >
-              Try Again
+              حاول مرة أخرى
             </Button>
           </div>
         </CardContent>
@@ -245,7 +245,7 @@ export default function ConversationPageClient({ conversationId }) {
                 otherDisplayName={
                   otherParticipant?.displayName ||
                   otherParticipant?.name ||
-                  "Unknown"
+                  "غير معروف"
                 }
                 formatMessageTime={formatMessageTime}
                 getCategoryName={getCategoryName}

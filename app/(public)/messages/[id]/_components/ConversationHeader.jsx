@@ -1,12 +1,12 @@
 "use client";
-import { ArrowLeft, Building2, User } from "lucide-react";
+import { ArrowRight, Building2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 
 export default function ConversationHeader({ otherParticipant, onBackClick }) {
   const otherDisplayName =
-    otherParticipant?.displayName || otherParticipant?.name || "Unknown";
+    otherParticipant?.displayName || otherParticipant?.name || "غير معروف";
 
   return (
     <div className="flex items-center gap-3 sm:gap-4 py-2">
@@ -16,7 +16,7 @@ export default function ConversationHeader({ otherParticipant, onBackClick }) {
         onClick={onBackClick}
         className="hover:bg-muted/50 min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px]"
       >
-        <ArrowLeft className="h-5 w-5 sm:h-4 sm:w-4" />
+        <ArrowRight className="h-5 w-5 sm:h-4 sm:w-4" />
       </Button>
 
       <div className="flex items-center gap-3">

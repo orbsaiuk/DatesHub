@@ -306,7 +306,7 @@ export default function Sidebar({ userRole, entity, children }) {
                   href={item.href}
                   label={item.label}
                   badge={
-                    item.label === "Messages" && unreadCount > 0
+                    item.label === "الرسائل" && unreadCount > 0
                       ? unreadCount
                       : null
                   }
@@ -365,6 +365,11 @@ export default function Sidebar({ userRole, entity, children }) {
                   key={item.href}
                   href={item.href}
                   label={item.label}
+                  badge={
+                    item.label === "الرسائل" && unreadCount > 0
+                      ? unreadCount
+                      : null
+                  }
                   icon={item.icon}
                   onClick={handleItemClick}
                   isCollapsed={false}

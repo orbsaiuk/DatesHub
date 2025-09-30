@@ -84,12 +84,12 @@ export default function OfferTableView({
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {offer.startDate
-                      ? new Date(offer.startDate).toLocaleDateString()
+                      ? new Date(offer.startDate).toLocaleDateString("ar-EG")
                       : "-"}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {offer.endDate
-                      ? new Date(offer.endDate).toLocaleDateString()
+                      ? new Date(offer.endDate).toLocaleDateString("ar-EG")
                       : "-"}
                   </td>
                   <td className="px-4 py-3">

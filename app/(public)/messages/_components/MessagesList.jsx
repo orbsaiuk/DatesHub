@@ -43,13 +43,12 @@ export default function MessagesList({
       {/* Results summary - hide secondary info on mobile */}
       <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center text-sm text-muted-foreground">
         <span className="order-2 sm:order-1">
-          Showing {Math.min((currentPage - 1) * pageSize + 1, totalItems)} -{" "}
-          {Math.min(currentPage * pageSize, totalItems)} of {totalItems}{" "}
-          conversations
+          عرض {Math.min((currentPage - 1) * pageSize + 1, totalItems)} -{" "}
+          {Math.min(currentPage * pageSize, totalItems)} من {totalItems} محادثة
         </span>
         {pageCount > 1 && (
           <span className="order-1 sm:order-2 text-xs sm:text-sm">
-            Page {currentPage} of {pageCount}
+            صفحة {currentPage} من {pageCount}
           </span>
         )}
       </div>

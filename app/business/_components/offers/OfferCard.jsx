@@ -110,7 +110,7 @@ export default function OfferCard({
               </p>
               <p className="text-sm font-medium">
                 {offer.startDate
-                  ? new Date(offer.startDate).toLocaleDateString()
+                  ? new Date(offer.startDate).toLocaleDateString("ar-EG")
                   : "-"}
               </p>
             </div>
@@ -120,7 +120,7 @@ export default function OfferCard({
               </p>
               <p className="text-sm font-medium">
                 {offer.endDate
-                  ? new Date(offer.endDate).toLocaleDateString()
+                  ? new Date(offer.endDate).toLocaleDateString("ar-EG")
                   : "-"}
               </p>
             </div>

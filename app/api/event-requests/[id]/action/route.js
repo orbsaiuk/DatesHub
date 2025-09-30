@@ -91,10 +91,13 @@ export async function POST(request, { params }) {
       }
 
       // Send a response message
-      const actionText = action === "accept" ? "accepted" : "declined";
       const responseText = responseMessage
-        ? `Event request ${actionText}: ${responseMessage}`
-        : `Event request ${actionText}`;
+        ? action === "accept"
+          ? `✅ تم قبول طلب الفعالية!\n\n${responseMessage}`
+          : `❌ تم رفض طلب الفعالية.\n\nالسبب: ${responseMessage}`
+        : action === "accept"
+          ? `✅ تم قبول طلب الفعالية!`
+          : `❌ تم رفض طلب الفعالية.`;
 
       await sendMessage({
         conversationId: conversation._id,

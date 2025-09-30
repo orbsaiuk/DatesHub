@@ -15,7 +15,7 @@ export default function MessageComposer({
       <div className="flex gap-2 sm:gap-3">
         <Textarea
           ref={textareaRef}
-          placeholder="Write your reply..."
+          placeholder="اكتب ردك..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           className="min-h-[80px] sm:min-h-[80px] resize-vertical text-base sm:text-sm"
