@@ -34,14 +34,13 @@ function StarRating({ rating = 0 }) {
   );
 }
 
-export default function DirectoryCompanyCard({
-  company,
+export default function DirectoryTenantCard({
+  tenant,
   basePath = "/companies",
   isBookmarked = false,
   onToggleBookmark,
 }) {
   const {
-    logo,
     name,
     rating,
     ratingCount,
@@ -49,7 +48,7 @@ export default function DirectoryCompanyCard({
     description,
     openingHours,
     extraServices,
-  } = company;
+  } = tenant;
 
   const [pending, setPending] = useState(false);
 
@@ -71,7 +70,7 @@ export default function DirectoryCompanyCard({
     <div className="rounded-xl border bg-white p-4 sm:p-6 shadow-sm relative">
       <div className="flex flex-col gap-4 md:flex-row md:gap-6">
         <CompanyLogo
-          company={company}
+          tenant={tenant}
           size="lg"
           className="rounded-md w-[160px] h-[160px] object-cover"
         />
@@ -117,10 +116,10 @@ export default function DirectoryCompanyCard({
           <div className="hidden sm:flex md:gap-2 mb-4 w-full">
             <div className="flex gap-2">
               <CompanyInteractionButton
-                companyTenantId={company.tenantId}
-                companyName={company.name}
+                companyTenantId={tenant.tenantId}
+                companyName={tenant.name}
               />
-              <Link href={`${basePath}/${company.id}`}>
+              <Link href={`${basePath}/${tenant.id}`}>
                 <Button
                   variant="outline"
                   size="sm"
@@ -156,11 +155,11 @@ export default function DirectoryCompanyCard({
 
       <div className="mt-4 flex gap-2 md:hidden">
         <CompanyInteractionButton
-          companyTenantId={company.tenantId}
-          companyName={company.name}
+          companyTenantId={tenant.tenantId}
+          companyName={tenant.name}
           className="flex-1"
         />
-        <Link href={`${basePath}/${company.id}`} className="flex-1">
+        <Link href={`${basePath}/${tenant.id}`} className="flex-1">
           <Button variant="outline" size="sm" className="w-full cursor-pointer">
             عرض الملف الشخصي
           </Button>

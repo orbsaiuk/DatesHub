@@ -35,7 +35,7 @@ export default function MessageItem({
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <span className="text-sm font-medium truncate">{senderName}</span>
         </div>
-        <span className="text-xs text-muted-foreground ml-2 whitespace-nowrap flex-shrink-0">
+        <span className="text-xs text-muted-foreground ms-2 whitespace-nowrap flex-shrink-0">
           {formatMessageTime(message.createdAt)}
         </span>
       </div>

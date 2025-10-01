@@ -92,7 +92,7 @@ const SidebarItem = memo(function SidebarItem({
         </span>
         {badge && !isCollapsed && (
           <span
-            className={`ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-semibold ${
+            className={`ms-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-semibold ${
               isActive ? "bg-white text-primary" : "bg-primary text-white"
             }`}
           >
@@ -104,7 +104,7 @@ const SidebarItem = memo(function SidebarItem({
       {/* Tooltip for collapsed state */}
       {isCollapsed && (
         <div
-          className={`absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-150 pointer-events-none z-50 whitespace-nowrap ${
+          className={`absolute right-full me-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-150 pointer-events-none z-50 whitespace-nowrap ${
             isActive ? "font-semibold" : ""
           }`}
         >
@@ -123,7 +123,8 @@ export default function Sidebar({ userRole, entity, children }) {
 
   const isBusiness = userRole === "company" || userRole === "supplier";
   const displayEntity = entity?.company || entity?.supplier || entity;
-  const displayName = displayEntity?.name || "شركة";
+  const displayName =
+    displayEntity?.name || (userRole === "supplier" ? "مورد" : "شركة");
 
   // Load initial collapsed state from localStorage
   useEffect(() => {
@@ -216,7 +217,7 @@ export default function Sidebar({ userRole, entity, children }) {
                 }`}
               >
                 <CompanyLogo
-                  company={displayEntity}
+                  tenant={displayEntity}
                   size="sm"
                   className="h-8 w-8 rounded-lg shrink-0"
                 />
@@ -324,7 +325,8 @@ export default function Sidebar({ userRole, entity, children }) {
               }`}
             >
               <div className="text-xs text-muted-foreground text-center">
-                © 2025 {entity?.name || "شركة"}
+                © 2025{" "}
+                {entity?.name || (userRole === "supplier" ? "مورد" : "شركة")}
               </div>
             </div>
           </div>
@@ -346,7 +348,7 @@ export default function Sidebar({ userRole, entity, children }) {
           />
 
           {/* Menu Panel */}
-          <div className="absolute left-0 top-0 h-full w-80 max-w-[85vw] bg-background shadow-2xl">
+          <div className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-background shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-lg font-semibold">التنقل</h2>
@@ -378,7 +380,7 @@ export default function Sidebar({ userRole, entity, children }) {
             </nav>
 
             {/* Footer */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
+            <div className="absolute bottom-0 right-0 left-0 p-4 border-t">
               <div className="flex items-center gap-4">
                 <SignedOut>
                   <SignInButton />

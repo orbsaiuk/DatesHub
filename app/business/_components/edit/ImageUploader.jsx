@@ -261,8 +261,8 @@ export default function ImageUploader({
           onClick={openFilePicker}
           className="w-full px-4 py-2"
         >
-          <Upload className="w-4 h-4 mr-2" />
-          Add More Images
+          <Upload className="w-4 h-4 me-2" />
+          إضافة المزيد من الصور
         </Button>
       )}
     </div>

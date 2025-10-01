@@ -1,8 +1,8 @@
 import EventCalendar from "@/app/business/_components/calendar/EventCalendar";
 
 export const metadata = {
-  title: "التقويم - لوحة تحكم الشركة",
-  description: "إدارة فعالياتك ومواعيدك",
+  title: "الحجوزات - لوحة تحكم الشركة",
+  description: "إدارة الحجوزات الخاصة بك",
 };
 
 export default function CompanyCalendarPage() {

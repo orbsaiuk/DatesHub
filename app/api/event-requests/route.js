@@ -192,15 +192,21 @@ export async function POST(request) {
         );
       }
     } catch (customerEmailError) {
-      console.error(
-        "Error sending event request confirmation to customer:",
-        customerEmailError
-      );
+      // Silent fail for email - don't block request creation
+      if (process.env.NODE_ENV === "development") {
+        console.error(
+          "Error sending event request confirmation to customer:",
+          customerEmailError
+        );
+      }
     }
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
-    console.error("Error creating event request:", error);
+    // Log error for debugging (only in development)
+    if (process.env.NODE_ENV === "development") {
+      console.error("Error creating event request:", error);
+    }
     return NextResponse.json(
       { error: "Failed to create event request" },
       { status: 500 }

@@ -98,9 +98,9 @@ export default function EventRequestActions({
           size="sm"
         >
           {isResponding && activeAction === "accept" ? (
-            <Loader2 className="h-4 w-4 animate-spin ml-2" />
+            <Loader2 className="h-4 w-4 animate-spin ms-2" />
           ) : (
-            <Check className="h-4 w-4 ml-2" />
+            <Check className="h-4 w-4 ms-2" />
           )}
           قبول
         </Button>
@@ -112,9 +112,9 @@ export default function EventRequestActions({
           size="sm"
         >
           {isResponding && activeAction === "decline" ? (
-            <Loader2 className="h-4 w-4 animate-spin ml-2" />
+            <Loader2 className="h-4 w-4 animate-spin ms-2" />
           ) : (
-            <X className="h-4 w-4 ml-2" />
+            <X className="h-4 w-4 ms-2" />
           )}
           رفض
         </Button>

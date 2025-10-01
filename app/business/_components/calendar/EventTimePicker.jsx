@@ -59,7 +59,7 @@ export default function EventTimePicker({
     <div className="space-y-2" dir="rtl">
       <Label className="text-sm font-medium text-gray-700 text-right block">
         {label}
-        {required && <span className="text-red-600 mr-1">*</span>}
+        {required && <span className="text-red-600 ms-1">*</span>}
       </Label>
 
       <Select
@@ -70,7 +70,7 @@ export default function EventTimePicker({
       >
         <SelectTrigger className="w-full h-12 md:h-10 text-base md:text-sm">
           <div className="flex items-center">
-            <Clock className="ml-2 h-4 w-4" />
+            <Clock className="ms-2 h-4 w-4" />
             <SelectValue placeholder={placeholder} />
           </div>
         </SelectTrigger>

@@ -19,7 +19,7 @@ export default function EventRequestTextarea({
         className="text-sm font-medium text-gray-700 text-right"
       >
         {label}
-        {required && <span className="text-red-500 mr-1">*</span>}
+        {required && <span className="text-red-500 ms-1">*</span>}
       </Label>
       <div className="relative">
         <Textarea

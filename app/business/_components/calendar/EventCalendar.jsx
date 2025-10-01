@@ -1,7 +1,7 @@
 "use client";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import "moment/locale/ar"; // Import Arabic locale
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { format, parse, startOfWeek, getDay, isAfter } from "date-fns";
+import { ar } from "date-fns/locale";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
@@ -10,9 +10,18 @@ import { Plus } from "lucide-react";
 import EventDialog from "./EventDialog";
 import EventDetailsDialog from "./EventDetailsDialog";
 
-// Set moment to use Arabic locale
-moment.locale("ar");
-const localizer = momentLocalizer(moment);
+// Setup date-fns localizer with Arabic locale
+const locales = {
+  ar: ar,
+};
+
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+});
 
 const eventStyleGetter = (event) => {
   let backgroundColor = "#3174ad"; // default
@@ -123,10 +132,14 @@ export default function EventCalendar() {
         }));
         setEvents(formattedEvents);
       } else {
-        console.error("Failed to fetch events");
+        if (process.env.NODE_ENV === "development") {
+          console.error("Failed to fetch events");
+        }
       }
     } catch (error) {
-      console.error("Error fetching events:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error fetching events:", error);
+      }
     } finally {
       setLoading(false);
     }
@@ -136,18 +149,13 @@ export default function EventCalendar() {
     fetchEvents();
   }, []);
 
-  // ---------- UPDATED: robust RTL slot handling ----------
-  // Use the full slotInfo (may include `slots` array). For month view,
-  // `onSelecting` is unreliable, but `onSelectSlot` provides `slots` — we use min/max of slots.
   const handleSelectSlot = (slotInfo) => {
-    // slotInfo shape: { start, end, slots, action, ... }
     const { start, end, slots } = slotInfo || {};
 
     let normalizedStart = start;
     let normalizedEnd = end;
 
     if (Array.isArray(slots) && slots.length > 0) {
-      // compute min / max from slots array (works even if user dragged right -> left)
       const slotDates = slots.map((s) => new Date(s).getTime());
       const minTime = Math.min(...slotDates);
       const maxTime = Math.max(...slotDates);
@@ -155,7 +163,7 @@ export default function EventCalendar() {
       normalizedEnd = new Date(maxTime);
     } else {
       // fallback: swap if start > end
-      if (moment(start).isAfter(moment(end))) {
+      if (isAfter(start, end)) {
         normalizedStart = end;
         normalizedEnd = start;
       }
@@ -233,10 +241,10 @@ export default function EventCalendar() {
             setSelectedEvent(null);
             setShowEventDialog(true);
           }}
-          className="w-full sm:w-auto min-h-[44px] text-sm sm:text-base px-4 py-2 sm:px-6"
+          className="w-full sm:w-auto min-h-[44px] text-sm sm:text-base px-4 py-2 sm:px-6 cursor-pointer"
           size="default"
         >
-          <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5 ms-2" />
           <span className="font-medium">فعالية جديدة</span>
         </Button>
       </div>
@@ -256,9 +264,7 @@ export default function EventCalendar() {
                 startAccessor="start"
                 endAccessor="end"
                 selectable
-                // ---------- RTL prop: enable internal RTL layout handling ----------
                 rtl
-                // pass elementProps so the calendar root element has dir="rtl" too
                 elementProps={{ dir: "rtl" }}
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleSelectEvent}

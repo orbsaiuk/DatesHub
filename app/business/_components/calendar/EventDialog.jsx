@@ -208,7 +208,7 @@ export default function EventDialog({
     try {
       setLoading(true);
       const toastId = toast.loading(
-        event ? "Updating event…" : "Creating event…"
+        event ? "جاري تحديث الحجز..." : "جاري إنشاء الحجز..."
       );
 
       // Combine date and time
@@ -245,17 +245,21 @@ export default function EventDialog({
       });
 
       if (response.ok) {
-        toast.success(event ? "تم تحديث الحدث" : "تم إنشاء الحدث", {
+        toast.success(event ? "تم تحديث الحجز بنجاح" : "تم إنشاء الحجز بنجاح", {
           id: toastId,
         });
         onSave();
       } else {
-        console.error("Failed to save event");
-        toast.error("فشل في حفظ الحدث", { id: toastId });
+        if (process.env.NODE_ENV === "development") {
+          console.error("Failed to save event");
+        }
+        toast.error("فشل في حفظ الحجز", { id: toastId });
       }
     } catch (error) {
-      console.error("Error saving event:", error);
-      toast.error("خطأ في حفظ الحدث");
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error saving event:", error);
+      }
+      toast.error("حدث خطأ أثناء حفظ الحجز");
     } finally {
       setLoading(false);
     }
@@ -263,81 +267,121 @@ export default function EventDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className=" sm:max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-center">
-            {event ? "تحرير الحدث" : "إنشاء حدث جديد"}
+      <DialogContent
+        className="sm:max-w-4xl max-h-[90vh] overflow-y-auto"
+        dir="rtl"
+      >
+        <DialogHeader className="space-y-3 pb-4 border-b">
+          <DialogTitle className="text-center text-2xl font-bold">
+            {event ? "تحرير الحجز" : "إنشاء حجز جديد"}
           </DialogTitle>
+          <p className="text-center text-sm text-muted-foreground">
+            {event ? "قم بتحديث تفاصيل الحجز" : "أضف حجز جديد إلى التقويم"}
+          </p>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" dir="rtl">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6 pt-4"
+          dir="rtl"
+        >
           {/* Basic Information */}
-          <div className="space-y-4">
+          <div className="space-y-4 bg-muted/30 p-4 rounded-lg">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              <span className="w-1 h-6 bg-primary rounded"></span>
+              المعلومات الأساسية
+            </h3>
+
             <div className="space-y-2">
-              <Label htmlFor="title">
-                عنوان الحدث <span className="text-red-500">*</span>
+              <Label htmlFor="title" className="text-base font-medium">
+                عنوان الحجز <span className="text-red-500 ms-1">*</span>
               </Label>
               <Input
                 id="title"
                 {...register("title")}
-                placeholder="أدخل عنوان الحدث"
-                className="text-right"
+                placeholder="مثال: حفل زفاف أحمد وسارة"
+                className="text-right h-11 text-base"
                 dir="rtl"
               />
               {errors.title && (
-                <p className="text-sm text-destructive mt-1">
+                <p className="text-sm text-destructive mt-1 flex items-center gap-1">
+                  <span>⚠️</span>
                   {errors.title.message}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">الوصف</Label>
+              <Label htmlFor="description" className="text-base font-medium">
+                الوصف
+              </Label>
               <Textarea
                 id="description"
                 {...register("description")}
-                placeholder="وصف الحدث..."
+                placeholder="أضف تفاصيل إضافية عن الحجز..."
                 rows={3}
-                className="text-right"
+                className="text-right resize-none"
                 dir="rtl"
               />
+              <p className="text-xs text-muted-foreground">
+                يمكنك إضافة ملاحظات أو متطلبات خاصة هنا
+              </p>
             </div>
           </div>
 
           {/* Date and Time */}
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-4">
+          <div className="space-y-4 bg-muted/30 p-4 rounded-lg">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              <span className="w-1 h-6 bg-primary rounded"></span>
+              التاريخ والوقت
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Start Date & Time */}
+              <div className="space-y-4 p-4 bg-background rounded-md border border-border/50">
+                <div className="flex items-center gap-2 pb-2 border-b">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  <h4 className="font-medium text-base">بداية الحجز</h4>
+                </div>
+
                 <EventDatePicker
-                  label="تاريخ البداية"
+                  label="التاريخ"
                   required={true}
                   value={startDateVal}
                   onChange={handleStartDateChange}
                   placeholder="اختر تاريخ البداية"
                 />
                 {errors.startDate && (
-                  <p className="text-sm text-destructive mt-1">
+                  <p className="text-sm text-destructive flex items-center gap-1">
+                    <span>⚠️</span>
                     {errors.startDate.message}
                   </p>
                 )}
 
                 <EventTimePicker
-                  label="وقت البداية"
+                  label="الوقت"
                   required={true}
                   value={startTimeVal}
                   onChange={handleStartTimeChange}
                   placeholder="اختر وقت البداية"
                 />
                 {errors.startTime && (
-                  <p className="text-sm text-destructive mt-1">
+                  <p className="text-sm text-destructive flex items-center gap-1">
+                    <span>⚠️</span>
                     {errors.startTime.message}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-4">
+              {/* End Date & Time */}
+              <div className="space-y-4 p-4 bg-background rounded-md border border-border/50">
+                <div className="flex items-center gap-2 pb-2 border-b">
+                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                  <h4 className="font-medium text-base">نهاية الحجز</h4>
+                </div>
+
                 <EventDatePicker
-                  label="تاريخ النهاية"
+                  label="التاريخ"
                   required={true}
                   value={endDateVal}
                   onChange={handleEndDateChange}
@@ -346,13 +390,14 @@ export default function EventDialog({
                   placeholder="اختر تاريخ النهاية"
                 />
                 {errors.endDate && (
-                  <p className="text-sm text-destructive mt-1">
+                  <p className="text-sm text-destructive flex items-center gap-1">
+                    <span>⚠️</span>
                     {errors.endDate.message}
                   </p>
                 )}
 
                 <EventTimePicker
-                  label="وقت النهاية"
+                  label="الوقت"
                   required={true}
                   value={endTimeVal}
                   onChange={handleEndTimeChange}
@@ -360,135 +405,178 @@ export default function EventDialog({
                   placeholder="اختر وقت النهاية"
                 />
                 {errors.endTime && (
-                  <p className="text-sm text-destructive mt-1">
+                  <p className="text-sm text-destructive flex items-center gap-1">
+                    <span>⚠️</span>
                     {errors.endTime.message}
                   </p>
                 )}
               </div>
             </div>
+
             {(!startDateVal || !startTimeVal) && (
-              <p className="text-xs text-muted-foreground">
-                حدد تاريخ ووقت البداية أولاً
-              </p>
+              <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-950 rounded-md border border-blue-200 dark:border-blue-800">
+                <span className="text-lg">ℹ️</span>
+                <p className="text-sm text-blue-900 dark:text-blue-100">
+                  حدد تاريخ ووقت البداية أولاً لتتمكن من اختيار النهاية
+                </p>
+              </div>
             )}
           </div>
 
           {/* Event Details */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            <div className="space-y-2">
-              <Label htmlFor="status">
-                الحالة <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={watch("status")}
-                onValueChange={(value) => setValue("status", value)}
-                dir="rtl"
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="اختر الحالة" />
-                </SelectTrigger>
-                <SelectContent dir="rtl">
-                  {statusOptions.map((status) => (
-                    <SelectItem key={status.value} value={status.value}>
-                      {status.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="priority">الأولوية</Label>
-              <Select
-                value={watch("priority")}
-                onValueChange={(value) => setValue("priority", value)}
-                dir="rtl"
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="اختر الأولوية" />
-                </SelectTrigger>
-                <SelectContent dir="rtl">
-                  {priorityOptions.map((priority) => (
-                    <SelectItem key={priority.value} value={priority.value}>
-                      {priority.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-4 bg-muted/30 p-4 rounded-lg">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              <span className="w-1 h-6 bg-primary rounded"></span>
+              تفاصيل الحجز
+            </h3>
 
-            <div className="space-y-2">
-              <Label htmlFor="location">الموقع</Label>
-              <Input
-                id="location"
-                {...register("location")}
-                placeholder="موقع الحدث"
-                className="text-right"
-                dir="rtl"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="status" className="text-base font-medium">
+                  الحالة <span className="text-red-500 ms-1">*</span>
+                </Label>
+                <Select
+                  value={watch("status")}
+                  onValueChange={(value) => setValue("status", value)}
+                  dir="rtl"
+                >
+                  <SelectTrigger className="h-11">
+                    <SelectValue placeholder="اختر الحالة" />
+                  </SelectTrigger>
+                  <SelectContent dir="rtl">
+                    {statusOptions.map((status) => (
+                      <SelectItem key={status.value} value={status.value}>
+                        {status.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="priority" className="text-base font-medium">
+                  الأولوية
+                </Label>
+                <Select
+                  value={watch("priority")}
+                  onValueChange={(value) => setValue("priority", value)}
+                  dir="rtl"
+                >
+                  <SelectTrigger className="h-11">
+                    <SelectValue placeholder="اختر الأولوية" />
+                  </SelectTrigger>
+                  <SelectContent dir="rtl">
+                    {priorityOptions.map((priority) => (
+                      <SelectItem key={priority.value} value={priority.value}>
+                        {priority.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="location" className="text-base font-medium">
+                  الموقع
+                </Label>
+                <Input
+                  id="location"
+                  {...register("location")}
+                  placeholder="مثال: قاعة الأفراح"
+                  className="text-right h-11"
+                  dir="rtl"
+                />
+              </div>
             </div>
           </div>
 
           {/* Client Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">معلومات العميل</h3>
+          <div className="space-y-4 bg-muted/30 p-4 rounded-lg">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              <span className="w-1 h-6 bg-primary rounded"></span>
+              معلومات العميل
+            </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="clientName">اسم العميل</Label>
+                <Label htmlFor="clientName" className="text-base font-medium">
+                  اسم العميل
+                </Label>
                 <Input
                   id="clientName"
                   {...register("clientName")}
-                  placeholder="اسم العميل"
-                  className="text-right"
+                  placeholder="مثال: أحمد محمد"
+                  className="text-right h-11"
                   dir="rtl"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="clientEmail">البريد الإلكتروني للعميل</Label>
+                <Label htmlFor="clientEmail" className="text-base font-medium">
+                  البريد الإلكتروني
+                </Label>
                 <Input
                   id="clientEmail"
                   type="email"
                   {...register("clientEmail")}
-                  placeholder="client@example.com"
-                  className="text-right"
-                  dir="rtl"
+                  placeholder="example@email.com"
+                  className="text-right h-11"
+                  dir="ltr"
                 />
                 {errors.clientEmail && (
-                  <p className="text-sm text-destructive mt-1">
+                  <p className="text-sm text-destructive flex items-center gap-1">
+                    <span>⚠️</span>
                     {errors.clientEmail.message}
                   </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="clientPhone">هاتف العميل</Label>
+                <Label htmlFor="clientPhone" className="text-base font-medium">
+                  رقم الهاتف
+                </Label>
                 <Input
                   id="clientPhone"
                   {...register("clientPhone")}
-                  placeholder="+966 123 456 789"
-                  className="text-right"
-                  dir="rtl"
+                  placeholder="05XX XXX XXXX"
+                  className="text-right h-11"
+                  dir="ltr"
                 />
               </div>
             </div>
+
+            <p className="text-xs text-muted-foreground flex items-center gap-1">
+              <span>💡</span>
+              سيتم استخدام هذه المعلومات للتواصل مع العميل
+            </p>
           </div>
 
           {/* Actions */}
-          <div className="flex justify-start space-x-2 pt-4" dir="ltr">
+          <div className="flex justify-end gap-3 pt-6 border-t" dir="rtl">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              className="min-w-[120px] h-11"
+              disabled={loading}
             >
               إلغاء
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading
-                ? "جاري الحفظ..."
-                : event
-                  ? "تحديث الحدث"
-                  : "إنشاء الحدث"}
+            <Button
+              type="submit"
+              disabled={loading}
+              className="min-w-[120px] h-11 font-medium"
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <span className="animate-spin">⏳</span>
+                  جاري الحفظ...
+                </span>
+              ) : event ? (
+                "تحديث الحجز"
+              ) : (
+                "إنشاء الحجز"
+              )}
             </Button>
           </div>
         </form>

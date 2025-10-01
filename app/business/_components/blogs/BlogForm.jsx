@@ -350,7 +350,7 @@ export default function BlogForm({
           disabled={isLoading}
           className="cursor-pointer min-h-[44px] px-4 py-2 w-full sm:w-auto order-2 sm:order-1"
         >
-          <X className="h-4 w-4 mr-2" />
+          <X className="h-4 w-4 me-2" />
           إلغاء
         </Button>
 
@@ -361,8 +361,8 @@ export default function BlogForm({
             disabled={isSubmitDisabled()}
             className="cursor-pointer min-h-[44px] px-4 py-2 w-full sm:w-auto order-1 sm:order-2"
           >
-            {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            {!isLoading && <Send className="h-4 w-4 mr-2" />}
+            {isLoading && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+            {!isLoading && <Send className="h-4 w-4 me-2" />}
             {isLoading ? "جاري الإرسال..." : "إرسال"}
           </Button>
         )}

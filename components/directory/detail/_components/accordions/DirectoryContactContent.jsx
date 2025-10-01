@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 
-export default function DirectoryContactContent({ company }) {
+export default function DirectoryContactContent({ tenant }) {
   return (
     <div className="rounded-md border p-4 sm:p-5 bg-white">
       <div className="flex items-start gap-3">
         <div className="h-10 w-10 rounded bg-gray-200" />
         <div className="flex-1">
           <p className="text-sm font-medium">
-            صندوق الوارد للتواصل مع {company?.name}
+            صندوق الوارد للتواصل مع {tenant?.name}
           </p>
           <p className="text-xs text-muted-foreground leading-6">
             إذا لم تكن متأكدًا تمامًا مما تحتاجه هنا، أرسل لهذه الشركة رسالة

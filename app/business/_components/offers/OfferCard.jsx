@@ -43,12 +43,12 @@ export default function OfferCard({
           <div className="absolute left-3 top-3">
             {offer.status === "active" ? (
               <span className="inline-flex items-center rounded-full bg-green-100/90 text-green-700 px-2.5 py-1 text-xs font-medium ring-1 ring-green-200 backdrop-blur">
-                <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5" />
+                <span className="w-1.5 h-1.5 bg-green-500 rounded-full ms-1.5" />
                 نشط
               </span>
             ) : (
               <span className="inline-flex items-center rounded-full bg-gray-100/90 text-gray-700 px-2.5 py-1 text-xs font-medium ring-1 ring-gray-200 backdrop-blur">
-                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1.5" />
+                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full ms-1.5" />
                 غير نشط
               </span>
             )}

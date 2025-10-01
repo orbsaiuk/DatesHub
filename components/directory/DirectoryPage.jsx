@@ -2,6 +2,7 @@ import DirectoryHero from "./_components/DirectoryHero";
 import DirectoryHeader from "./_components/DirectoryHeader";
 import DirectoryList from "./_components/DirectoryList";
 
+import { client } from "@/sanity/lib/client";
 import { writeClient } from "@/sanity/lib/serverClient";
 import {
   COMPANIES_LIST_QUERY,
@@ -15,6 +16,8 @@ import {
 } from "@/sanity/queries/suppliers";
 import { ALL_CATEGORIES_BY_TENANT_QUERY } from "@/sanity/queries/categories";
 import { PUBLIC_TENANT } from "@/sanity/lib/tenancy";
+import { auth } from "@clerk/nextjs/server";
+import { USER_BOOKMARK_IDS_QUERY } from "@/sanity/queries/user";
 
 export default async function DirectoryPage({
   type = "companies",
@@ -45,9 +48,9 @@ export default async function DirectoryPage({
       };
 
   const result = await writeClient.fetch(query, params);
-  const companies = Array.isArray(result) ? result : (result?.data ?? []);
+  const tenants = Array.isArray(result) ? result : (result?.data ?? []);
 
-  const categoriesRes = await writeClient.fetch(
+  const categoriesRes = await client.fetch(
     ALL_CATEGORIES_BY_TENANT_QUERY,
     PUBLIC_TENANT
   );
@@ -55,7 +58,7 @@ export default async function DirectoryPage({
     ? categoriesRes
     : (categoriesRes?.data ?? []);
 
-  const cityRegionRes = await writeClient.fetch(
+  const cityRegionRes = await client.fetch(
     type === "suppliers"
       ? SUPPLIER_CITY_REGION_QUERY
       : COMPANY_CITY_REGION_QUERY
@@ -64,12 +67,29 @@ export default async function DirectoryPage({
     ? cityRegionRes
     : (cityRegionRes?.data ?? []);
 
+  // Fetch user's bookmarks on the server to avoid client-side delay
+  let bookmarkedIds = [];
+  try {
+    const { userId } = await auth();
+    if (userId) {
+      const bookmarksRes = await writeClient.fetch(USER_BOOKMARK_IDS_QUERY, {
+        uid: userId,
+      });
+      bookmarkedIds = Array.isArray(bookmarksRes?.bookmarks)
+        ? bookmarksRes.bookmarks.map((b) => b?.id).filter(Boolean)
+        : [];
+    }
+  } catch (_) {
+    // User not logged in or error fetching bookmarks - continue with empty array
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1">
         <DirectoryHero
           title={`اعثر على ${title.toLowerCase()} المثالية`}
           subtitle="لخدمة فعاليتك"
+          description="تصفح وتواصل مع مقدمي الخدمات عبر الفئات المختلفة."
         />
         <DirectoryHeader
           title={`جميع ${title}`}
@@ -81,13 +101,14 @@ export default async function DirectoryPage({
             ctype: ctype || "all",
             q: q || "",
           }}
-          count={companies.length}
+          count={tenants.length}
           cities={cities}
         />
         <DirectoryList
-          items={companies}
+          items={tenants}
           clearHref={basePath}
           basePath={basePath}
+          initialBookmarkedIds={bookmarkedIds}
         />
       </main>
     </div>

@@ -1,20 +1,20 @@
 import DirectoryMap from "../DirectoryMap";
 
-export default function DirectoryLocationContent({ company }) {
-  const allMarkers = Array.isArray(company?.locations) ? company.locations : [];
+export default function DirectoryLocationContent({ tenant }) {
+  const allMarkers = Array.isArray(tenant?.locations) ? tenant.locations : [];
   const hasHours =
-    Array.isArray(company?.openingHours) && company.openingHours.length > 0;
+    Array.isArray(tenant?.openingHours) && tenant.openingHours.length > 0;
   return (
     <div className="rounded-xl border bg-white shadow-sm">
       <div className="aspect-[4/3] sm:aspect-[16/6] w-full rounded-xl overflow-hidden">
-        <DirectoryMap company={company} />
+        <DirectoryMap tenant={tenant} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3">
         <div className="rounded-md border bg-white p-3 col-span-1 sm:col-span-2">
           <p className="text-xs text-muted-foreground">المواقع</p>
-          {Array.isArray(company?.locationList) ? (
+          {Array.isArray(tenant?.locationList) ? (
             <ul className="mt-1 space-y-1">
-              {company.locationList.map((locStr, i) => {
+              {tenant.locationList.map((locStr, i) => {
                 const marker = allMarkers[i];
                 const searchQ = encodeURIComponent(locStr || "");
                 return (
@@ -51,7 +51,7 @@ export default function DirectoryLocationContent({ company }) {
           <p className="text-xs text-muted-foreground">ساعات العمل</p>
           {hasHours ? (
             <div className="mt-1">
-              {company.openingHours.map((line, i) => (
+              {tenant.openingHours.map((line, i) => (
                 <p key={i} className="text-xs text-muted-foreground">
                   {line}
                 </p>

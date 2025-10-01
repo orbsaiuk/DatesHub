@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
-import DirectoryCompanyCard from "./DirectoryCompanyCard";
+import DirectoryTenantCard from "./DirectoryTenantCard";
 import {
   Pagination,
   PaginationContent,
@@ -21,8 +21,12 @@ export default function DirectoryList({
   clearHref = "/companies",
   pageSize = 5,
   basePath = "/companies",
+  initialBookmarkedIds = null, // Pass server-fetched bookmarks to avoid client delay
 }) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [bookmarkedIds, setBookmarkedIds] = useState(
+    initialBookmarkedIds || []
+  );
   const listTopRef = useRef(null);
   const previousPageRef = useRef(undefined);
 
@@ -84,6 +88,34 @@ export default function DirectoryList({
     setCurrentPage(next);
   };
 
+  const toggleBookmark = async (tenantId) => {
+    try {
+      const res = await fetch("/api/bookmarks/toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: tenantId }),
+      });
+
+      if (res.status === 401) {
+        const redirect = encodeURIComponent(window.location.pathname);
+        window.location.href = `/sign-in?redirect_url=${redirect}`;
+        return;
+      }
+
+      const data = await res.json();
+      const nowBookmarked = Boolean(data?.bookmarked);
+
+      // Update local state
+      if (nowBookmarked) {
+        setBookmarkedIds((prev) => [...prev, tenantId]);
+      } else {
+        setBookmarkedIds((prev) => prev.filter((id) => id !== tenantId));
+      }
+    } catch (error) {
+      throw error; // Let DirectoryTenantCard handle the error
+    }
+  };
+
   const getPageNumbers = () => {
     const pages = [];
     if (pageCount <= 5) {
@@ -128,13 +160,13 @@ export default function DirectoryList({
       ) : (
         <>
           <div className="space-y-3 sm:space-y-5">
-            {currentItems.map((company) => (
-              <DirectoryCompanyCard
-                key={company.id}
-                company={company}
+            {currentItems.map((tenant) => (
+              <DirectoryTenantCard
+                key={tenant.id}
+                tenant={tenant}
                 basePath={basePath}
-                isBookmarked={false}
-                onToggleBookmark={async () => {}}
+                isBookmarked={bookmarkedIds.includes(tenant.id)}
+                onToggleBookmark={() => toggleBookmark(tenant.id)}
               />
             ))}
           </div>

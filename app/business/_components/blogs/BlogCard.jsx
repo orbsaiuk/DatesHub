@@ -132,7 +132,7 @@ export default function BlogCard({
                     onClick={() => onPreview(blog)}
                     disabled={deleting}
                   >
-                    <Eye className="h-4 w-4 mr-2" />
+                    <Eye className="h-4 w-4 me-2" />
                     معاينة
                   </DropdownMenuItem>
                 )}
@@ -144,7 +144,7 @@ export default function BlogCard({
                     }
                     disabled={deleting}
                   >
-                    <Trash2 className="h-4 w-4 mr-2" />
+                    <Trash2 className="h-4 w-4 me-2" />
                     حذف
                   </DropdownMenuItem>
                 )}

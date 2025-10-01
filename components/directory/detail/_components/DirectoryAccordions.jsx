@@ -17,7 +17,7 @@ export default function DirectoryAccordions({
   projects = [],
   works = [],
   awards = [],
-  company,
+  tenant,
   isSupplier = false,
 }) {
   const DEFAULT_KEYS = ["location", "contact"];
@@ -46,7 +46,7 @@ export default function DirectoryAccordions({
                     Array.isArray(openItems) && openItems.includes("reviews")
                   }
                   reviews={reviews}
-                  companyId={company?.id}
+                  companyId={tenant?.id}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -70,7 +70,7 @@ export default function DirectoryAccordions({
             الموقع
           </AccordionTrigger>
           <AccordionContent className="px-4 sm:px-6">
-            <DirectoryLocationContent company={company} />
+            <DirectoryLocationContent tenant={tenant} />
           </AccordionContent>
         </AccordionItem>
 
@@ -79,7 +79,7 @@ export default function DirectoryAccordions({
             التواصل
           </AccordionTrigger>
           <AccordionContent className="px-4 sm:px-6">
-            <DirectoryContactContent company={company} />
+            <DirectoryContactContent tenant={tenant} />
           </AccordionContent>
         </AccordionItem>
       </Accordion>

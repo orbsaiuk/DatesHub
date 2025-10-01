@@ -34,7 +34,6 @@ export default function InboxDropdown() {
         "/api/messaging/user/conversations?limit=10"
       );
       const data = await response.json();
-      console.log(data);
 
       if (data.ok) {
         setConversations(data.items || []);

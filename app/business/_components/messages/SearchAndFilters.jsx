@@ -34,7 +34,7 @@ export default function SearchAndFilters({
         <TabsList>
           <TabsTrigger value="all" className="flex items-center gap-2">
             الكل
-            <Badge variant="secondary" className="text-xs ml-1">
+            <Badge variant="secondary" className="text-xs ms-1">
               {filteredConversations.length}
             </Badge>
           </TabsTrigger>
@@ -44,7 +44,7 @@ export default function SearchAndFilters({
           >
             غير مقروءة
             {unreadCount > 0 && (
-              <Badge variant="destructive" className="text-xs ml-1">
+              <Badge variant="destructive" className="text-xs ms-1">
                 {unreadCount}
               </Badge>
             )}

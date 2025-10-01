@@ -26,8 +26,8 @@ export default function PlanCard({
       {isPopular && (
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
           <Badge className="bg-primary text-primary-foreground px-3 py-1 sm:px-4 sm:py-1 text-xs sm:text-sm">
-            <Star className="w-3 h-3 mr-1" />
-الأكثر شعبية
+            <Star className="w-3 h-3 me-1" />
+            الأكثر شعبية
           </Badge>
         </div>
       )}
@@ -38,7 +38,7 @@ export default function PlanCard({
             variant="secondary"
             className="bg-green-500 text-white px-2 py-1 sm:px-3 sm:py-1 text-xs"
           >
-            <Check className="w-3 h-3 mr-1" />
+            <Check className="w-3 h-3 me-1" />
             الباقة الحالية
           </Badge>
         </div>
@@ -78,7 +78,7 @@ export default function PlanCard({
                     variant="outline"
                     className="text-xs mt-1 inline-block"
                   >
-حتى {feature.limit}
+                    حتى {feature.limit}
                   </Badge>
                 )}
               </div>
@@ -86,7 +86,7 @@ export default function PlanCard({
           ))}
           {plan.features?.length > 6 && (
             <p className="text-xs text-muted-foreground text-center pt-2">
-+{plan.features.length - 6} ميزة إضافية
+              +{plan.features.length - 6} ميزة إضافية
             </p>
           )}
         </div>
@@ -98,8 +98,8 @@ export default function PlanCard({
               className="w-full h-12 text-sm sm:text-base"
               disabled
             >
-              <Check className="w-4 h-4 mr-2" />
-الباقة الحالية
+              <Check className="w-4 h-4 me-2" />
+              الباقة الحالية
             </Button>
           ) : canUpgradeToThis ? (
             <Button
@@ -108,11 +108,11 @@ export default function PlanCard({
               disabled={loading}
             >
               {loading ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white me-2"></div>
               ) : (
-                <ArrowUp className="w-4 h-4 mr-2" />
+                <ArrowUp className="w-4 h-4 me-2" />
               )}
-الترقية إلى {plan.name}
+              الترقية إلى {plan.name}
             </Button>
           ) : canDowngradeToThis ? (
             <Button
@@ -121,15 +121,15 @@ export default function PlanCard({
               onClick={onChoose}
               disabled={loading}
             >
-التراجع إلى {plan.name}
+              التراجع إلى {plan.name}
             </Button>
           ) : tier === "enterprise" ? (
             <Button
               variant="outline"
               className="w-full h-12 text-sm sm:text-base touch-manipulation"
             >
-              <Users className="w-4 h-4 mr-2" />
-تواصل مع المبيعات
+              <Users className="w-4 h-4 me-2" />
+              تواصل مع المبيعات
             </Button>
           ) : (
             <Button
@@ -137,7 +137,7 @@ export default function PlanCard({
               className="w-full h-12 text-sm sm:text-base"
               disabled
             >
-غير متاح
+              غير متاح
             </Button>
           )}
         </div>

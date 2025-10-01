@@ -95,12 +95,12 @@ export default function OfferTableView({
                   <td className="px-4 py-3">
                     {offer.status === "active" ? (
                       <span className="inline-flex items-center rounded-full bg-green-100 text-green-700 px-2.5 py-1 text-xs font-medium ring-1 ring-green-200">
-                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></div>
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full ms-1.5"></div>
                         نشط
                       </span>
                     ) : (
                       <span className="inline-flex items-center rounded-full bg-gray-100 text-gray-700 px-2.5 py-1 text-xs font-medium ring-1 ring-gray-200">
-                        <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1.5"></div>
+                        <div className="w-1.5 h-1.5 bg-gray-400 rounded-full ms-1.5"></div>
                         غير نشط
                       </span>
                     )}

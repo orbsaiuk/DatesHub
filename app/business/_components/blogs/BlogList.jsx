@@ -136,7 +136,7 @@ export default function BlogList({
               disabled={isLoading}
               className="min-h-[44px] px-4 py-2 w-full sm:w-auto justify-center"
             >
-              <RefreshCw className="h-4 w-4 mr-2" />
+              <RefreshCw className="h-4 w-4 me-2" />
               تحديث
             </Button>
           )}
@@ -145,7 +145,7 @@ export default function BlogList({
               onClick={onCreateNew}
               className="min-h-[44px] px-4 py-2 w-full sm:w-auto justify-center"
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="h-4 w-4 me-2" />
               مقال جديد
             </Button>
           )}
@@ -213,7 +213,7 @@ export default function BlogList({
                 {/* Status Filter */}
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-full sm:w-[180px] min-h-[44px]">
-                    <Filter className="h-4 w-4 mr-2" />
+                    <Filter className="h-4 w-4 me-2" />
                     <SelectValue placeholder="تصفية حسب الحالة" />
                   </SelectTrigger>
                   <SelectContent>
@@ -274,7 +274,7 @@ export default function BlogList({
           <p className="text-muted-foreground mb-4">{emptyStateDescription}</p>
           {showCreateButton && onCreateNew && (
             <Button onClick={onCreateNew}>
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="h-4 w-4 me-2" />
               أنشئ مقالك الأول
             </Button>
           )}

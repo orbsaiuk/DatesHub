@@ -12,12 +12,12 @@ function buildQueryFromLocation(loc) {
   return parts.join(", ");
 }
 
-export default function DirectoryMap({ company, className = "" }) {
+export default function DirectoryMap({ tenant, className = "" }) {
   const [resolved, setResolved] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const needsGeocode = useMemo(() => {
-    return (Array.isArray(company?.locations) ? company.locations : []).map(
+    return (Array.isArray(tenant?.locations) ? tenant.locations : []).map(
       (l) => {
         const hasGeo =
           l?.geo &&
@@ -26,7 +26,7 @@ export default function DirectoryMap({ company, className = "" }) {
         return { loc: l, hasGeo, query: buildQueryFromLocation(l) };
       }
     );
-  }, [company]);
+  }, [tenant]);
 
   useEffect(() => {
     let cancelled = false;
@@ -37,8 +37,8 @@ export default function DirectoryMap({ company, className = "" }) {
       for (const { loc, hasGeo, query } of needsGeocode) {
         if (hasGeo) {
           out.push({
-            id: `${company.id}-${loc.geo.lat},${loc.geo.lng}`,
-            name: company.name,
+            id: `${tenant.id}-${loc.geo.lat},${loc.geo.lng}`,
+            name: tenant.name,
             lat: loc.geo.lat,
             lng: loc.geo.lng,
           });
@@ -58,8 +58,8 @@ export default function DirectoryMap({ company, className = "" }) {
             typeof data.lng === "number"
           ) {
             out.push({
-              id: `${company.id}-${data.lat},${data.lng}`,
-              name: company.name,
+              id: `${tenant.id}-${data.lat},${data.lng}`,
+              name: tenant.name,
               lat: data.lat,
               lng: data.lng,
             });
@@ -78,19 +78,19 @@ export default function DirectoryMap({ company, className = "" }) {
       cancelled = true;
       if (timer) clearTimeout(timer);
     };
-  }, [needsGeocode, company?.id, company?.name]);
+  }, [needsGeocode, tenant?.id, tenant?.name]);
 
   const markers = useMemo(() => {
-    const fromGeo = (Array.isArray(company?.locations) ? company.locations : [])
+    const fromGeo = (Array.isArray(tenant?.locations) ? tenant.locations : [])
       .filter((l) => l?.geo?.lat && l?.geo?.lng)
       .map((l, idx) => ({
-        id: `${company.id}-g${idx}`,
-        name: company.name,
+        id: `${tenant.id}-g${idx}`,
+        name: tenant.name,
         lat: l.geo.lat,
         lng: l.geo.lng,
       }));
     return [...fromGeo, ...resolved];
-  }, [company, resolved]);
+  }, [tenant, resolved]);
 
   return <MapView className={className} markers={markers} loading={loading} />;
 }

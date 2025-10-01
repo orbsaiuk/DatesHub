@@ -49,7 +49,10 @@ export default function EventRequestForm({
       await onSubmit?.(data);
       reset(); // Reset form after successful submission
     } catch (error) {
-      console.error("Error submitting event request:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error submitting event request:", error);
+      }
+      // Error should be handled by parent component
     }
   };
 

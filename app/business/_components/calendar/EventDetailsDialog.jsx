@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import {
   Calendar,
+  Clock,
   MapPin,
   User,
   Phone,
@@ -104,15 +105,19 @@ export default function EventDetailsDialog({
       });
 
       if (response.ok) {
-        toast.success("تم حذف الحدث", { id: toastId });
+        toast.success("تم حذف الحدث بنجاح", { id: toastId });
         onDelete();
       } else {
-        console.error("Failed to delete event");
+        if (process.env.NODE_ENV === "development") {
+          console.error("Failed to delete event");
+        }
         toast.error("فشل في حذف الحدث", { id: toastId });
       }
     } catch (error) {
-      console.error("Error deleting event:", error);
-      toast.error("خطأ في حذف الحدث");
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error deleting event:", error);
+      }
+      toast.error("حدث خطأ أثناء حذف الحدث");
     } finally {
       setLoading(false);
     }
@@ -129,15 +134,19 @@ export default function EventDetailsDialog({
       });
 
       if (response.ok) {
-        toast.success("تم تحديث الحالة", { id: toastId });
+        toast.success("تم تحديث الحالة بنجاح", { id: toastId });
         onUpdate();
       } else {
-        console.error("Failed to update status");
+        if (process.env.NODE_ENV === "development") {
+          console.error("Failed to update status");
+        }
         toast.error("فشل في تحديث الحالة", { id: toastId });
       }
     } catch (error) {
-      console.error("Error updating status:", error);
-      toast.error("خطأ في تحديث الحالة");
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error updating status:", error);
+      }
+      toast.error("حدث خطأ أثناء تحديث الحالة");
     } finally {
       setUpdatingStatus(false);
     }
@@ -155,34 +164,292 @@ export default function EventDetailsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="space-y-4">
-          <div className="w-full flex items-start sm:flex-row flex-col justify-center sm:justify-between gap-2 sm:gap-0 mt-6">
-            <div className="space-y-2 flex flex-row sm:flex-col justify-between w-full">
-              <DialogTitle className="text-xl capitalize">
+      <DialogContent
+        className="sm:max-w-4xl max-h-[90vh] overflow-y-auto"
+        dir="rtl"
+      >
+        <DialogHeader className="space-y-4 pb-6 border-b">
+          <div className="w-full flex items-start sm:flex-row flex-col justify-center sm:justify-between gap-4 sm:gap-0">
+            <div className="space-y-3 flex flex-col w-full">
+              <DialogTitle className="text-2xl font-bold text-center">
                 {event.title}
               </DialogTitle>
-              <div className="flex items-center gap-2">
-                <Badge className={getStatusColor(event.status)}>
-                  {statusOptions.find((opt) => opt.value === event.status)
-                    ?.label || event.status}
-                </Badge>
-                <Badge className={getPriorityColor(event.priority)}>
-                  {priorityOptions.find((opt) => opt.value === event.priority)
-                    ?.label || event.priority}{" "}
-                  Priority
-                </Badge>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Badge
+                    className={`${getStatusColor(event.status)} text-base px-3 py-1`}
+                  >
+                    {statusOptions.find((opt) => opt.value === event.status)
+                      ?.label || event.status}
+                  </Badge>
+                  {event.priority && (
+                    <Badge
+                      className={`${getPriorityColor(event.priority)} text-base px-3 py-1`}
+                    >
+                      <span className="ms-1">🔔</span>
+                      {priorityOptions.find(
+                        (opt) => opt.value === event.priority
+                      )?.label || event.priority}
+                    </Badge>
+                  )}
+                </div>
+                <div className="hidden sm:flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onEdit(event)}
+                    className="cursor-pointer"
+                  >
+                    <Edit className="w-4 h-4 ms-1" />
+                    تعديل
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="cursor-pointer text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="w-4 h-4 ms-1" />
+                        حذف
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent dir="rtl">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>هل أنت متأكد؟</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          لا يمكن التراجع عن هذا الإجراء. سيؤدي هذا إلى حذف
+                          الحدث "{event.title}" وجميع البيانات المرتبطة به
+                          نهائياً.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="cursor-pointer">
+                          إلغاء
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleDelete}
+                          className="bg-destructive text-white hover:bg-destructive/90 cursor-pointer"
+                          disabled={loading}
+                        >
+                          {loading ? "جاري الحذف..." : "حذف الحدث"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               </div>
             </div>
-            <div className="hidden sm:flex gap-2">
+          </div>
+        </DialogHeader>
+
+        <div className="space-y-6" dir="rtl">
+          {/* Quick Status Update */}
+          <div className="bg-gradient-to-l from-primary/5 to-transparent p-4 rounded-lg border border-primary/20">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🔄</span>
+                <label className="text-base font-semibold">تحديث الحالة:</label>
+              </div>
+              <Select
+                value={event.status}
+                onValueChange={handleStatusUpdate}
+                disabled={updatingStatus}
+                dir="rtl"
+              >
+                <SelectTrigger className="w-48 h-11">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent dir="rtl">
+                  {statusOptions.map((status) => (
+                    <SelectItem key={status.value} value={status.value}>
+                      {status.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Date and Time */}
+          <div className="space-y-4 bg-muted/30 p-4 rounded-lg">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              التاريخ والوقت
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Start Date/Time */}
+              <div className="flex flex-col gap-2 p-4 bg-green-50 dark:bg-green-950/20 rounded-md border border-green-200 dark:border-green-800">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  <p className="text-sm font-semibold text-green-900 dark:text-green-100">
+                    بداية الحجز
+                  </p>
+                </div>
+                <div className="pr-4 space-y-1">
+                  <p className="font-bold text-base">
+                    {formatDate(event.startDate)}
+                  </p>
+                  <p className="text-sm text-muted-foreground flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {formatTime(event.startDate)}
+                  </p>
+                </div>
+              </div>
+
+              {/* End Date/Time */}
+              <div className="flex flex-col gap-2 p-4 bg-red-50 dark:bg-red-950/20 rounded-md border border-red-200 dark:border-red-800">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                  <p className="text-sm font-semibold text-red-900 dark:text-red-100">
+                    نهاية الحجز
+                  </p>
+                </div>
+                <div className="pr-4 space-y-1">
+                  <p className="font-bold text-base">
+                    {formatDate(event.endDate)}
+                  </p>
+                  <p className="text-sm text-muted-foreground flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {formatTime(event.endDate)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Description and Location */}
+          {(event.description || event.location) && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Description */}
+              {event.description && (
+                <div className="space-y-3 bg-muted/30 p-4 rounded-lg">
+                  <h3 className="font-semibold text-base flex items-center gap-2">
+                    <FileText className="w-5 h-5" />
+                    الوصف
+                  </h3>
+                  <p className="text-sm text-muted-foreground pr-6 whitespace-pre-wrap leading-relaxed">
+                    {event.description}
+                  </p>
+                </div>
+              )}
+
+              {/* Location */}
+              {event.location && (
+                <div className="space-y-3 bg-muted/30 p-4 rounded-lg">
+                  <h3 className="font-semibold text-base flex items-center gap-2">
+                    <MapPin className="w-5 h-5" />
+                    الموقع
+                  </h3>
+                  <p className="text-sm pr-6 font-medium">{event.location}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Client Information */}
+          {event.clientContact &&
+            (event.clientContact.name ||
+              event.clientContact.email ||
+              event.clientContact.phone) && (
+              <div className="space-y-4 bg-muted/30 p-4 rounded-lg border-r-4 border-primary">
+                <h3 className="font-semibold text-lg flex items-center gap-2">
+                  <User className="w-5 h-5" />
+                  معلومات العميل
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pr-2">
+                  {event.clientContact.name && (
+                    <div className="flex items-center gap-3 p-3 bg-background rounded-md">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <User className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-muted-foreground">
+                          الاسم
+                        </span>
+                        <span className="text-sm font-medium">
+                          {event.clientContact.name}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {event.clientContact.email && (
+                    <div className="flex items-center gap-3 p-3 bg-background rounded-md">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Mail className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-muted-foreground">
+                          البريد
+                        </span>
+                        <a
+                          href={`mailto:${event.clientContact.email}`}
+                          className="text-sm font-medium text-blue-600 hover:underline"
+                          dir="ltr"
+                        >
+                          {event.clientContact.email}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                  {event.clientContact.phone && (
+                    <div className="flex items-center gap-3 p-3 bg-background rounded-md">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Phone className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-muted-foreground">
+                          الهاتف
+                        </span>
+                        <a
+                          href={`tel:${event.clientContact.phone}`}
+                          className="text-sm font-medium text-blue-600 hover:underline"
+                          dir="ltr"
+                        >
+                          {event.clientContact.phone}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+          {/* Event Metadata */}
+          <div className="flex flex-row items-center justify-between pt-4 border-t">
+            <div className="space-y-2 bg-muted/20 p-3 rounded-md">
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <span>📅</span>
+                <span className="font-medium">تاريخ الإنشاء:</span>
+                {new Date(
+                  event._createdAt || event.createdAt || Date.now()
+                ).toLocaleDateString("ar-EG", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+              {event._updatedAt && event._updatedAt !== event._createdAt && (
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <span>🔄</span>
+                  <span className="font-medium">آخر تحديث:</span>
+                  {new Date(event._updatedAt).toLocaleDateString("ar-EG", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+              )}
+            </div>
+            <div className="flex sm:hidden gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => onEdit(event)}
                 className="cursor-pointer"
               >
-                <Edit className="w-4 h-4 mr-1" />
-                Edit
+                <Edit className="w-4 h-4 ms-1" />
+                تعديل
               </Button>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
@@ -191,11 +458,11 @@ export default function EventDetailsDialog({
                     size="sm"
                     className="cursor-pointer"
                   >
-                    <Trash2 className="w-4 h-4 mr-1" />
-                    Delete
+                    <Trash2 className="w-4 h-4 ms-1 text-destructive" />
+                    حذف
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent dir="rtl">
                   <AlertDialogHeader>
                     <AlertDialogTitle>هل أنت متأكد؟</AlertDialogTitle>
                     <AlertDialogDescription>
@@ -213,199 +480,6 @@ export default function EventDetailsDialog({
                       disabled={loading}
                     >
                       {loading ? "جاري الحذف..." : "حذف الحدث"}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
-          </div>
-        </DialogHeader>
-
-        <div className="space-y-6" dir="rtl">
-          {/* Quick Status Update */}
-          <div className="bg-muted/50 p-4 rounded-lg">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-medium">تحديث الحالة:</label>
-              <Select
-                value={event.status}
-                onValueChange={handleStatusUpdate}
-                disabled={updatingStatus}
-                dir="rtl"
-              >
-                <SelectTrigger className="w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent dir="rtl">
-                  {statusOptions.map((status) => (
-                    <SelectItem key={status.value} value={status.value}>
-                      {status.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Date and Time */}
-          <div className="space-y-3">
-            <h3 className="font-medium flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              التاريخ والوقت
-            </h3>
-            <div className="flex flex-col md:grid md:grid-cols-2 gap-4 pr-0 md:pr-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2">
-                <p className="text-sm text-muted-foreground font-medium min-w-[60px]">
-                  البداية:
-                </p>
-                <div className="flex flex-row items-center gap-1 sm:gap-2">
-                  <span className="font-medium text-sm">
-                    {formatDate(event.startDate)}
-                  </span>
-                  <span className="text-muted-foreground text-xs sm:text-sm">
-                    ({formatTime(event.startDate)})
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2">
-                <p className="text-sm text-muted-foreground font-medium min-w-[60px]">
-                  النهاية:
-                </p>
-                <div className="flex flex-row items-center gap-1 sm:gap-2">
-                  <span className="font-medium text-sm">
-                    {formatDate(event.endDate)}
-                  </span>
-                  <span className="text-muted-foreground text-xs sm:text-sm">
-                    ({formatTime(event.endDate)})
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-y py-4">
-            {/* Description */}
-            {event.description && (
-              <div className="space-y-2">
-                <h3 className="font-medium flex items-center gap-2">
-                  <FileText className="w-4 h-4" />
-                  الوصف
-                </h3>
-                <p className="text-sm text-muted-foreground pr-6 whitespace-pre-wrap">
-                  {event.description}
-                </p>
-              </div>
-            )}
-
-            {/* Location */}
-            {event.location && (
-              <div className="space-y-2">
-                <h3 className="font-medium flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  الموقع
-                </h3>
-                <p className="text-sm pr-6">{event.location}</p>
-              </div>
-            )}
-          </div>
-
-          {/* Client Information */}
-          {event.clientContact &&
-            (event.clientContact.name ||
-              event.clientContact.email ||
-              event.clientContact.phone) && (
-              <div className="space-y-3 border-b pb-4">
-                <h3 className="font-medium flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  معلومات العميل
-                </h3>
-                <div className="space-y-2 pr-6">
-                  {event.clientContact.name && (
-                    <div className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm">
-                        {event.clientContact.name}
-                      </span>
-                    </div>
-                  )}
-                  {event.clientContact.email && (
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-muted-foreground" />
-                      <a
-                        href={`mailto:${event.clientContact.email}`}
-                        className="text-sm text-blue-600 hover:underline"
-                      >
-                        {event.clientContact.email}
-                      </a>
-                    </div>
-                  )}
-                  {event.clientContact.phone && (
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-muted-foreground" />
-                      <a
-                        href={`tel:${event.clientContact.phone}`}
-                        className="text-sm text-blue-600 hover:underline"
-                      >
-                        {event.clientContact.phone}
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-          {/* Event Metadata */}
-          <div className="flex flex-row items-center justify-between">
-            <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">
-                Created:{" "}
-                {new Date(
-                  event._createdAt || event.createdAt || Date.now()
-                ).toLocaleDateString("ar-EG")}
-              </p>
-              {event._updatedAt !== event._createdAt && (
-                <p className="text-xs text-muted-foreground">
-                  Last updated:{" "}
-                  {new Date(event._updatedAt).toLocaleDateString("ar-EG")}
-                </p>
-              )}
-            </div>
-            <div className="flex sm:hidden gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onEdit(event)}
-                className="cursor-pointer"
-              >
-                <Edit className="w-4 h-4 mr-1" />
-              </Button>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onDelete(event)}
-                    className="cursor-pointer"
-                  >
-                    <Trash2 className="w-4 h-4 mr-1 text-destructive" />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the event "{event.title}" and all associated data.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className="cursor-pointer">
-                      Cancel
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      className="bg-destructive text-white hover:bg-destructive/90 cursor-pointer"
-                      disabled={loading}
-                    >
-                      {loading ? "Deleting..." : "Delete Event"}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>

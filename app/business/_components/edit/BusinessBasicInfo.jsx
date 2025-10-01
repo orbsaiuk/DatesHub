@@ -180,7 +180,7 @@ export default function BusinessBasicInfo({
                       }}
                       className="text-destructive hover:text-destructive w-full sm:w-auto"
                     >
-                      <X className="h-4 w-4 mr-1" />
+                      <X className="h-4 w-4 me-1" />
                       إزالة
                     </Button>
                   )}

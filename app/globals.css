@@ -321,6 +321,9 @@
     border-bottom: 1px solid hsl(var(--border));
     padding: 8px;
   }
+  .rbc-event-content {
+    text-align: right;
+  }
 }
 
 .quill-toolbar-rtl {

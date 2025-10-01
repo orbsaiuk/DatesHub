@@ -10,27 +10,26 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import StarRating from "./StarRating";
 import { CompanyLogo } from "@/components/ImageOptimized";
-import { urlFor } from "@/sanity/lib/image";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { SignedIn } from "@clerk/nextjs";
 import CompanyInteractionButton from "@/components/CompanyInteractionButton";
 
-export default function DirectoryHeader({ company }) {
-  const logoUrl =
-    typeof company.logo === "string"
-      ? company.logo
-      : company.logo
-        ? urlFor(company.logo).url()
-        : null;
-
-  const [isBookmarked, setIsBookmarked] = useState(false);
+export default function DirectoryHeader({
+  tenant,
+  basePath = "/companies",
+  initialIsBookmarked = null,
+  initialInteractionStatus = null,
+}) {
+  const [isBookmarked, setIsBookmarked] = useState(
+    initialIsBookmarked ?? false
+  );
   const [loading, setLoading] = useState(false);
   const hasIncrementedRef = useRef(false);
 
   useEffect(() => {
-    if (!company?.id) return;
-    const storageKey = `viewed_company_${company.id}`;
+    if (!tenant?.id) return;
+    const storageKey = `viewed_${tenant.type}_${tenant.id}`;
     try {
       if (typeof window !== "undefined") {
         if (sessionStorage.getItem(storageKey)) return;
@@ -41,31 +40,13 @@ export default function DirectoryHeader({ company }) {
     if (hasIncrementedRef.current) return;
     hasIncrementedRef.current = true;
 
-    fetch("/api/company/increment-views", {
+    fetch(`/api/${tenant.type}/increment-views`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
-      body: JSON.stringify({ id: company.id }),
+      body: JSON.stringify({ id: tenant.id }),
     }).catch(() => {});
-  }, [company?.id]);
-
-  useEffect(() => {
-    let mounted = true;
-    async function load() {
-      try {
-        const res = await fetch("/api/bookmarks", { cache: "no-store" });
-        if (!mounted) return;
-        if (res.status !== 200) return;
-        const data = await res.json();
-        const ids = Array.isArray(data?.bookmarks) ? data.bookmarks : [];
-        setIsBookmarked(ids.includes(company.id));
-      } catch (_) {}
-    }
-    load();
-    return () => {
-      mounted = false;
-    };
-  }, [company?.id]);
+  }, [tenant?.id]);
 
   async function toggleBookmark() {
     if (loading) return;
@@ -75,10 +56,10 @@ export default function DirectoryHeader({ company }) {
       const res = await fetch("/api/bookmarks/toggle", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: company.id }),
+        body: JSON.stringify({ id: tenant.id }),
       });
       if (res.status === 401) {
-        const redirect = encodeURIComponent(`/companies/${company.id}`);
+        const redirect = encodeURIComponent(`${basePath}/${tenant.id}`);
         window.location.href = `/sign-in?redirect_url=${redirect}`;
         return;
       }
@@ -98,7 +79,7 @@ export default function DirectoryHeader({ company }) {
     <Card className="p-4 sm:p-6 relative">
       <div className="flex flex-col gap-4 md:flex-row md:gap-6">
         <CompanyLogo
-          company={company}
+          tenant={tenant}
           size="xl"
           className="rounded-md w-[250px] h-[150px] object-cover"
           priority
@@ -107,15 +88,15 @@ export default function DirectoryHeader({ company }) {
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-semibold truncate">
-              {company.name}
+              {tenant.name}
             </h1>
           </div>
 
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <StarRating rating={company.rating} />
+            <StarRating rating={tenant.rating} />
             <span>
-              {company?.ratingCount > 0
-                ? `${Number(company.rating || 0).toFixed(1)} (${company.ratingCount} ${company.ratingCount === 1 ? "تقييم" : "تقييم"})`
+              {tenant.ratingCount > 0
+                ? `${Number(tenant.rating || 0).toFixed(1)} (${tenant.ratingCount} ${tenant.ratingCount === 1 ? "تقييم" : "تقييم"})`
                 : "لا توجد تقييمات بعد"}
             </span>
           </div>
@@ -123,25 +104,25 @@ export default function DirectoryHeader({ company }) {
           <div className="mt-3 flex items-start gap-2 text-xs sm:text-sm">
             <MapPin className="mt-0.5 size-4 text-muted-foreground" />
             <span className="text-muted-foreground">
-              {company.location}
-              {Array.isArray(company.locationList) &&
-              company.locationList.length > 1 ? (
+              {tenant.location}
+              {Array.isArray(tenant.locationList) &&
+              tenant.locationList.length > 1 ? (
                 <>
                   {" "}
                   <span
-                    title={company.locationList.slice(1).join("\n")}
+                    title={tenant.locationList.slice(1).join("\n")}
                     className="text-muted-foreground/80 cursor-help"
                   >
-                    (+{company.locationList.length - 1} المزيد)
+                    (+{tenant.locationList.length - 1} المزيد)
                   </span>
                 </>
               ) : null}
             </span>
           </div>
-          {Array.isArray(company.extraServices) &&
-          company.extraServices.length > 0 ? (
+          {Array.isArray(tenant.extraServices) &&
+          tenant.extraServices.length > 0 ? (
             <div className="mt-2 flex flex-wrap gap-2">
-              {company.extraServices.slice(0, 8).map((t) => (
+              {tenant.extraServices.slice(0, 8).map((t) => (
                 <span
                   key={t}
                   className="inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] sm:text-[11px] text-muted-foreground bg-gray-50"
@@ -154,8 +135,9 @@ export default function DirectoryHeader({ company }) {
 
           <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
             <CompanyInteractionButton
-              companyTenantId={company.tenantId}
-              companyName={company.name}
+              companyTenantId={tenant.id}
+              companyName={tenant.name}
+              initialStatus={initialInteractionStatus}
             />
             <Button
               variant="outline"

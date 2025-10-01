@@ -12,13 +12,13 @@ export default function ImageOptimized({
   loading,
   sizes,
   sanityImage = null,
-  companyName = "",
+  tenantName = "",
   context = "",
   ...props
 }) {
   // Generate optimized alt text if not provided
   const optimizedAlt =
-    alt || generateAltText(sanityImage, companyName, context);
+    alt || generateAltText(sanityImage, tenantName, context);
 
   // Determine loading strategy - priority overrides loading prop
   const loadingStrategy = priority ? undefined : loading || "lazy";
@@ -66,13 +66,13 @@ export default function ImageOptimized({
 }
 
 // Generate SEO-friendly alt text
-function generateAltText(sanityImage, companyName = "", context = "") {
+function generateAltText(sanityImage, tenantName = "", context = "") {
   if (sanityImage?.alt) return sanityImage.alt;
 
   const parts = [];
 
-  if (companyName) {
-    parts.push(companyName);
+  if (tenantName) {
+    parts.push(tenantName);
   }
 
   if (context) {
@@ -86,7 +86,7 @@ function generateAltText(sanityImage, companyName = "", context = "") {
     parts.push(filename);
   }
 
-  if (companyName && context !== "logo") {
+  if (tenantName && context !== "logo") {
     parts.push("على دليل أعمال OrbsAI");
   }
 
@@ -95,12 +95,12 @@ function generateAltText(sanityImage, companyName = "", context = "") {
 
 // Company logo component with optimized metadata
 export function CompanyLogo({
-  company,
+  tenant,
   size = "md",
   className = "",
   priority = false,
 }) {
-  if (!company?.logo) return null;
+  if (!tenant?.logo) return null;
 
   const sizeMap = {
     sm: { width: 32, height: 32, className: "w-8 h-8" },
@@ -112,15 +112,15 @@ export function CompanyLogo({
   const { width, height, className: sizeClass } = sizeMap[size] || sizeMap.md;
 
   // Handle both Sanity images and direct URLs
-  if (company.logo?.asset) {
+  if (tenant.logo?.asset) {
     return (
       <ImageOptimized
-        sanityImage={company.logo}
-        alt={`شعار شركة ${company.name}`}
+        sanityImage={tenant.logo}
+        alt={`شعار شركة ${tenant.name}`}
         width={width}
         height={height}
         className={`${sizeClass} object-cover ${className}`}
-        companyName={company.name}
+        tenantName={tenant.name}
         context="logo"
         priority={priority}
       />
@@ -128,16 +128,16 @@ export function CompanyLogo({
   }
 
   // Handle direct URL logos
-  const logoUrl = typeof company.logo === "string" ? company.logo : null;
+  const logoUrl = typeof tenant.logo === "string" ? tenant.logo : null;
   if (logoUrl) {
     return (
       <ImageOptimized
         src={logoUrl}
-        alt={`شعار شركة ${company.name}`}
+        alt={`شعار شركة ${tenant.name}`}
         width={width}
         height={height}
         className={`${sizeClass} object-cover ${className}`}
-        companyName={company.name}
+        tenantName={tenant.name}
         context="logo"
         priority={priority}
       />

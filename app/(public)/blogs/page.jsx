@@ -1,4 +1,4 @@
-import { writeClient } from "@/sanity/lib/serverClient";
+import { client } from "@/sanity/lib/client";
 import { PUBLISHED_BLOGS_QUERY } from "@/sanity/queries/blogs";
 import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
 import BlogHero from "./_components/BlogHero";
@@ -13,11 +13,9 @@ export const metadata = {
 export default async function BlogPage() {
   // Fetch all blogs and categories without any filters
   const [blogs, categories] = await Promise.all([
-    writeClient.fetch(PUBLISHED_BLOGS_QUERY),
-    writeClient.fetch(ALL_CATEGORIES_QUERY),
+    client.fetch(PUBLISHED_BLOGS_QUERY),
+    client.fetch(ALL_CATEGORIES_QUERY),
   ]);
-
-  console.log(blogs);
 
   return (
     <>

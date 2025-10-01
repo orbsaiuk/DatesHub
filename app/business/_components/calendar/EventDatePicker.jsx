@@ -66,7 +66,7 @@ export default function EventDatePicker({
     <div className="space-y-2" dir="rtl">
       <Label className="text-sm font-medium text-gray-700 text-right block">
         {label}
-        {required && <span className="text-red-600 mr-1">*</span>}
+        {required && <span className="text-red-600 ms-1">*</span>}
       </Label>
 
       <Popover open={open} onOpenChange={setOpen}>
@@ -81,7 +81,7 @@ export default function EventDatePicker({
             )}
             dir="rtl"
           >
-            <CalendarIcon className="ml-2 h-4 w-4" />
+            <CalendarIcon className="ms-2 h-4 w-4" />
             {date ? (
               format(date, "PPP", { locale: ar })
             ) : (

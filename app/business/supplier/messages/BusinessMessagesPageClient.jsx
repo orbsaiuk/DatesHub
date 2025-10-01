@@ -235,9 +235,9 @@ export default function BusinessMessagesPageClient({ tenantType, tenantId }) {
     return (
       <Card>
         <CardContent className="p-8 text-center">
-          <p className="text-muted-foreground mb-4">Failed to load messages</p>
+          <p className="text-muted-foreground mb-4">فشل في تحميل الرسائل</p>
           <Button onClick={loadConversations} variant="outline">
-            Try Again
+            حاول مرة أخرى
           </Button>
         </CardContent>
       </Card>

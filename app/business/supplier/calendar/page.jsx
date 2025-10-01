@@ -1,8 +1,8 @@
 import EventCalendar from "@/app/business/_components/calendar/EventCalendar";
 
 export const metadata = {
-  title: "Calendar - Supplier Dashboard",
-  description: "Manage your events and appointments",
+  title: "الحجوزات - لوحة تحكم المورد",
+  description: "إدارة الحجوزات الخاصة بك",
 };
 
 export default function SupplierCalendarPage() {

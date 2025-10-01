@@ -172,7 +172,7 @@ export default function AwardsForm({ form, updateField, awardErrors }) {
           onClick={startAdd}
           className="cursor-pointer px-4 py-2"
         >
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 me-2" />
           إضافة جائزة
         </Button>
       </div>

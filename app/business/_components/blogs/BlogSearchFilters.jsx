@@ -97,7 +97,7 @@ export default function BlogSearchFilters({
             onClick={onRetry}
             className="h-11 md:h-10 px-4 md:px-3 text-orange-600 border-orange-200 hover:bg-orange-50 whitespace-nowrap"
           >
-            <RefreshCw className="h-4 w-4 mr-2 md:mr-1" />
+            <RefreshCw className="h-4 w-4 me-2 md:me-1" />
             <span className="hidden sm:inline">إعادة المحاولة</span>
           </Button>
         )}

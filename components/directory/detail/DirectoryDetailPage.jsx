@@ -3,12 +3,16 @@ import DirectoryOverview from "./_components/DirectoryOverview";
 import DirectoryAccordions from "./_components/DirectoryAccordions";
 import DirectoryMap from "./_components/DirectoryMap";
 import ScrollToTop from "@/components/ScrollToTop";
+import BreadcrumbPrefetch from "@/components/navigation/BreadcrumbPrefetch";
 import { writeClient } from "@/sanity/lib/serverClient";
 import { COMPANY_DETAIL_QUERY } from "@/sanity/queries/companies";
 import { COMPANY_BY_ID_OR_SLUG_QUERY } from "@/sanity/queries/company";
 import { SUPPLIER_BY_ID_OR_SLUG_QUERY } from "@/sanity/queries/supplier";
 import { SUPPLIER_DETAIL_QUERY } from "@/sanity/queries/suppliers";
 import { notFound } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { USER_BOOKMARK_IDS_QUERY } from "@/sanity/queries/user";
+import { getCompanyInteractionStatus } from "@/services/interactionStatus";
 
 export const revalidate = 60;
 
@@ -161,7 +165,7 @@ export default async function DirectoryDetailPage({
       )
     : [];
 
-  const company = {
+  const tenant = {
     id: data?.tenantId || (await params)?.id,
     name: data.name,
     rating: data.rating || 0,
@@ -178,27 +182,60 @@ export default async function DirectoryDetailPage({
     geo: primaryLocation?.geo || null,
   };
 
+  // Fetch user's bookmark status and interaction status on the server to avoid client-side delay
+  let isBookmarked = false;
+  let interactionStatus = null;
+  try {
+    const { userId } = await auth();
+    if (userId) {
+      const bookmarksRes = await writeClient.fetch(USER_BOOKMARK_IDS_QUERY, {
+        uid: userId,
+      });
+      const bookmarkedIds = Array.isArray(bookmarksRes?.bookmarks)
+        ? bookmarksRes.bookmarks.map((b) => b?.id).filter(Boolean)
+        : [];
+      isBookmarked = bookmarkedIds.includes(tenant.id);
+
+      // Fetch company interaction status
+      interactionStatus = await getCompanyInteractionStatus(userId, tenant.id);
+    }
+  } catch (_) {
+    // User not logged in or error fetching data
+  }
+
+  // Pre-fetch breadcrumb name to avoid client-side loading delay
+  const prefetchedNames =
+    type === "supplier"
+      ? { suppliers: { [id]: data.name } }
+      : { companies: { [id]: data.name } };
+
   return (
     <div className="container mx-auto px-4 my-6 sm:my-8">
+      <BreadcrumbPrefetch prefetchedNames={prefetchedNames} />
       <ScrollToTop />
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6">
-        <DirectoryHeader company={company} />
+        <DirectoryHeader
+          tenant={tenant}
+          basePath={basePath}
+          initialIsBookmarked={isBookmarked}
+          initialInteractionStatus={interactionStatus}
+        />
 
         <div className="rounded-xl border bg-white shadow-sm">
           <div className="aspect-[4/3] w-full rounded-xl overflow-hidden">
-            <DirectoryMap company={company} />
+            <DirectoryMap tenant={tenant} />
           </div>
         </div>
       </div>
 
-      <DirectoryOverview company={company} />
+      <DirectoryOverview tenant={tenant} />
 
       <DirectoryAccordions
         reviews={data.reviews || []}
         works={data.ourWorks || []}
         awards={data.awards || []}
         isSupplier={type === "supplier"}
-        company={company}
+        tenant={tenant}
       />
     </div>
   );

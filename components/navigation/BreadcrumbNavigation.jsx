@@ -102,14 +102,47 @@ export default function BreadcrumbNavigation({
 }) {
   const pathname = usePathname();
   const { customBreadcrumbs: contextBreadcrumbs } = useBreadcrumb();
-  const [companyNames, setCompanyNames] = useState({});
-  const [supplierNames, setSupplierNames] = useState({});
-  const [conversationLabels, setConversationLabels] = useState({});
-  const [blogTitles, setBlogTitles] = useState({});
-  const [loading, setLoading] = useState(false);
 
+  // Get prefetched names from window object (set by BreadcrumbPrefetch component)
+  const prefetchedNames =
+    typeof window !== "undefined"
+      ? window.__breadcrumbPrefetchedNames || {}
+      : {};
+
+  const [companyNames, setCompanyNames] = useState(
+    prefetchedNames.companies || {}
+  );
+  const [supplierNames, setSupplierNames] = useState(
+    prefetchedNames.suppliers || {}
+  );
+  const [conversationLabels, setConversationLabels] = useState(
+    prefetchedNames.conversations || {}
+  );
+  const [blogTitles, setBlogTitles] = useState(prefetchedNames.blogs || {});
   // Use context breadcrumbs first, then prop breadcrumbs, then auto-generate
   const activeBreadcrumbs = contextBreadcrumbs || customBreadcrumbs;
+
+  // Sync prefetched names from window object on pathname change
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.__breadcrumbPrefetchedNames) {
+      const prefetched = window.__breadcrumbPrefetchedNames;
+      if (prefetched.companies) {
+        setCompanyNames((prev) => ({ ...prev, ...prefetched.companies }));
+      }
+      if (prefetched.suppliers) {
+        setSupplierNames((prev) => ({ ...prev, ...prefetched.suppliers }));
+      }
+      if (prefetched.conversations) {
+        setConversationLabels((prev) => ({
+          ...prev,
+          ...prefetched.conversations,
+        }));
+      }
+      if (prefetched.blogs) {
+        setBlogTitles((prev) => ({ ...prev, ...prefetched.blogs }));
+      }
+    }
+  }, [pathname]);
 
   // Extract company IDs, conversation IDs, and blog IDs from pathname to preload labels
   useEffect(() => {
@@ -138,7 +171,6 @@ export default function BreadcrumbNavigation({
       const missingIds = companyIds.filter((id) => !companyNames[id]);
 
       if (missingIds.length > 0) {
-        setLoading(true);
         Promise.all(
           missingIds.map(async (id) => {
             const name = await getCompanyName(id);
@@ -150,7 +182,6 @@ export default function BreadcrumbNavigation({
             return acc;
           }, {});
           setCompanyNames((prev) => ({ ...prev, ...newNames }));
-          setLoading(false);
         });
       }
     }

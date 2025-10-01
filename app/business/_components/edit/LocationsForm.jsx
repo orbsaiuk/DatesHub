@@ -315,8 +315,8 @@ export default function LocationsForm({ form, updateField, locationErrors }) {
           onClick={addLocation}
           className="cursor-pointer px-4 py-2"
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Location
+          <Plus className="h-4 w-4 me-2" />
+          إضافة موقع
         </Button>
       </div>
 

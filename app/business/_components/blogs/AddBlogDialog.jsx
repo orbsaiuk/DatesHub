@@ -87,7 +87,7 @@ export default function AddBlogDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className={triggerClassName}>
-          <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5 me-2" />
           <span className="font-medium">مقال جديد</span>
         </Button>
       </DialogTrigger>

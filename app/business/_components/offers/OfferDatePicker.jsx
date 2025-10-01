@@ -56,7 +56,7 @@ export default function OfferDatePicker({
     <div className="space-y-1" dir="rtl">
       <label className="text-sm font-medium text-gray-700 text-right block">
         {label}
-        {required && <span className="text-red-600 mr-1">*</span>}
+        {required && <span className="text-red-600 ms-1">*</span>}
       </label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -70,7 +70,7 @@ export default function OfferDatePicker({
             )}
             dir="rtl"
           >
-            <CalendarIcon className="ml-2 h-4 w-4" />
+            <CalendarIcon className="ms-2 h-4 w-4" />
             {date ? (
               format(date, "PPP", { locale: ar })
             ) : (

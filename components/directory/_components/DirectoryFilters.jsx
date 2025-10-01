@@ -33,9 +33,7 @@ export default function DirectoryFilters({
   const [selectedSpecialization, setSelectedSpecialization] = useState(
     initialFilters?.spec || ""
   );
-  const [companyType, setCompanyType] = useState(
-    initialFilters?.ctype || "all"
-  );
+  const [tenantType, setTenantType] = useState(initialFilters?.ctype || "all");
   const [isApplying, setIsApplying] = useState(false);
   const [dirty, setDirty] = useState(false);
 
@@ -75,7 +73,7 @@ export default function DirectoryFilters({
   useEffect(() => {
     setLocation(searchParams?.get("loc") || "");
     setSelectedSpecialization(searchParams?.get("spec") || "");
-    setCompanyType(searchParams?.get("ctype") || "all");
+    setTenantType(searchParams?.get("ctype") || "all");
     setDirty(false);
   }, [searchParams]);
 
@@ -86,7 +84,7 @@ export default function DirectoryFilters({
     else params.delete("loc");
     if (selectedSpecialization) params.set("spec", selectedSpecialization);
     else params.delete("spec");
-    if (companyType && companyType !== "all") params.set("ctype", companyType);
+    if (tenantType && tenantType !== "all") params.set("ctype", tenantType);
     else params.delete("ctype");
     router.push(
       `${basePath}${params.toString() ? `?${params.toString()}` : ""}`
@@ -211,9 +209,9 @@ export default function DirectoryFilters({
 
       {/* Event Type */}
       <Select
-        value={companyType}
+        value={tenantType}
         onValueChange={(v) => {
-          setCompanyType(v);
+          setTenantType(v);
           setDirty(true);
         }}
         dir="rtl"
@@ -254,7 +252,7 @@ export default function DirectoryFilters({
             onClick={() => {
               setLocation("");
               setSelectedSpecialization("");
-              setCompanyType("all");
+              setTenantType("all");
               router.push(basePath);
             }}
             className="cursor-pointer h-10"

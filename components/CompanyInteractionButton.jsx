@@ -13,11 +13,16 @@ export default function CompanyInteractionButton({
   className = "",
   variant = "default",
   size = "sm",
+  initialStatus = null, // Server-fetched status to avoid client-side delay
 }) {
   const { user } = useUser();
-  const [hasAcceptedRequest, setHasAcceptedRequest] = useState(false);
-  const [hasPendingRequest, setHasPendingRequest] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [hasAcceptedRequest, setHasAcceptedRequest] = useState(
+    initialStatus?.hasAcceptedRequest || initialStatus?.hasConversation || false
+  );
+  const [hasPendingRequest, setHasPendingRequest] = useState(
+    initialStatus?.hasPendingRequest || false
+  );
+  const [isLoading, setIsLoading] = useState(initialStatus === null);
 
   const checkInteractionStatus = async () => {
     if (!user?.id || !companyTenantId) {
@@ -47,8 +52,10 @@ export default function CompanyInteractionButton({
   };
 
   useEffect(() => {
+    // Skip client-side fetch if status was provided from server
+    if (initialStatus !== null) return;
     checkInteractionStatus();
-  }, [user?.id, companyTenantId]);
+  }, [user?.id, companyTenantId, initialStatus]);
 
   // Show loading state while checking status
   if (isLoading) {
@@ -60,7 +67,6 @@ export default function CompanyInteractionButton({
     return (
       <MessageCompanyButton
         companyTenantId={companyTenantId}
-        companyName={companyName}
         className={className}
         variant={variant}
         size={size}
@@ -72,7 +78,6 @@ export default function CompanyInteractionButton({
   if (hasPendingRequest) {
     return (
       <WaitingForResponseButton
-        companyName={companyName}
         className={className}
         variant="outline"
         size={size}

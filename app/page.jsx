@@ -27,6 +27,7 @@ const OffersSection = dynamic(
   () => import("@/components/sections/OffersSection"),
   { ssr: true }
 );
+import { client } from "@/sanity/lib/client";
 import { writeClient } from "@/sanity/lib/serverClient";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
 import { urlFor } from "@/sanity/lib/image";
@@ -64,7 +65,7 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const settings = await writeClient.fetch(SITE_SETTINGS_QUERY);
+  const settings = await client.fetch(SITE_SETTINGS_QUERY);
   const brandTitle = settings?.title || undefined;
   const logoUrl = settings?.logo
     ? urlFor(settings.logo).width(120).height(32).url()
