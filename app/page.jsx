@@ -17,14 +17,16 @@ import { RoleBasedLayout } from "@/components/ClientRoleDetector";
 import { client } from "@/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
 import { getRecentBlogs } from "@/services/sanity/blogs";
-import { getAuthenticatedUser } from "@/lib/auth/authorization";
+import { auth } from "@clerk/nextjs/server";
 
 /**
  * Generate dynamic metadata based on user role
+ * Uses sessionClaims for instant metadata (no API calls)
  */
 export async function generateMetadata() {
-  const user = await getAuthenticatedUser();
-  const role = user?.role || null;
+  const { sessionClaims } = await auth();
+  // Get role from JWT session claims (instant)
+  const role = sessionClaims?.role || "user";
 
   // Company-specific metadata
   if (role === "company") {
@@ -34,14 +36,15 @@ export async function generateMetadata() {
         "اكتشف وتواصل مع الموردين الموثوقين. تصفح الفئات، قارن العروض الحصرية، واستكشف ملفات الموردين التفصيلية على OrbsAI.",
       alternates: { canonical: "/" },
     };
-  } else {
-    return {
-      title: "OrbsAI — اكتشف الشركات",
-      description:
-        "اكتشف وتواصل مع الشركات والموردين المعتمدين حول العالم. استكشف فئات الأعمال والعروض الحصرية وملفات الشركات التفصيلية. انضم إلى شبكتنا الموثوقة اليوم.",
-      alternates: { canonical: "/" },
-    };
   }
+
+  // Default metadata for regular users and suppliers
+  return {
+    title: "OrbsAI — اكتشف الشركات",
+    description:
+      "اكتشف وتواصل مع الشركات والموردين المعتمدين حول العالم. استكشف فئات الأعمال والعروض الحصرية وملفات الشركات التفصيلية. انضم إلى شبكتنا الموثوقة اليوم.",
+    alternates: { canonical: "/" },
+  };
 }
 
 /**

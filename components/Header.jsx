@@ -7,11 +7,13 @@ import { SignedIn } from "@clerk/nextjs";
 import HeaderAuthButtons from "./HeaderAuthButtons";
 import ImageOptimized from "@/components/ImageOptimized";
 import InboxDropdown from "@/components/messaging/InboxDropdown";
-import { getAuthenticatedUser } from "@/lib/auth/authorization";
+import { auth } from "@clerk/nextjs/server";
 
 export default async function Header({ brandTitle, logoUrl }) {
-  const user = await getAuthenticatedUser();
-  const role = user?.role || null;
+  const { sessionClaims } = await auth();
+  // Get role from JWT session claims (instant, no API call)
+  // Will be populated once JWT template is configured in Clerk Dashboard
+  const role = sessionClaims?.role || "user";
   const isBusiness = role === "company" || role === "supplier";
   const dashboardHref = isBusiness ? `/business/${role}/dashboard` : "#";
   const directoryHref = isBusiness ? "/suppliers" : "/companies";
