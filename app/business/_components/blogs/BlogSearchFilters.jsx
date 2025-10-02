@@ -11,40 +11,18 @@ import { Button } from "@/components/ui/button";
 import { Search, RefreshCw, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { client } from "@/sanity/lib/client";
-import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
 
 export default function BlogSearchFilters({
   query,
   setQuery,
   status,
   setStatus,
-  category,
-  setCategory,
   searchLoading,
   error,
   retryCount,
   onRetry,
 }) {
-  const [categories, setCategories] = useState([]);
-  const [loadingCategories, setLoadingCategories] = useState(true);
 
-  // Fetch categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoadingCategories(true);
-        const fetchedCategories = await client.fetch(ALL_CATEGORIES_QUERY);
-        setCategories(fetchedCategories || []);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        setCategories([]);
-      } finally {
-        setLoadingCategories(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   return (
     <div className="space-y-3 md:space-y-0 md:flex md:flex-row md:gap-4 md:items-center">
@@ -62,22 +40,6 @@ export default function BlogSearchFilters({
       </div>
 
       <div className="flex gap-3 md:gap-2">
-        <Select value={category} onValueChange={setCategory} dir="rtl">
-          <SelectTrigger className="flex-1 md:w-40 h-11 md:h-10 text-base md:text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20">
-            <SelectValue
-              placeholder={loadingCategories ? "جاري التحميل..." : "الفئة"}
-            />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">جميع الفئات</SelectItem>
-            {categories.map((cat) => (
-              <SelectItem key={cat._id} value={cat._id}>
-                {cat.title}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
         <Select value={status} onValueChange={setStatus} dir="rtl">
           <SelectTrigger className="flex-1 md:w-40 h-11 md:h-10 text-base md:text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20">
             <SelectValue placeholder="الحالة" />

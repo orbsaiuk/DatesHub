@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import BlogFilters from "./BlogFilters";
+import { useSearchParams } from "next/navigation";
 import BlogGrid from "./BlogGrid";
-import BlogGridSkeleton from "./BlogGridSkeleton";
 import PaginationControls from "./PaginationControls";
 import EmptyState from "./EmptyState";
 
@@ -12,26 +10,17 @@ function normalize(str = "") {
   return str.toLowerCase();
 }
 
-export default function BlogsClient({ blogs = [], categories = [] }) {
+export default function BlogsClient({ blogs = [] }) {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 9;
   const listTopRef = useRef(null);
   const previousPageRef = useRef(null);
 
   const search = searchParams.get("search") || "";
-  const category = searchParams.get("category") || ""; // expect category slug or "all"
 
   const filtered = useMemo(() => {
     let items = Array.isArray(blogs) ? [...blogs] : [];
-
-    // Category filter: use blog.category to match slug
-    const effectiveCategory = category && category !== "all" ? category : null;
-    if (effectiveCategory) {
-      items = items.filter((b) => b.category?.slug === effectiveCategory);
-    }
 
     // Text search in title and excerpt
     const q = normalize(search).trim();
@@ -42,10 +31,8 @@ export default function BlogsClient({ blogs = [], categories = [] }) {
         return inTitle || inExcerpt;
       });
     }
-
-    // No explicit sorting here; keep server-provided order (newest first)
     return items;
-  }, [blogs, category, search]);
+  }, [blogs, search]);
 
   const totalItems = filtered.length || 0;
   const pageCount = Math.max(1, Math.ceil(totalItems / pageSize));
@@ -55,18 +42,10 @@ export default function BlogsClient({ blogs = [], categories = [] }) {
     return filtered.slice(startIndex, startIndex + pageSize);
   }, [filtered, currentPage, pageSize]);
 
-  // Avoid skeleton flash on first load; only show on subsequent filter changes
-  const firstLoadRef = useRef(true);
+  // Reset to first page when search changes (instant)
   useEffect(() => {
-    if (firstLoadRef.current) {
-      firstLoadRef.current = false;
-      return; // skip initial mount to prevent flicker
-    }
-    setIsLoading(true);
-    setCurrentPage(1); // Reset to first page when filters change
-    const t = setTimeout(() => setIsLoading(false), 180); // slightly faster transition
-    return () => clearTimeout(t);
-  }, [category, search]);
+    setCurrentPage(1);
+  }, [search]);
 
   // Reset current page if it exceeds total pages
   useEffect(() => {
@@ -135,27 +114,18 @@ export default function BlogsClient({ blogs = [], categories = [] }) {
 
   return (
     <div>
-      <BlogFilters
-        categories={categories}
-        total={filtered.length}
-        isLoading={isLoading}
-      />
-      {isLoading ? (
-        <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <BlogGridSkeleton />
-          </div>
-        </section>
-      ) : filtered.length > 0 ? (
+      {filtered.length > 0 ? (
         <>
           <div ref={listTopRef} />
           <BlogGrid blogs={currentBlogs} />
-          <PaginationControls
-            currentPage={currentPage}
-            pageCount={pageCount}
-            getPageNumbers={getPageNumbers}
-            goToPage={goToPage}
-          />
+          {pageCount > 1 && (
+            <PaginationControls
+              currentPage={currentPage}
+              pageCount={pageCount}
+              getPageNumbers={getPageNumbers}
+              goToPage={goToPage}
+            />
+          )}
         </>
       ) : (
         <EmptyState />

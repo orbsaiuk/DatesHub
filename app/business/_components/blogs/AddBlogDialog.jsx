@@ -26,7 +26,6 @@ export default function AddBlogDialog({
     excerpt: "",
     content: "",
     blogImage: null,
-    category: "",
     tags: [],
     readingTime: "",
   };
@@ -49,7 +48,6 @@ export default function AddBlogDialog({
             ? form.content
             : form.content?.plainText || "",
         blogImage: isFile ? undefined : form.blogImage || null,
-        category: form.category || null,
         tags: Array.isArray(form.tags) ? form.tags : [],
         readingTime: form.readingTime ? Number(form.readingTime) : null,
       };

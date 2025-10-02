@@ -31,7 +31,6 @@ export async function GET(request) {
       tenantId: company.tenantId || tenantId,
     });
   } catch (error) {
-    console.error("Error fetching company data:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

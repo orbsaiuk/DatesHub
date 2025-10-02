@@ -36,7 +36,6 @@ export async function GET(_request, { params }) {
       tenantId: supplier.tenantId || id,
     });
   } catch (error) {
-    console.error("Error fetching supplier data:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

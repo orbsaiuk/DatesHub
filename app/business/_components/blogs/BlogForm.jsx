@@ -20,7 +20,6 @@ import { X, Plus, Upload, Send, Loader2 } from "lucide-react";
 import RichTextEditor from "./RichTextEditor";
 import NextImage from "next/image";
 import { client } from "@/sanity/lib/client";
-import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
 
 const schema = z.object({
   title: z.string().min(1, "العنوان مطلوب"),
@@ -35,7 +34,6 @@ const schema = z.object({
     })
     .or(z.string().min(1, "المحتوى مطلوب")),
   blogImage: z.any().refine((v) => !!v, { message: "صورة المقال مطلوبة" }),
-  category: z.string().min(1, "الفئة مطلوبة"),
 });
 
 export default function BlogForm({
@@ -44,7 +42,6 @@ export default function BlogForm({
     excerpt: "",
     content: "",
     blogImage: null,
-    category: "",
   },
   status = "draft",
   mode = "create",
@@ -52,8 +49,7 @@ export default function BlogForm({
   onSubmit,
   onCancel,
 }) {
-  const [categories, setCategories] = useState([]);
-  const [loadingCategories, setLoadingCategories] = useState(true);
+
   const MIN_WIDTH = 1200;
   const MIN_HEIGHT = 675; // ~16:9
   const MAX_FILE_MB = 5; // optional size guard
@@ -64,23 +60,7 @@ export default function BlogForm({
     mode: "onChange",
   });
 
-  // Fetch categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoadingCategories(true);
-        const fetchedCategories = await client.fetch(ALL_CATEGORIES_QUERY);
-        setCategories(fetchedCategories || []);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        setCategories([]);
-      } finally {
-        setLoadingCategories(false);
-      }
-    };
 
-    fetchCategories();
-  }, []);
 
   const errors = form.formState.errors || {};
   const blogImage = form.watch("blogImage");
@@ -104,10 +84,9 @@ export default function BlogForm({
     const hasContent =
       typeof content === "string" ? !!content.trim() : !!content?.html?.trim();
     const hasImage = !!form.getValues("blogImage");
-    const hasCategory = !!form.getValues("category");
     return (
       isLoading ||
-      !(hasTitle && hasExcerpt && hasContent && hasImage && hasCategory)
+      !(hasTitle && hasExcerpt && hasContent && hasImage)
     );
   };
 
@@ -160,53 +139,7 @@ export default function BlogForm({
             )}
           </div>
 
-          {/* Category */}
-          <div className="space-y-2">
-            <Label htmlFor="category">
-              الفئة <span className="text-red-600">*</span>
-            </Label>
-            <Controller
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  dir="rtl"
-                >
-                  <SelectTrigger
-                    className={`min-h-[44px] ${errors.category ? "border-red-500" : ""}`}
-                  >
-                    <SelectValue
-                      placeholder={
-                        loadingCategories ? "جاري تحميل الفئات..." : "اختر فئة"
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {loadingCategories ? (
-                      <SelectItem value="__loading" disabled>
-                        جاري تحميل الفئات...
-                      </SelectItem>
-                    ) : categories.length > 0 ? (
-                      categories.map((category) => (
-                        <SelectItem key={category._id} value={category._id}>
-                          {category.title}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      <SelectItem value="__none" disabled>
-                        لا توجد فئات متاحة
-                      </SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {errors.category && (
-              <p className="text-sm text-red-500">{errors.category.message}</p>
-            )}
-          </div>
+
 
           {/* Content */}
           <div className="space-y-2">

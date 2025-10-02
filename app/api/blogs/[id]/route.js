@@ -27,7 +27,6 @@ export async function GET(request, { params }) {
       title: blog.title,
     });
   } catch (error) {
-    console.error("Error fetching blog data:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

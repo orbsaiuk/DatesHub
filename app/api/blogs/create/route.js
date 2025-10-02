@@ -47,7 +47,6 @@ export async function POST(req) {
       contentHtml,
       contentText,
       blogImage,
-      category,
       tags = [],
       readingTime,
       status = "pending",
@@ -104,7 +103,6 @@ export async function POST(req) {
       contentHtml: finalContentHtml ? String(finalContentHtml) : undefined,
       contentText: finalContentText ? String(finalContentText) : undefined,
       blogImage: fileImageRef || blogImage,
-      category: category ? { _type: "reference", _ref: category } : undefined,
       tags: Array.isArray(tags) ? tags : [],
       readingTime: readingTime ? Number(readingTime) : undefined,
       status: ["pending", "published", "rejected"].includes(status)

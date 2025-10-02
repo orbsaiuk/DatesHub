@@ -94,16 +94,28 @@ export async function getBlogsByQuery(options = {}) {
   }
 }
 
-export async function getRelatedBlogs(currentBlogId, categoryId = null) {
+export async function getRelatedBlogs(currentBlogId, authorId = null) {
   try {
-    if (!currentBlogId || !categoryId) {
-      // Fallback to recent blogs if no category
+    if (!currentBlogId) {
+      // Fallback to recent blogs if no current blog ID
       return await readClient.fetch(RECENT_BLOGS_QUERY, { limit: 5 });
     }
-    return await readClient.fetch(RELATED_BLOGS_QUERY, {
-      currentBlogId,
-      categoryId,
-    });
+
+    // If we have an authorId, try to get blogs by the same author
+    if (authorId) {
+      const relatedBlogs = await readClient.fetch(RELATED_BLOGS_QUERY, {
+        currentBlogId,
+        authorId,
+      });
+      
+      // If we found related blogs by author, return them
+      if (relatedBlogs && relatedBlogs.length > 0) {
+        return relatedBlogs;
+      }
+    }
+
+    // Fallback to recent blogs if no author-based results
+    return await readClient.fetch(RECENT_BLOGS_QUERY, { limit: 5 });
   } catch (error) {
     console.error("Error fetching related blogs:", error);
     return [];

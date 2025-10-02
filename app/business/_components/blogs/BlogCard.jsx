@@ -178,17 +178,7 @@ export default function BlogCard({
           </p>
         )}
 
-        {/* Category */}
-        {blog.category && (
-          <div className="mb-3">
-            <Badge
-              variant="default"
-              className="text-xs bg-blue-100 text-blue-800 hover:bg-blue-200"
-            >
-              {blog.category.title}
-            </Badge>
-          </div>
-        )}
+
 
         {/* Footer Info */}
         <div className="mt-auto pt-4 border-t">

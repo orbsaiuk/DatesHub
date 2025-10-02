@@ -78,7 +78,6 @@ export async function POST(req) {
       excerpt,
       content,
       blogImage,
-      category,
       tags = [],
       readingTime,
       status,
@@ -160,11 +159,6 @@ export async function POST(req) {
     }
     if (fileImageRef) updates.blogImage = fileImageRef;
     else if (blogImage !== undefined) updates.blogImage = blogImage;
-    if (category !== undefined) {
-      updates.category = category
-        ? { _type: "reference", _ref: category }
-        : null;
-    }
     if (Array.isArray(tags)) updates.tags = tags;
     if (readingTime !== undefined)
       updates.readingTime = readingTime ? Number(readingTime) : null;

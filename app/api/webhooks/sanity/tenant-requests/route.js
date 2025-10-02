@@ -29,17 +29,9 @@ export async function POST(req) {
     // Handle rejection emails
     if (doc.status === "rejected") {
       try {
-        const emailResult = await sendRejectionEmail(doc);
-        if (emailResult.ok) {
-          console.log("Rejection email sent successfully");
-        } else {
-          console.warn(
-            "Rejection email failed:",
-            emailResult.error || emailResult.reason
-          );
-        }
+        await sendRejectionEmail(doc);
       } catch (emailError) {
-        console.error("Rejection email notification error:", emailError);
+        // Silent fail - email is not critical
       }
       return NextResponse.json({ ok: true, rejectionEmailSent: true });
     }
@@ -103,26 +95,7 @@ export async function POST(req) {
     const [clerkResult, sanityUserResult, entityResult, membershipResult] =
       operations;
 
-    // Log Clerk role update result (non-blocking)
-    if (
-      clerkResult.status === "fulfilled" &&
-      !clerkResult.value?.ok &&
-      !clerkResult.value?.skipped
-    ) {
-      console.error("Clerk role update failed", clerkResult.value);
-    } else if (clerkResult.status === "rejected") {
-      console.error("Clerk role update error", clerkResult.reason);
-    }
-
-    // Log Sanity user role update result (non-blocking)
-    if (
-      sanityUserResult.status === "fulfilled" &&
-      !sanityUserResult.value?.ok
-    ) {
-      console.error("Sanity user role update failed", sanityUserResult.value);
-    } else if (sanityUserResult.status === "rejected") {
-      console.error("Sanity user role update error", sanityUserResult.reason);
-    }
+    // Role update results available if needed (non-blocking)
 
     // Entity creation is critical - must succeed
     if (entityResult.status === "rejected") {
@@ -155,14 +128,10 @@ export async function POST(req) {
         });
       }
     } catch (subErr) {
-      console.error("Failed to create default Free subscription:", subErr);
-      // Non-blocking
+      // Non-blocking - subscription creation failure is not critical
     }
 
-    // User membership is important but not critical for webhook success
-    if (membershipResult.status === "rejected") {
-      console.error("User membership creation failed", membershipResult.reason);
-    }
+    // User membership is important but not critical for webhook success (non-blocking)
 
     // patch tenantRequest with createdCompanyId
     await writeClient
@@ -172,23 +141,13 @@ export async function POST(req) {
 
     // Send approval email notification
     try {
-      const emailResult = await sendApprovalEmail(doc);
-      if (emailResult.ok) {
-        console.log("Approval email sent successfully");
-      } else {
-        console.warn(
-          "Approval email failed:",
-          emailResult.error || emailResult.reason
-        );
-      }
+      await sendApprovalEmail(doc);
     } catch (emailError) {
-      console.error("Email notification error:", emailError);
       // Don't fail the webhook if email fails
     }
 
     return NextResponse.json({ ok: true, created: created._id, tenantId });
   } catch (err) {
-    console.error("Webhook error:", err);
     return NextResponse.json(
       { ok: false, error: err.message },
       { status: 500 }

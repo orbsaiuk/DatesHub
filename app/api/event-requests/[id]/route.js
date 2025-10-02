@@ -57,27 +57,12 @@ export async function PATCH(request, { params }) {
         updatedEventRequest,
         { companyResponse }
       );
-      if (emailResult.ok) {
-        console.log(
-          "Event request response notification sent to customer successfully"
-        );
-      } else {
-        console.warn(
-          "Event request response notification to customer failed:",
-          emailResult.error || emailResult.reason
-        );
-      }
     } catch (emailError) {
-      console.error(
-        "Error sending event request response notification to customer:",
-        emailError
-      );
       // Don't fail the update if email fails
     }
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Error updating event request:", error);
     return NextResponse.json(
       { error: "Failed to update event request" },
       { status: 500 }

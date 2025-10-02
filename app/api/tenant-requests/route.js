@@ -25,7 +25,6 @@ export async function GET(request) {
       hasPendingRequest: false,
     });
   } catch (error) {
-    console.error("Error checking pending tenant request:", error);
     return NextResponse.json(
       { error: "Failed to check pending request" },
       { status: 500 }

@@ -58,7 +58,6 @@ export async function GET(request) {
 
     return NextResponse.json(eventRequests);
   } catch (error) {
-    console.error("Error fetching event requests:", error);
     return NextResponse.json(
       { error: "Failed to fetch event requests" },
       { status: 500 }
@@ -157,7 +156,6 @@ export async function POST(request) {
         },
       });
     } catch (conversationError) {
-      console.error("Error creating conversation/message:", conversationError);
       // Don't fail the request creation if messaging fails
     }
 
@@ -169,33 +167,10 @@ export async function POST(request) {
 
     const emailResults = await Promise.allSettled(emailPromises);
 
-    // Log results
-    const [companyResult, customerResult] = emailResults;
-
-    if (companyResult.status === "fulfilled" && companyResult.value?.ok) {
-      console.log("Event request notification sent to company successfully");
-    } else {
-      console.warn(
-        "Event request notification to company failed:",
-        companyResult.reason || companyResult.value?.error
-      );
-    }
-
-    if (customerResult.status === "fulfilled" && customerResult.value?.ok) {
-      console.log("Event request confirmation sent to customer successfully");
-    } else {
-      console.warn(
-        "Event request confirmation to customer failed:",
-        customerResult.reason || customerResult.value?.error
-      );
-    }
+    // Emails sent - results available in emailResults if needed
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
-    // Log error for debugging (only in development)
-    if (process.env.NODE_ENV === "development") {
-      console.error("Error creating event request:", error);
-    }
     return NextResponse.json(
       { error: "Failed to create event request" },
       { status: 500 }

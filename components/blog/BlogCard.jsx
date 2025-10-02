@@ -66,13 +66,7 @@ export default function BlogCard({ blog }) {
               </p>
             )}
 
-            {blog.category && (
-              <div className="mb-3">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  {blog.category.title}
-                </span>
-              </div>
-            )}
+
 
             <div className="flex items-center justify-between text-xs text-gray-500 mt-auto">
               {(authorLogoUrl || authorName) && (

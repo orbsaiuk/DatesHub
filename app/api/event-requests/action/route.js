@@ -110,7 +110,6 @@ export async function POST(request) {
       eventRequest: updatedEventRequest,
     });
   } catch (error) {
-    console.error("Error handling event request action:", error);
     return NextResponse.json(
       { error: "Failed to process event request action" },
       { status: 500 }

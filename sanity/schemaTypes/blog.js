@@ -162,14 +162,7 @@ export default defineType({
       ],
       validation: (Rule) => Rule.required(),
     }),
-    defineField({
-      name: "category",
-      title: "Category",
-      type: "reference",
-      to: [{ type: "category" }],
-      description: "Select a category for this blog post",
-      validation: (Rule) => Rule.required(),
-    }),
+
     defineField({
       name: "status",
       title: "Publication Status",

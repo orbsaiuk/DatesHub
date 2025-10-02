@@ -79,7 +79,6 @@ export async function POST(req) {
       return Response.json({ bookmarked: true });
     }
   } catch (err) {
-    console.error("POST /api/bookmarks/toggle error", err);
     return new Response("Server error", { status: 500 });
   }
 }

@@ -19,7 +19,6 @@ export async function GET() {
 
     return Response.json({ bookmarks });
   } catch (err) {
-    console.error("GET /api/bookmarks error", err);
     return new Response("Server error", { status: 500 });
   }
 }

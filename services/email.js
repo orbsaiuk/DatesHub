@@ -16,7 +16,7 @@ export async function sendEventRequestConfirmationToCustomer(eventRequest) {
           user?.emailAddresses?.[0]?.emailAddress;
       }
     } catch (error) {
-      console.warn("Could not get customer email from Clerk:", error);
+      // Silent fail - try alternative email sources
     }
 
     if (!customerEmail && eventRequest?.email) {
@@ -61,10 +61,6 @@ export async function sendEventRequestConfirmationToCustomer(eventRequest) {
     }
     return { ok: false, error: emailResult.error || emailResult.reason };
   } catch (error) {
-    console.error(
-      "Error sending event request confirmation to customer:",
-      error
-    );
     return { ok: false, error: String(error) };
   }
 }
@@ -108,21 +104,14 @@ export async function sendApprovalEmail(reqDoc) {
       { primaryColor: "#6366f1" }
     );
 
-    console.log(`Sending approval email to ${to}`);
     const emailResult = await sendEmail({ to, subject, html });
 
     if (emailResult.ok) {
-      console.log("Approval email sent:", emailResult.data);
       return { ok: true, data: emailResult.data };
     } else {
-      console.error(
-        "Approval email failed:",
-        emailResult.error || emailResult.reason
-      );
       return { ok: false, error: emailResult.error || emailResult.reason };
     }
   } catch (err) {
-    console.error("Email send failed:", err);
     return { ok: false, error: String(err) };
   }
 }
@@ -131,9 +120,6 @@ export async function sendRejectionEmail(reqDoc) {
   try {
     const to = reqDoc.email || reqDoc.contact?.email;
     if (!to) {
-      console.warn(
-        `No email address found for tenant request ${reqDoc._id} - cannot send rejection email`
-      );
       return { ok: false, reason: "no email address" };
     }
 
@@ -173,27 +159,14 @@ export async function sendRejectionEmail(reqDoc) {
       { primaryColor: "#f59e0b" }
     );
 
-    console.log(`Sending rejection email to: ${to}`);
     const emailResult = await sendEmail({ to, subject, html });
 
     if (emailResult.ok) {
-      console.log(
-        `Rejection email sent successfully to ${to}`,
-        emailResult.data
-      );
       return { ok: true, data: emailResult.data };
     } else {
-      console.error(
-        `Failed to send rejection email to ${to}:`,
-        emailResult.error || emailResult.reason
-      );
       return { ok: false, error: emailResult.error || emailResult.reason };
     }
   } catch (emailError) {
-    console.error(
-      `Error sending rejection email for request ${reqDoc._id}:`,
-      emailError
-    );
     return { ok: false, error: String(emailError) };
   }
 }
@@ -212,15 +185,11 @@ export async function sendEventRequestNotificationToCompany(eventRequest) {
     );
 
     if (!company) {
-      console.warn(
-        `Company not found for tenant ID: ${eventRequest.targetCompanyTenantId}`
-      );
       return { ok: false, reason: "company not found" };
     }
 
     const companyEmail = company.contact?.email;
     if (!companyEmail) {
-      console.warn(`No email found for company: ${company.name}`);
       return { ok: false, reason: "no company email" };
     }
 
@@ -265,29 +234,14 @@ export async function sendEventRequestNotificationToCompany(eventRequest) {
       { primaryColor: "#8b5cf6" }
     );
 
-    console.log(
-      `Sending event request notification to company: ${companyEmail}`
-    );
     const emailResult = await sendEmail({ to: companyEmail, subject, html });
 
     if (emailResult.ok) {
-      console.log(
-        "Event request notification sent to company:",
-        emailResult.data
-      );
       return { ok: true, data: emailResult.data };
     } else {
-      console.error(
-        "Event request notification to company failed:",
-        emailResult.error || emailResult.reason
-      );
       return { ok: false, error: emailResult.error || emailResult.reason };
     }
   } catch (error) {
-    console.error(
-      "Error sending event request notification to company:",
-      error
-    );
     return { ok: false, error: String(error) };
   }
 }
@@ -308,13 +262,10 @@ export async function sendEventRequestResponseToCustomer(
           user?.emailAddresses?.[0]?.emailAddress;
       }
     } catch (error) {
-      console.warn("Could not get customer email from Clerk:", error);
+      // Silent fail - try alternative email sources
     }
 
     if (!customerEmail) {
-      console.warn(
-        `No email found for customer with ID: ${eventRequest.requestedBy}`
-      );
       return { ok: false, reason: "no customer email" };
     }
 
@@ -414,21 +365,14 @@ export async function sendEventRequestResponseToCustomer(
       { primaryColor: isAccepted ? "#10b981" : "#f59e0b" }
     );
 
-    console.log(`Sending event request response to customer: ${customerEmail}`);
     const emailResult = await sendEmail({ to: customerEmail, subject, html });
 
     if (emailResult.ok) {
-      console.log("Event request response sent to customer:", emailResult.data);
       return { ok: true, data: emailResult.data };
     } else {
-      console.error(
-        "Event request response to customer failed:",
-        emailResult.error || emailResult.reason
-      );
       return { ok: false, error: emailResult.error || emailResult.reason };
     }
   } catch (error) {
-    console.error("Error sending event request response to customer:", error);
     return { ok: false, error: String(error) };
   }
 }

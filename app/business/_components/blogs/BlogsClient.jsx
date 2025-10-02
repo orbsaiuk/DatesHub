@@ -24,7 +24,6 @@ export default function BlogsClient({
 }) {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("all");
-  const [category, setCategory] = useState("all");
   const [page, setPage] = useState(1);
   const pageSize = 9;
   const [showForm, setShowForm] = useState(false);
@@ -57,13 +56,9 @@ export default function BlogsClient({
         (Array.isArray(b.tags) &&
           b.tags.some((t) => t?.toLowerCase().includes(q)));
       const matchesStatus = status === "all" || b.status === status;
-      const matchesCategory =
-        category === "all" ||
-        b.category?._ref === category ||
-        b.category?._id === category;
-      return matchesQ && matchesStatus && matchesCategory;
+      return matchesQ && matchesStatus;
     });
-  }, [localItems, query, status, category]);
+  }, [localItems, query, status]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const currentPage = Math.min(page, totalPages);
@@ -226,8 +221,6 @@ export default function BlogsClient({
         setQuery={setQuery}
         status={status}
         setStatus={setStatus}
-        category={category}
-        setCategory={setCategory}
       />
 
       {filtered.length === 0 ? (

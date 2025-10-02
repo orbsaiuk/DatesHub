@@ -11,11 +11,6 @@ export const BLOG_CARD_PROJECTION = `{
     },
     alt
   },
-  category->{
-    _id,
-    title,
-    "slug": slug.current
-  },
   author{
     authorType,
     company->{
@@ -55,11 +50,6 @@ export const BLOG_DETAIL_PROJECTION = `{
       url
     },
     alt
-  },
-  category->{
-    _id,
-    title,
-    "slug": slug.current
   },
   seo
 }`;
@@ -110,17 +100,18 @@ export const RECENT_SUPPLIER_BLOGS_QUERY = `
   ${BLOG_CARD_PROJECTION}
 `;
 
-// Get related blogs (same category, excluding current blog)
+// Get related blogs (same author, excluding current blog)
 export const RELATED_BLOGS_QUERY = `
-*[_type == "blog" && status == "published" && _id != $currentBlogId && category._ref == $categoryId] | order(coalesce(createdAt, _createdAt) desc)[0...5] ${BLOG_CARD_PROJECTION}
+*[_type == "blog" && status == "published" && _id != $currentBlogId && (
+  (author.authorType == "company" && author.company._ref == $authorId) ||
+  (author.authorType == "supplier" && author.supplier._ref == $authorId)
+)] | order(coalesce(createdAt, _createdAt) desc)[0...5] ${BLOG_CARD_PROJECTION}
 `;
 
 // Build a filtered/sorted blog query dynamically. Returns { query, params }
 export function buildBlogsQuery({
   authorType, // 'company' | 'supplier'
   authorId, // company or supplier ID
-  categoryId, // specific category ID
-
   search, // text matches title, excerpt, or content
   sortBy, // 'newest' | 'oldest' | 'most-viewed' | 'featured'
   status = "published", // filter by status, defaults to published
@@ -148,10 +139,7 @@ export function buildBlogsQuery({
     params.authorId = authorId;
   }
 
-  if (categoryId) {
-    filters.push("category._ref == $categoryId");
-    params.categoryId = categoryId;
-  }
+
 
   if (search) {
     // Search in title, excerpt, and content (HTML string)

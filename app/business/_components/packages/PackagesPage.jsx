@@ -92,7 +92,6 @@ export default function PackagesPage({
         toast.error(error.error || "فشل في معالجة الاشتراك");
       }
     } catch (error) {
-      console.error("Error upgrading plan:", error);
       toast.error("حدث خطأ ما. يرجى المحاولة مرة أخرى.");
     } finally {
       setLoading(false);
@@ -119,7 +118,8 @@ export default function PackagesPage({
     if (!currentPlan) return plan.tier !== "free";
 
     const tierOrder = { free: 0, pro: 1, enterprise: 2 };
-    return tierOrder[plan.tier] > tierOrder[currentPlan.tier];
+    const currentTier = getPlanTier(currentPlan);
+    return tierOrder[plan.tier] > tierOrder[currentTier];
   };
 
   const canDowngrade = (plan) => {
@@ -127,7 +127,8 @@ export default function PackagesPage({
     if (!currentPlan) return false;
 
     const tierOrder = { free: 0, pro: 1, enterprise: 2 };
-    return tierOrder[plan.tier] < tierOrder[currentPlan.tier];
+    const currentTier = getPlanTier(currentPlan);
+    return tierOrder[plan.tier] < tierOrder[currentTier];
   };
 
   const getUsagePercentage = (used, limit) => {

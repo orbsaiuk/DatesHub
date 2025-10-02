@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, Loader2 } from "lucide-react";
+import { useDebounce } from "use-debounce";
+import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -12,34 +13,41 @@ export default function BlogHero() {
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || ""
   );
-  const [submitting, setSubmitting] = useState(false);
 
-  // Keep local input in sync when user navigates
+  // Debounce search query for instant search (300ms delay)
+  const [debouncedSearch] = useDebounce(searchQuery, 300);
+
+  // Sync input with URL on navigation
   useEffect(() => {
-    setSearchQuery(searchParams.get("search") || "");
-    // navigation completed -> stop button spinner
-    if (submitting) setSubmitting(false);
+    const urlSearch = searchParams.get("search") || "";
+    if (urlSearch !== searchQuery) {
+      setSearchQuery(urlSearch);
+    }
   }, [searchParams]);
 
+  // Update URL when debounced search changes
+  useEffect(() => {
+    const currentSearch = searchParams.get("search") || "";
+    const trimmedSearch = debouncedSearch.trim();
+
+    // Only update if the value actually changed
+    if (trimmedSearch !== currentSearch) {
+      const params = new URLSearchParams(searchParams);
+
+      if (trimmedSearch) {
+        params.set("search", trimmedSearch);
+      } else {
+        params.delete("search");
+      }
+
+      router.push(params.toString() ? `/blogs?${params}` : "/blogs", {
+        scroll: false,
+      });
+    }
+  }, [debouncedSearch]);
+
   const handleSearch = (e) => {
-    e.preventDefault();
-    const params = new URLSearchParams(searchParams);
-
-    if (searchQuery.trim()) {
-      params.set("search", searchQuery.trim());
-    } else {
-      params.delete("search");
-    }
-
-    // If nothing changed, do not keep spinner on
-    const next = params.toString();
-    const current = new URLSearchParams(searchParams).toString();
-    if (next === current) {
-      setSubmitting(false);
-      return;
-    }
-    setSubmitting(true);
-    router.push(next ? `/blogs?${next}` : `/blogs`);
+    e.preventDefault(); // Keep form submit for Enter key accessibility
   };
 
   return (
@@ -72,33 +80,25 @@ export default function BlogHero() {
                 type="text"
                 placeholder="البحث عن المقالات..."
                 value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  if (submitting) setSubmitting(false);
-                }}
-                className="w-full text-sm sm:text-base px-5 py-4 sm:py-3 pl-12 sm:pl-14 rounded-full bg-white/95 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:bg-white leading-none min-h-[40px] sm:min-h-[48px] touch-manipulation shadow-lg border border-white/20 transition-all duration-200"
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full text-sm sm:text-base px-5 py-4 sm:py-3 pl-12 sm:pl-14 pr-12 rounded-full bg-white/95 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:bg-white leading-none min-h-[40px] sm:min-h-[48px] touch-manipulation shadow-lg border border-white/20 transition-all duration-200"
                 autoComplete="off"
                 spellCheck="false"
               />
-              <Button
-                type="submit"
-                disabled={submitting}
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-2 sm:px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer min-h-[30px] touch-manipulation shadow-md border border-blue-500/20"
-              >
-                {submitting ? (
-                  <span className="inline-flex items-center gap-1 sm:gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="hidden sm:inline text-xs sm:text-sm">
-                      جاري البحث
-                    </span>
-                  </span>
-                ) : (
-                  <>
-                    <Search className="h-2 w-2 sm:hidden" />
-                    <span className="hidden sm:inline text-sm">بحث</span>
-                  </>
-                )}
-              </Button>
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-blue-600 pointer-events-none">
+                <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+              </div>
+
+              {/* Clear Button (when there's text) */}
+              {searchQuery && (
+                <Button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-full transition-all duration-200 cursor-pointer touch-manipulation"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
             </div>
           </div>
         </form>
