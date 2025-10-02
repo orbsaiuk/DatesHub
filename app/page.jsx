@@ -36,8 +36,10 @@ import { USER_ROLE_AND_MEMBERSHIPS_BY_CLERK_ID_QUERY } from "@/sanity/queries/us
 import CompanyHomeHero from "@/components/sections/CompanyHomeHero";
 import { SignedOut } from "@clerk/nextjs";
 import { getRecentBlogs } from "@/services/sanity/blogs";
+import { unstable_noStore as noStore } from "next/cache";
 
 export async function generateMetadata() {
+  noStore(); // Disable caching for metadata
   const { userId } = await auth();
   let role = null;
   if (userId) {
@@ -65,12 +67,8 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
+  noStore(); // Disable caching for page
   const settings = await client.fetch(SITE_SETTINGS_QUERY);
-  const brandTitle = settings?.title || undefined;
-  const logoUrl = settings?.logo
-    ? urlFor(settings.logo).width(120).height(32).url()
-    : undefined;
-
   const { userId } = await auth();
   let role = null;
   if (userId) {
@@ -86,7 +84,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header brandTitle={brandTitle} logoUrl={logoUrl} />
+      <Header />
       <main className="flex-1">
         {isCompany ? (
           <>
@@ -111,14 +109,7 @@ export default async function Home() {
           </>
         )}
       </main>
-      <Footer
-        settings={{
-          title: settings?.title,
-          description: settings?.description,
-          footerText: settings?.footerText,
-          socialLinks: settings?.socialLinks,
-        }}
-      />
+      <Footer />
     </div>
   );
 }
