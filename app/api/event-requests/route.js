@@ -161,44 +161,33 @@ export async function POST(request) {
       // Don't fail the request creation if messaging fails
     }
 
-    // Send email notification to company (fire-and-forget)
-    try {
-      const emailResult =
-        await sendEventRequestNotificationToCompany(eventRequestData);
-      if (emailResult.ok) {
-        console.log("Event request notification sent to company successfully");
-      } else {
-        console.warn(
-          "Event request notification to company failed:",
-          emailResult.error || emailResult.reason
-        );
-      }
-    } catch (emailError) {
-      console.error(
-        "Error sending event request notification to company:",
-        emailError
+    // CRITICAL: Send emails in parallel and WAIT before returning (serverless requirement)
+    const emailPromises = [
+      sendEventRequestNotificationToCompany(eventRequestData),
+      sendEventRequestConfirmationToCustomer(eventRequestData),
+    ];
+
+    const emailResults = await Promise.allSettled(emailPromises);
+
+    // Log results
+    const [companyResult, customerResult] = emailResults;
+
+    if (companyResult.status === "fulfilled" && companyResult.value?.ok) {
+      console.log("Event request notification sent to company successfully");
+    } else {
+      console.warn(
+        "Event request notification to company failed:",
+        companyResult.reason || companyResult.value?.error
       );
-      // Don't fail the request creation if email fails
     }
 
-    // Send confirmation email to the customer (fire-and-forget)
-    try {
-      const customerEmailResult =
-        await sendEventRequestConfirmationToCustomer(eventRequestData);
-      if (!customerEmailResult.ok) {
-        console.warn(
-          "Event request confirmation to customer failed:",
-          customerEmailResult.error || customerEmailResult.reason
-        );
-      }
-    } catch (customerEmailError) {
-      // Silent fail for email - don't block request creation
-      if (process.env.NODE_ENV === "development") {
-        console.error(
-          "Error sending event request confirmation to customer:",
-          customerEmailError
-        );
-      }
+    if (customerResult.status === "fulfilled" && customerResult.value?.ok) {
+      console.log("Event request confirmation sent to customer successfully");
+    } else {
+      console.warn(
+        "Event request confirmation to customer failed:",
+        customerResult.reason || customerResult.value?.error
+      );
     }
 
     return NextResponse.json(result, { status: 201 });

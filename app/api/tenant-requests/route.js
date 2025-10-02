@@ -190,7 +190,10 @@ export async function POST(request) {
       autoGenerateArrayKeys: true,
     });
 
-    // Fire-and-forget: applicant confirmation email
+    // CRITICAL: Send emails BEFORE returning response (serverless requirement)
+    const emailPromises = [];
+
+    // Applicant confirmation email
     const toEmail = (email || doc?.contact?.email || "").trim();
     if (toEmail) {
       const subject = `تم استلام طلبك: ${name || "طلبك"}`;
@@ -198,11 +201,10 @@ export async function POST(request) {
         `شكراً لتقديم طلب ${tenantType === "company" ? "الشركة" : "المورد"}${name ? ` لـ ${name}` : ""}.`,
         "سيقوم فريقنا بمراجعته وإشعارك عند الموافقة أو إذا كنا بحاجة إلى تفاصيل إضافية.",
       ]);
-      // eslint-disable-next-line no-unused-vars
-      const _ = sendEmail({ to: toEmail, subject, html });
+      emailPromises.push(sendEmail({ to: toEmail, subject, html }));
     }
 
-    // Optional: notify admins if configured
+    // Admin notification email
     const adminEmail = (process.env.ADMIN_NOTIFIER_EMAIL || "").trim();
     if (adminEmail) {
       const subject = `[طلب ${tenantType === "company" ? "شركة" : "مورد"} جديد] ${name || "بدون عنوان"}`;
@@ -211,8 +213,12 @@ export async function POST(request) {
         `الاسم: ${name || "-"}`,
         `البريد الإلكتروني: ${toEmail || "-"}`,
       ]);
-      // eslint-disable-next-line no-unused-vars
-      const _ = sendEmail({ to: adminEmail, subject, html });
+      emailPromises.push(sendEmail({ to: adminEmail, subject, html }));
+    }
+
+    // Wait for all emails to complete before returning response
+    if (emailPromises.length > 0) {
+      await Promise.allSettled(emailPromises);
     }
 
     return NextResponse.json({ ok: true, id: created?._id });
