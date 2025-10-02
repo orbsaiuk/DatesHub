@@ -10,10 +10,8 @@ import InboxDropdown from "@/components/messaging/InboxDropdown";
 import { USER_ROLE_AND_MEMBERSHIPS_BY_CLERK_ID_QUERY } from "@/sanity/queries/user";
 import { writeClient } from "@/sanity/lib/serverClient";
 import { auth } from "@clerk/nextjs/server";
-import { unstable_noStore as noStore } from "next/cache";
 
 export default async function Header({ brandTitle, logoUrl }) {
-  noStore(); // Disable caching for this component
   const { userId } = await auth();
   let role = null;
   if (userId) {

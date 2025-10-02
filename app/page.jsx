@@ -30,16 +30,13 @@ const OffersSection = dynamic(
 import { client } from "@/sanity/lib/client";
 import { writeClient } from "@/sanity/lib/serverClient";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
-import { urlFor } from "@/sanity/lib/image";
 import { auth } from "@clerk/nextjs/server";
 import { USER_ROLE_AND_MEMBERSHIPS_BY_CLERK_ID_QUERY } from "@/sanity/queries/user";
 import CompanyHomeHero from "@/components/sections/CompanyHomeHero";
 import { SignedOut } from "@clerk/nextjs";
 import { getRecentBlogs } from "@/services/sanity/blogs";
-import { unstable_noStore as noStore } from "next/cache";
 
 export async function generateMetadata() {
-  noStore(); // Disable caching for metadata
   const { userId } = await auth();
   let role = null;
   if (userId) {
@@ -67,7 +64,6 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  noStore(); // Disable caching for page
   const settings = await client.fetch(SITE_SETTINGS_QUERY);
   const { userId } = await auth();
   let role = null;
