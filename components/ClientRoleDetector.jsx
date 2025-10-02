@@ -23,6 +23,8 @@ export function useUserRole() {
   return { role, isReady, isLoaded };
 }
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 /**
  * Simple loading spinner component
  */
@@ -121,20 +123,32 @@ export function SupplierOnlyContent({
 }
 
 /**
- * Wrapper component to handle role-based rendering with unified loading state
- * Shows a single loading state while determining which content to show
+ * Wrapper component to handle role-based rendering with role-specific loading states
+ * Shows appropriate loading skeleton based on the role being loaded
  */
 export function RoleBasedLayout({
   companyContent,
   userContent,
   supplierContent,
-  loadingFallback = <LoadingSpinner />,
+  companyLoadingFallback,
+  userLoadingFallback,
+  supplierLoadingFallback,
+  defaultLoadingFallback = <LoadingSpinner />,
 }) {
   const { role, isReady } = useUserRole();
 
-  // Show loading while determining role
+  // Show role-specific loading while determining role
   if (!isReady) {
-    return loadingFallback;
+    // If specific loading fallbacks are provided, show user loading by default
+    // (since most visitors are regular users)
+    if (
+      userLoadingFallback ||
+      companyLoadingFallback ||
+      supplierLoadingFallback
+    ) {
+      return userLoadingFallback || defaultLoadingFallback;
+    }
+    return defaultLoadingFallback;
   }
 
   // Render based on role

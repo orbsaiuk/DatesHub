@@ -11,7 +11,8 @@ import OffersSection from "@/components/sections/OffersSection";
 import Categories from "@/components/sections/Categories";
 import CompanyHomeHero from "@/components/sections/CompanyHomeHero";
 import JoinSection from "@/components/sections/JoinSection";
-import HomePageSkeleton from "@/components/sections/HomePageSkeleton";
+import UserHomePageSkeleton from "@/components/sections/UserHomePageSkeleton";
+import CompanyHomePageSkeleton from "@/components/sections/CompanyHomePageSkeleton";
 import { SignedOut } from "@clerk/nextjs";
 import { RoleBasedLayout } from "@/components/ClientRoleDetector";
 import { client } from "@/sanity/lib/client";
@@ -48,8 +49,10 @@ export default async function Home() {
       <HeaderClient />
       <main className="flex-1">
         <RoleBasedLayout
-          // Loading state while role is being determined
-          loadingFallback={<HomePageSkeleton />}
+          // Loading states - role-specific skeletons
+          userLoadingFallback={<UserHomePageSkeleton />}
+          companyLoadingFallback={<CompanyHomePageSkeleton />}
+          supplierLoadingFallback={<UserHomePageSkeleton />}
           // Company view
           companyContent={
             <>

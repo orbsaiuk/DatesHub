@@ -8,7 +8,7 @@ function Skeleton({ className, ...props }) {
       aria-busy="true"
       data-slot="skeleton"
       className={cn(
-        "bg-accent/60 dark:bg-accent/40 animate-pulse rounded-md",
+        "bg-gray-200 dark:bg-gray-200 animate-pulse rounded-md",
         className
       )}
       {...props}
