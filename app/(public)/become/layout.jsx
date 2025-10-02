@@ -19,14 +19,14 @@ export const metadata = {
   robots: { index: true, follow: true },
 };
 
-import Header from "@/components/Header";
+import HeaderClient from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import BreadcrumbNavigation from "@/components/navigation/BreadcrumbNavigation";
 
 export default function BecomeLayout({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <HeaderClient />
       <BreadcrumbNavigation />
       <main className="flex-1">{children}</main>
       <Footer />

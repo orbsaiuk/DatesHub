@@ -3,7 +3,7 @@ import { writeClient } from "@/sanity/lib/serverClient";
 import { auth } from "@clerk/nextjs/server";
 import { USER_BOOKMARKS_QUERY } from "@/sanity/queries/user";
 import { redirect } from "next/navigation";
-import Header from "@/components/Header";
+import HeaderClient from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import BreadcrumbNavigation from "@/components/navigation/BreadcrumbNavigation";
 
@@ -34,7 +34,7 @@ export default async function BookmarksPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <HeaderClient />
       <BreadcrumbNavigation />
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8 sm:py-10">

@@ -20,10 +20,11 @@ export default function HeaderClient({ brandTitle, logoUrl }) {
   // Get role from user metadata (available immediately after hydration)
   const role = user?.publicMetadata?.role || "user";
   const isBusiness = role === "company" || role === "supplier";
+  const isCompany = role === "company";
   const dashboardHref = isBusiness ? `/business/${role}/dashboard` : "#";
-  const directoryHref = isBusiness ? "/suppliers" : "/companies";
-  const directoryLabel = isBusiness ? "الموردين" : "الشركات";
-  const title = brandTitle || "العلامة";
+  const directoryHref = isCompany ? "/suppliers" : "/companies";
+  const directoryLabel = isCompany ? "الموردين" : "الشركات";
+  const title = "العلامة";
 
   return (
     <header className="w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">

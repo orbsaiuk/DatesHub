@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import HeaderClient from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import BreadcrumbNavigation from "@/components/navigation/BreadcrumbNavigation";
 
@@ -18,7 +18,7 @@ export const metadata = {
 export default function SuppliersLayout({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <HeaderClient />
       <BreadcrumbNavigation />
       {children}
       <Footer />
