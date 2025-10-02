@@ -29,15 +29,14 @@ const OffersSection = dynamic(
 );
 import { client } from "@/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
-import { auth } from "@clerk/nextjs/server";
 import CompanyHomeHero from "@/components/sections/CompanyHomeHero";
 import { SignedOut } from "@clerk/nextjs";
 import { getRecentBlogs } from "@/services/sanity/blogs";
+import { getAuthenticatedUser } from "@/lib/auth/authorization";
 
 export async function generateMetadata() {
-  const { sessionClaims } = await auth();
-  // Get role from session claims (JWT token) for instant access
-  const role = sessionClaims?.role || null;
+  const user = await getAuthenticatedUser();
+  const role = user?.role || null;
   const isCompany = role === "company";
   if (isCompany) {
     return {
@@ -57,9 +56,9 @@ export async function generateMetadata() {
 
 export default async function Home() {
   const settings = await client.fetch(SITE_SETTINGS_QUERY);
-  const { sessionClaims } = await auth();
-  // Get role from session claims (JWT token) for instant access
-  const role = sessionClaims?.role || null;
+  // Get user with role fallback - checks sessionClaims first, then Clerk API if needed
+  const user = await getAuthenticatedUser();
+  const role = user?.role || null;
   const isCompany = role === "company";
 
   const recentBlogs = await getRecentBlogs(3);

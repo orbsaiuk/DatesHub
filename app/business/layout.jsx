@@ -1,7 +1,7 @@
 import Sidebar from "@/app/business/_components/Sidebar";
 import { getUserCompany, getUserSupplier } from "@/services/sanity/entities";
 import { getCurrentSubscription } from "@/services/sanity/subscriptions";
-import { auth } from "@clerk/nextjs/server";
+import { getAuthenticatedUser } from "@/lib/auth/authorization";
 
 export const metadata = {
   robots: { index: false, follow: false },
@@ -10,9 +10,10 @@ export const metadata = {
 };
 
 export default async function BusinessLayout({ children }) {
-  const { userId, sessionClaims } = await auth();
-  // Get role from session claims (JWT token) for instant access
-  const role = sessionClaims?.role || null;
+  // Get user with role fallback - checks sessionClaims first, then Clerk API if needed
+  const user = await getAuthenticatedUser();
+  const userId = user?.userId;
+  const role = user?.role || null;
   let company = null;
   let supplier = null;
   let subscription = null;

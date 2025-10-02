@@ -7,12 +7,11 @@ import { SignedIn } from "@clerk/nextjs";
 import HeaderAuthButtons from "./HeaderAuthButtons";
 import ImageOptimized from "@/components/ImageOptimized";
 import InboxDropdown from "@/components/messaging/InboxDropdown";
-import { auth } from "@clerk/nextjs/server";
+import { getAuthenticatedUser } from "@/lib/auth/authorization";
 
 export default async function Header({ brandTitle, logoUrl }) {
-  const { sessionClaims } = await auth();
-  // Get role from session claims (JWT token) for instant access - no database query needed
-  const role = sessionClaims?.role || null;
+  const user = await getAuthenticatedUser();
+  const role = user?.role || null;
   const isBusiness = role === "company" || role === "supplier";
   const dashboardHref = isBusiness ? `/business/${role}/dashboard` : "#";
   const directoryHref = isBusiness ? "/suppliers" : "/companies";
