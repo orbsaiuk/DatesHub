@@ -5,11 +5,11 @@ import { useState, useEffect } from "react";
 import {
   Home,
   Building2,
-  Users,
   FileText,
   Bookmark,
   UserPlus,
   MessageSquare,
+  CheckCircle2,
 } from "lucide-react";
 import {
   Breadcrumb,
@@ -29,6 +29,7 @@ const routeConfig = {
   blogs: { label: "المدونة", icon: FileText },
   bookmarks: { label: "المحفوظات", icon: Bookmark },
   become: { label: "انضم إلينا", icon: UserPlus },
+  success: { label: "تم الإرسال", icon: CheckCircle2 },
   messages: { label: "الرسائل", icon: MessageSquare },
 };
 

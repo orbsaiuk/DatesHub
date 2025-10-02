@@ -13,23 +13,28 @@ import {
 import { notFound } from "next/navigation";
 import { checkTenantRequestExists } from "@/services/sanity/tenantRequest";
 
-export async function generateMetadata() {
+export async function generateMetadata({ searchParams }) {
+  // Get the id from searchParams
+  const { id } = await searchParams;
+
   // Check if the request exists
-  try {
-    const request = await checkTenantRequestExists(id);
-    if (!request) {
+  if (id) {
+    try {
+      const request = await checkTenantRequestExists(id);
+      if (!request) {
+        return {
+          title: "الصفحة غير موجودة - شبكة OrbsAI التجارية",
+          description: "عذرًا، لم نتمكن من العثور على الطلب المحدد.",
+          robots: { index: false, follow: false },
+        };
+      }
+    } catch (error) {
       return {
         title: "الصفحة غير موجودة - شبكة OrbsAI التجارية",
-        description: "عذرًا، لم نتمكن من العثور على الطلب المحدد.",
+        description: "حدث خطأ أثناء البحث عن الطلب.",
         robots: { index: false, follow: false },
       };
     }
-  } catch (error) {
-    return {
-      title: "الصفحة غير موجودة - شبكة OrbsAI التجارية",
-      description: "حدث خطأ أثناء البحث عن الطلب.",
-      robots: { index: false, follow: false },
-    };
   }
 
   // Return success page metadata

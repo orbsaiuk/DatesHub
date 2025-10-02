@@ -3,8 +3,35 @@ import { NextResponse } from "next/server";
 import { writeClient } from "@/sanity/lib/serverClient";
 import { uuid } from "@sanity/uuid";
 import { sendEmail, buildBasicHtmlEmail } from "@/lib/email";
+import { getUserPendingTenantRequest } from "@/services/sanity/tenantRequest";
 
 export const runtime = "nodejs";
+
+export async function GET(request) {
+  const { userId } = await auth();
+  if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+
+  try {
+    const pendingRequest = await getUserPendingTenantRequest(userId);
+
+    if (pendingRequest) {
+      return NextResponse.json({
+        hasPendingRequest: true,
+        request: pendingRequest,
+      });
+    }
+
+    return NextResponse.json({
+      hasPendingRequest: false,
+    });
+  } catch (error) {
+    console.error("Error checking pending tenant request:", error);
+    return NextResponse.json(
+      { error: "Failed to check pending request" },
+      { status: 500 }
+    );
+  }
+}
 
 async function parseMultipartAndUploadLogo(request) {
   const formData = await request.formData();
@@ -140,20 +167,23 @@ export async function POST(request) {
       doc.logo = logoImageRef;
     }
 
-    // Upsert: if there's an existing pending request for this user+tenantType, patch it
+    // Check if user already has a pending request
     const existing = await writeClient.fetch(
-      `*[_type == "tenantRequest" && requestedBy == $uid && tenantType == $tt && status == "pending"][0]{ _id }`,
-      { uid: userId, tt: tenantType }
+      `*[_type == "tenantRequest" && requestedBy == $uid && status == "pending"][0]{ _id, tenantType, name }`,
+      { uid: userId }
     );
 
     if (existing?._id) {
-      const patch = writeClient.patch(existing._id).set(doc);
-      const updated = await patch.commit({ autoGenerateArrayKeys: true });
-      return NextResponse.json({
-        ok: true,
-        updated: true,
-        id: updated?._id || existing._id,
-      });
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "existing_pending_request",
+          message:
+            "لديك طلب قيد المراجعة بالفعل. يرجى انتظار مراجعة طلبك الحالي.",
+          existingRequestId: existing._id,
+        },
+        { status: 409 }
+      );
     }
 
     const created = await writeClient.create(doc, {
