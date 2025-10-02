@@ -12,17 +12,12 @@ import Categories from "@/components/sections/Categories";
 import CompanyHomeHero from "@/components/sections/CompanyHomeHero";
 import JoinSection from "@/components/sections/JoinSection";
 import UserHomePageSkeleton from "@/components/sections/UserHomePageSkeleton";
-import CompanyHomePageSkeleton from "@/components/sections/CompanyHomePageSkeleton";
 import { SignedOut } from "@clerk/nextjs";
 import { RoleBasedLayout } from "@/components/ClientRoleDetector";
 import { client } from "@/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
 import { getRecentBlogs } from "@/services/sanity/blogs";
 
-/**
- * Static metadata - same for all users
- * Instant load - no auth blocking
- */
 export const metadata = {
   title: "OrbsAI — اكتشف الشركات والموردين",
   description:
@@ -30,13 +25,6 @@ export const metadata = {
   alternates: { canonical: "/" },
 };
 
-/**
- * Home Page - Hybrid Rendering Approach
- *
- * - Server components: CompanyHomeHero, Hero, etc. (with sanityFetch support)
- * - Client wrappers: Show/hide based on user role
- * - Progressive: Shows default content, then personalizes client-side
- */
 export default async function Home() {
   // Fetch data server-side for all components
   const [settings, recentBlogs] = await Promise.all([
@@ -49,10 +37,8 @@ export default async function Home() {
       <HeaderClient />
       <main className="flex-1">
         <RoleBasedLayout
-          // Loading states - role-specific skeletons
-          userLoadingFallback={<UserHomePageSkeleton />}
-          companyLoadingFallback={<CompanyHomePageSkeleton />}
-          supplierLoadingFallback={<UserHomePageSkeleton />}
+          // Global loading skeleton for all roles
+          loadingFallback={<UserHomePageSkeleton />}
           // Company view
           companyContent={
             <>
@@ -63,23 +49,6 @@ export default async function Home() {
           }
           // Regular user view (default)
           userContent={
-            <>
-              <Hero />
-              <Discover />
-              <OffersSection type="company" />
-              <Categories />
-              <FeaturedCompanies />
-              <How items={settings?.how} />
-              <Why items={settings?.why} />
-              <SignedOut>
-                <JoinSection />
-              </SignedOut>
-              <Blog items={recentBlogs} title="نصائح لتخطيط الفعاليات" />
-              <FAQ items={settings?.faq} />
-            </>
-          }
-          // Supplier view (same as user for now)
-          supplierContent={
             <>
               <Hero />
               <Discover />

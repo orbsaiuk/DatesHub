@@ -3,10 +3,6 @@
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 
-/**
- * Client-side role detector
- * Returns the user's role from Clerk metadata
- */
 export function useUserRole() {
   const { user, isLoaded } = useUser();
   const [role, setRole] = useState(null);
@@ -23,30 +19,10 @@ export function useUserRole() {
   return { role, isReady, isLoaded };
 }
 
-import { Skeleton } from "@/components/ui/skeleton";
-
-/**
- * Simple loading spinner component
- */
-function LoadingSpinner() {
-  return (
-    <div className="flex items-center justify-center min-h-[400px]">
-      <div className="relative">
-        <div className="w-12 h-12 rounded-full border-4 border-gray-200" />
-        <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin absolute top-0 left-0" />
-      </div>
-    </div>
-  );
-}
-
-/**
- * Client wrapper that shows/hides content based on user role
- * Shows loading state while role is being determined
- */
 export function RoleContent({
   role: requiredRole,
   children,
-  fallback = <LoadingSpinner />,
+  fallback,
   showLoadingOnFetch = true,
 }) {
   const { role, isReady } = useUserRole();
@@ -65,9 +41,6 @@ export function RoleContent({
   return role === requiredRole ? children : null;
 }
 
-/**
- * Shows content only for regular users (not company/supplier)
- */
 export function UserOnlyContent({
   children,
   fallback,
@@ -84,9 +57,6 @@ export function UserOnlyContent({
   );
 }
 
-/**
- * Shows content only for company users
- */
 export function CompanyOnlyContent({
   children,
   fallback,
@@ -103,56 +73,27 @@ export function CompanyOnlyContent({
   );
 }
 
-/**
- * Shows content only for supplier users
- */
-export function SupplierOnlyContent({
-  children,
-  fallback,
-  showLoadingOnFetch = true,
-}) {
-  return (
-    <RoleContent
-      role="supplier"
-      fallback={fallback}
-      showLoadingOnFetch={showLoadingOnFetch}
-    >
-      {children}
-    </RoleContent>
-  );
-}
-
-/**
- * Wrapper component to handle role-based rendering with role-specific loading states
- * Shows appropriate loading skeleton based on the role being loaded
- */
 export function RoleBasedLayout({
   companyContent,
   userContent,
-  supplierContent,
-  companyLoadingFallback,
-  userLoadingFallback,
-  supplierLoadingFallback,
-  defaultLoadingFallback = <LoadingSpinner />,
+  loadingFallback,
 }) {
-  const { role, isReady } = useUserRole();
+  const { user, isLoaded } = useUser();
+  const [role, setRole] = useState(null);
+  const [isReady, setIsReady] = useState(false);
 
-  // Show role-specific loading while determining role
-  if (!isReady) {
-    // If specific loading fallbacks are provided, show user loading by default
-    // (since most visitors are regular users)
-    if (
-      userLoadingFallback ||
-      companyLoadingFallback ||
-      supplierLoadingFallback
-    ) {
-      return userLoadingFallback || defaultLoadingFallback;
+  useEffect(() => {
+    if (isLoaded) {
+      const userRole = user?.publicMetadata?.role || "user";
+      setRole(userRole);
+      setIsReady(true);
     }
-    return defaultLoadingFallback;
+  }, [user, isLoaded]);
+
+  if (!isReady || !isLoaded) {
+    return loadingFallback;
   }
 
-  // Render based on role
   if (role === "company") return companyContent;
-  if (role === "supplier") return supplierContent;
   return userContent;
 }
