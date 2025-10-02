@@ -1,29 +1,38 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import Hero from "@/components/sections/Hero";
 import JoinSection from "@/components/sections/JoinSection";
-const FeaturedCompanies = dynamic(
+const FeaturedCompanies = dynamicImport(
   () => import("@/components/sections/FeaturedCompanies"),
   { ssr: true }
 );
-const FAQ = dynamic(() => import("@/components/sections/FAQ"), { ssr: true });
-const Blog = dynamic(() => import("@/components/sections/Blog"), {
+const FAQ = dynamicImport(() => import("@/components/sections/FAQ"), {
+  ssr: true,
+});
+const Blog = dynamicImport(() => import("@/components/sections/Blog"), {
   ssr: true,
   loading: () => {
     const BlogSkeleton = require("@/components/sections/BlogSkeleton").default;
     return <BlogSkeleton count={3} />;
   },
 });
-const Discover = dynamic(() => import("@/components/sections/Discover"), {
+const Discover = dynamicImport(() => import("@/components/sections/Discover"), {
   ssr: true,
 });
-const Categories = dynamic(() => import("@/components/sections/Categories"), {
+const Categories = dynamicImport(
+  () => import("@/components/sections/Categories"),
+  {
+    ssr: true,
+  }
+);
+const How = dynamicImport(() => import("@/components/sections/How"), {
   ssr: true,
 });
-const How = dynamic(() => import("@/components/sections/How"), { ssr: true });
-const Why = dynamic(() => import("@/components/sections/Why"), { ssr: true });
-const OffersSection = dynamic(
+const Why = dynamicImport(() => import("@/components/sections/Why"), {
+  ssr: true,
+});
+const OffersSection = dynamicImport(
   () => import("@/components/sections/OffersSection"),
   { ssr: true }
 );
@@ -33,6 +42,9 @@ import CompanyHomeHero from "@/components/sections/CompanyHomeHero";
 import { SignedOut } from "@clerk/nextjs";
 import { getRecentBlogs } from "@/services/sanity/blogs";
 import { getAuthenticatedUser } from "@/lib/auth/authorization";
+
+// Force dynamic rendering to ensure auth state is always fresh
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   const user = await getAuthenticatedUser();

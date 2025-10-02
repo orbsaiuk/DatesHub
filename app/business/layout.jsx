@@ -9,6 +9,8 @@ export const metadata = {
   description: "لوحة تحكم الأعمال والإدارة.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function BusinessLayout({ children }) {
   // Get user with role fallback - checks sessionClaims first, then Clerk API if needed
   const user = await getAuthenticatedUser();
