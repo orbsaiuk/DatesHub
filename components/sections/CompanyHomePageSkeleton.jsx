@@ -16,35 +16,29 @@ export default function CompanyHomePageSkeleton() {
         </div>
       </section>
 
-      {/* Supplier Offers Section Skeleton */}
-      <section className="py-12 container mx-auto px-4">
-        <Skeleton className="h-8 w-48 mb-6" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-muted rounded-lg p-6 space-y-4">
-              <Skeleton className="h-48 w-full" />
-              <Skeleton className="h-6 w-3/4" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6" />
-              <Skeleton className="h-10 w-32" />
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Categories Section Skeleton */}
-      <section className="py-12 container mx-auto px-4">
-        <Skeleton className="h-8 w-48 mb-6" />
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
-            <div
-              key={i}
-              className="bg-muted rounded-lg p-6 flex flex-col items-center gap-3"
-            >
-              <Skeleton className="w-12 h-12 rounded-full" />
-              <Skeleton className="h-4 w-20" />
+      <section className="w-full pb-12 sm:py-16">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-10 max-w-7xl">
+          {/* Header (title + controls) */}
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-8 w-48 sm:w-64" />
+            <div className="hidden sm:flex items-center gap-2 pt-6">
+              <Skeleton className="h-10 w-10 rounded-md" />
+              <Skeleton className="h-10 w-10 rounded-md" />
             </div>
-          ))}
+          </div>
+
+          {/* Grid / Carousel placeholder */}
+          <div className="flex flex-wrap items-center justify-between mt-4">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-muted rounded-full p-6 flex flex-col items-center justify-between"
+              >
+                <Skeleton className="w-16 h-16 sm:w-36 sm:h-36 rounded-full" />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
