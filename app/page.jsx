@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import HeaderClient from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import Hero from "@/components/sections/Hero";
 import Discover from "@/components/sections/Discover";
@@ -17,35 +17,17 @@ import { RoleBasedLayout } from "@/components/ClientRoleDetector";
 import { client } from "@/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
 import { getRecentBlogs } from "@/services/sanity/blogs";
-import { auth } from "@clerk/nextjs/server";
 
 /**
- * Generate dynamic metadata based on user role
- * Uses sessionClaims for instant metadata (no API calls)
+ * Static metadata - same for all users
+ * Instant load - no auth blocking
  */
-export async function generateMetadata() {
-  const { sessionClaims } = await auth();
-  // Get role from JWT session claims (instant)
-  const role = sessionClaims?.role || "user";
-
-  // Company-specific metadata
-  if (role === "company") {
-    return {
-      title: "OrbsAI — اكتشف الموردين",
-      description:
-        "اكتشف وتواصل مع الموردين الموثوقين. تصفح الفئات، قارن العروض الحصرية، واستكشف ملفات الموردين التفصيلية على OrbsAI.",
-      alternates: { canonical: "/" },
-    };
-  }
-
-  // Default metadata for regular users and suppliers
-  return {
-    title: "OrbsAI — اكتشف الشركات",
-    description:
-      "اكتشف وتواصل مع الشركات والموردين المعتمدين حول العالم. استكشف فئات الأعمال والعروض الحصرية وملفات الشركات التفصيلية. انضم إلى شبكتنا الموثوقة اليوم.",
-    alternates: { canonical: "/" },
-  };
-}
+export const metadata = {
+  title: "OrbsAI — اكتشف الشركات والموردين",
+  description:
+    "اكتشف وتواصل مع الشركات والموردين المعتمدين حول العالم. استكشف فئات الأعمال والعروض الحصرية وملفات الشركات التفصيلية. انضم إلى شبكتنا الموثوقة اليوم.",
+  alternates: { canonical: "/" },
+};
 
 /**
  * Home Page - Hybrid Rendering Approach
@@ -63,7 +45,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <HeaderClient />
       <main className="flex-1">
         <RoleBasedLayout
           // Loading state while role is being determined
