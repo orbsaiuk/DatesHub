@@ -7,20 +7,12 @@ import { SignedIn } from "@clerk/nextjs";
 import HeaderAuthButtons from "./HeaderAuthButtons";
 import ImageOptimized from "@/components/ImageOptimized";
 import InboxDropdown from "@/components/messaging/InboxDropdown";
-import { USER_ROLE_AND_MEMBERSHIPS_BY_CLERK_ID_QUERY } from "@/sanity/queries/user";
-import { writeClient } from "@/sanity/lib/serverClient";
 import { auth } from "@clerk/nextjs/server";
 
 export default async function Header({ brandTitle, logoUrl }) {
-  const { userId } = await auth();
-  let role = null;
-  if (userId) {
-    const profile = await writeClient.fetch(
-      USER_ROLE_AND_MEMBERSHIPS_BY_CLERK_ID_QUERY,
-      { userId }
-    );
-    role = profile?.role || null;
-  }
+  const { sessionClaims } = await auth();
+  // Get role from session claims (JWT token) for instant access - no database query needed
+  const role = sessionClaims?.role || null;
   const isBusiness = role === "company" || role === "supplier";
   const dashboardHref = isBusiness ? `/business/${role}/dashboard` : "#";
   const directoryHref = isBusiness ? "/suppliers" : "/companies";

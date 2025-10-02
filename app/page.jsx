@@ -28,24 +28,16 @@ const OffersSection = dynamic(
   { ssr: true }
 );
 import { client } from "@/sanity/lib/client";
-import { writeClient } from "@/sanity/lib/serverClient";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
 import { auth } from "@clerk/nextjs/server";
-import { USER_ROLE_AND_MEMBERSHIPS_BY_CLERK_ID_QUERY } from "@/sanity/queries/user";
 import CompanyHomeHero from "@/components/sections/CompanyHomeHero";
 import { SignedOut } from "@clerk/nextjs";
 import { getRecentBlogs } from "@/services/sanity/blogs";
 
 export async function generateMetadata() {
-  const { userId } = await auth();
-  let role = null;
-  if (userId) {
-    const profile = await writeClient.fetch(
-      USER_ROLE_AND_MEMBERSHIPS_BY_CLERK_ID_QUERY,
-      { userId }
-    );
-    role = profile?.role || null;
-  }
+  const { sessionClaims } = await auth();
+  // Get role from session claims (JWT token) for instant access
+  const role = sessionClaims?.role || null;
   const isCompany = role === "company";
   if (isCompany) {
     return {
@@ -65,15 +57,9 @@ export async function generateMetadata() {
 
 export default async function Home() {
   const settings = await client.fetch(SITE_SETTINGS_QUERY);
-  const { userId } = await auth();
-  let role = null;
-  if (userId) {
-    const profile = await writeClient.fetch(
-      USER_ROLE_AND_MEMBERSHIPS_BY_CLERK_ID_QUERY,
-      { userId }
-    );
-    role = profile?.role || null;
-  }
+  const { sessionClaims } = await auth();
+  // Get role from session claims (JWT token) for instant access
+  const role = sessionClaims?.role || null;
   const isCompany = role === "company";
 
   const recentBlogs = await getRecentBlogs(3);
