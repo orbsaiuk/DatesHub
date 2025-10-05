@@ -12,6 +12,7 @@ import DirectoryWorkAwardsContent from "./accordions/DirectoryWorkAwardsContent"
 import DirectoryLocationContent from "./accordions/DirectoryLocationContent";
 import DirectoryContactContent from "./accordions/DirectoryContactContent";
 
+
 export default function DirectoryAccordions({
   reviews = [],
   projects = [],

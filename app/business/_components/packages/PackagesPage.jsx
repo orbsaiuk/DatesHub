@@ -153,11 +153,11 @@ export default function PackagesPage({
   const annualSavings =
     monthlyPro && annualPro
       ? Math.max(
-          0,
-          ((monthlyPro.price.amount * 12 - annualPro.price.amount) /
-            (monthlyPro.price.amount * 12)) *
-            100
-        ).toFixed(0)
+        0,
+        ((monthlyPro.price.amount * 12 - annualPro.price.amount) /
+          (monthlyPro.price.amount * 12)) *
+        100
+      ).toFixed(0).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d])
       : 0;
 
   const getPlanIcon = (tier) => {

@@ -9,8 +9,19 @@ export const OFFERS_BY_TENANT_QUERY = `
   endDate,
   status,
   deactivatedAt,
-  views,
-  description
+  description,
+  company->{
+    name,
+    logo{
+      asset->{url}
+    }
+  },
+  supplier->{
+    name,
+    logo{
+      asset->{url}
+    }
+  }
 }`;
 
 export const OFFER_STATS_BY_TENANT_QUERY = `
@@ -21,46 +32,5 @@ export const OFFER_STATS_BY_TENANT_QUERY = `
 }
 `;
 
-export const PUBLIC_COMPANY_OFFERS_QUERY = `
-*[_type == "offers" && tenantType == "company" && status == "active" && (
-  !defined(startDate) || startDate <= now()
-) && (
-  !defined(endDate) || endDate >= now()
-)] | order(_createdAt desc)[0...6]{
-  _id,
-  title,
-  description,
-  image{
-    asset->{url}
-  },
-  startDate,
-  endDate,
-  company->{
-    name,
-    logo{
-      asset->{url}
-    }
-  }
-}`;
-
-export const COMPANY_SUPPLIER_OFFERS_QUERY = `
-*[_type == "offers" && tenantType == "supplier" && status == "active" && (
-  !defined(startDate) || startDate <= now()
-) && (
-  !defined(endDate) || endDate >= now()
-)] | order(_createdAt desc)[0...6]{
-  _id,
-  title,
-  description,
-  image{
-    asset->{url}
-  },
-  startDate,
-  endDate,
-  supplier->{
-    name,
-    logo{
-      asset->{url}
-    }
-  }
-}`;
+// These queries are deprecated - use promotional banners for home page instead
+// Keeping for backward compatibility, but should not be used for new features

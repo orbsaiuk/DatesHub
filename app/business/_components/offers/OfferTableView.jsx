@@ -21,14 +21,12 @@ export default function OfferTableView({
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-muted-foreground border-b">
+            <tr className="text-right text-muted-foreground border-b">
               <th className="px-4 py-3 font-medium">العنوان</th>
               <th className="px-4 py-3 font-medium">الصورة</th>
-              <th className="px-4 py-3 font-medium">الوصف</th>
               <th className="px-4 py-3 font-medium">البداية</th>
               <th className="px-4 py-3 font-medium">النهاية</th>
               <th className="px-4 py-3 font-medium">الحالة</th>
-              <th className="px-4 py-3 font-medium">المشاهدات</th>
               <th className="px-4 py-3 font-medium">الإجراءات</th>
             </tr>
           </thead>
@@ -70,18 +68,6 @@ export default function OfferTableView({
                       </div>
                     )}
                   </td>
-                  <td
-                    className="px-4 py-3 max-w-[240px] truncate"
-                    title={
-                      (offer.description &&
-                        offer.description[0]?.children?.[0]?.text) ||
-                      "-"
-                    }
-                  >
-                    {(offer.description &&
-                      offer.description[0]?.children?.[0]?.text) ||
-                      "-"}
-                  </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {offer.startDate
                       ? new Date(offer.startDate).toLocaleDateString("ar-EG")
@@ -104,9 +90,6 @@ export default function OfferTableView({
                         غير نشط
                       </span>
                     )}
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground font-mono">
-                    {offer.views ?? 0}
                   </td>
                   <td className="px-4 py-3">
                     <OfferActions

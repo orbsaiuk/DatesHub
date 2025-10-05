@@ -9,10 +9,12 @@ export async function POST() {
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
-    const now = new Date().toISOString();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split("T")[0];
     const toExpire = await writeClient.fetch(
-      `*[_type == "offers" && status == "active" && defined(endDate) && endDate < $now]{ _id }`,
-      { now }
+      `*[_type == "offers" && status == "active" && defined(endDate) && endDate < $todayStr]{ _id }`,
+      { todayStr }
     );
     const ids = (toExpire || []).map((d) => d._id);
     if (ids.length > 0) {

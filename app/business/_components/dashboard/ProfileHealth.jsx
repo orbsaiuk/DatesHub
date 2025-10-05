@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatArabicNumber } from "@/lib/utils/arabic";
 
 export default function ProfileHealth({ entity, entityType }) {
   // Align checks with Edit page sections (6):
@@ -6,8 +7,8 @@ export default function ProfileHealth({ entity, entityType }) {
   // 5) Our Works, 6) Awards
   const hasCompanyInfo = Boolean(
     entity?.name &&
-      entity.name.trim() &&
-      (entity?.descriptionText?.trim() || entity?.logo)
+    entity.name.trim() &&
+    (entity?.descriptionText?.trim() || entity?.logo)
   );
 
   const hasLocations = Array.isArray(entity?.locations)
@@ -76,7 +77,7 @@ export default function ProfileHealth({ entity, entityType }) {
       </div>
       <div className="mt-2 sm:mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <span className="text-xs sm:text-sm text-muted-foreground">
-          {pct}% مكتمل ({completed}/{total} أقسام)
+          {formatArabicNumber(pct)}% مكتمل ({formatArabicNumber(completed)}/{formatArabicNumber(total)} أقسام)
         </span>
         {pct < 100 && (
           <Link

@@ -1,3 +1,5 @@
+import { formatArabicNumber, formatArabicMonthYear } from "@/lib/utils/arabic";
+
 export default function ActivityReport({ entity }) {
   const views = Array.isArray(entity?.viewsRecent) ? entity.viewsRecent : [];
 
@@ -6,16 +8,14 @@ export default function ActivityReport({ entity }) {
   const monthLabels = [];
   for (let i = monthsBack - 1; i >= 0; i -= 1) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    monthLabels.push(
-      d.toLocaleString(undefined, { month: "short", year: "numeric" })
-    );
+    monthLabels.push(formatArabicMonthYear(d));
   }
 
   const monthKey = (date) => `${date.getFullYear()}-${date.getMonth()}`;
   const labelFromKey = (key) => {
     const [y, m] = key.split("-").map((n) => parseInt(n, 10));
     const d = new Date(y, m, 1);
-    return d.toLocaleString(undefined, { month: "short", year: "numeric" });
+    return formatArabicMonthYear(d);
   };
 
   const initCounts = () =>
@@ -77,11 +77,15 @@ export default function ActivityReport({ entity }) {
             <div className="mt-2 grid grid-cols-2 gap-3 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">المشاهدات</span>
-                <span className="font-medium">{row.views}</span>
+                <span className="font-medium">
+                  {formatArabicNumber(row.views)}
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">الرسائل</span>
-                <span className="font-medium">{row.messages}</span>
+                <span className="font-medium">
+                  {formatArabicNumber(row.messages)}
+                </span>
               </div>
             </div>
           </div>
@@ -101,8 +105,8 @@ export default function ActivityReport({ entity }) {
             {rows.map((row, index) => (
               <tr key={index} className="border-t">
                 <td className="p-3">{row.date}</td>
-                <td className="p-3">{row.views}</td>
-                <td className="p-3">{row.messages}</td>
+                <td className="p-3">{formatArabicNumber(row.views)}</td>
+                <td className="p-3">{formatArabicNumber(row.messages)}</td>
               </tr>
             ))}
           </tbody>

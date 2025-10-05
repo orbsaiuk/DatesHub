@@ -30,6 +30,7 @@ export default function OfferDatePicker({
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const minimumDate = minDate ? new Date(minDate) : today;
+  minimumDate.setHours(0, 0, 0, 0);
 
   const handleDateSelect = (selectedDate) => {
     setDate(selectedDate);

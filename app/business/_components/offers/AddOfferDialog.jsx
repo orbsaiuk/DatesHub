@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
   DialogTrigger,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -43,9 +42,8 @@ export default function AddOfferDialog({
   const todayStr = useMemo(() => new Date().toISOString().split("T")[0], []);
   const minEndStr = useMemo(() => {
     if (!form.startDate) return "";
-    const d = new Date(form.startDate);
-    d.setDate(d.getDate() + 1);
-    return d.toISOString().split("T")[0];
+    // Allow same date for start and end (same-day offers)
+    return form.startDate;
   }, [form.startDate]);
 
   async function submit() {
@@ -56,8 +54,10 @@ export default function AddOfferDialog({
     if (form.startDate && form.endDate) {
       const start = new Date(form.startDate);
       const end = new Date(form.endDate);
-      if (end <= start) {
-        return toast.error("يجب أن يكون تاريخ النهاية بعد تاريخ البداية");
+      if (end < start) {
+        return toast.error(
+          "تاريخ النهاية يجب أن يكون في نفس يوم البداية أو بعده"
+        );
       }
     }
     setLoading(true);

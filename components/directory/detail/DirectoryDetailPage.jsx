@@ -1,6 +1,7 @@
 import DirectoryHeader from "./_components/DirectoryHeader";
 import DirectoryOverview from "./_components/DirectoryOverview";
 import DirectoryAccordions from "./_components/DirectoryAccordions";
+import DirectoryOffersSection from "./_components/DirectoryOffersSection";
 import DirectoryMap from "./_components/DirectoryMap";
 import ScrollToTop from "@/components/ScrollToTop";
 import BreadcrumbPrefetch from "@/components/navigation/BreadcrumbPrefetch";
@@ -87,19 +88,19 @@ export async function buildDetailMetadata({ id, basePath, type = "company" }) {
       siteName: "OrbsAI",
       images: data.logo
         ? [
-            {
-              url: data.logo?.asset?.url || "/next.svg",
-              alt: `شعار ${name} - ملف الأعمال على OrbsAI`,
-              width: data.logo?.asset?.metadata?.dimensions?.width || 400,
-              height: data.logo?.asset?.metadata?.dimensions?.height || 400,
-            },
-          ]
+          {
+            url: data.logo?.asset?.url || "/next.svg",
+            alt: `شعار ${name} - ملف الأعمال على OrbsAI`,
+            width: data.logo?.asset?.metadata?.dimensions?.width || 400,
+            height: data.logo?.asset?.metadata?.dimensions?.height || 400,
+          },
+        ]
         : [
-            {
-              url: "/next.svg",
-              alt: `${name} - ملف الأعمال على OrbsAI`,
-            },
-          ],
+          {
+            url: "/next.svg",
+            alt: `${name} - ملف الأعمال على OrbsAI`,
+          },
+        ],
     },
     twitter: {
       card: "summary_large_image",
@@ -107,17 +108,17 @@ export async function buildDetailMetadata({ id, basePath, type = "company" }) {
       description,
       images: data.logo
         ? [
-            {
-              url: data.logo?.asset?.url || "/next.svg",
-              alt: `شعار ${name}`,
-            },
-          ]
+          {
+            url: data.logo?.asset?.url || "/next.svg",
+            alt: `شعار ${name}`,
+          },
+        ]
         : [
-            {
-              url: "/next.svg",
-              alt: `ملف أعمال ${name}`,
-            },
-          ],
+          {
+            url: "/next.svg",
+            alt: `ملف أعمال ${name}`,
+          },
+        ],
     },
   };
 }
@@ -159,10 +160,10 @@ export default async function DirectoryDetailPage({
       : null;
   const locationStrings = Array.isArray(data?.locations)
     ? Array.from(
-        new Set(
-          data.locations.map((loc) => buildLocationString(loc)).filter(Boolean)
-        )
+      new Set(
+        data.locations.map((loc) => buildLocationString(loc)).filter(Boolean)
       )
+    )
     : [];
 
   const tenant = {
@@ -230,6 +231,7 @@ export default async function DirectoryDetailPage({
 
       <DirectoryOverview tenant={tenant} />
 
+
       <DirectoryAccordions
         reviews={data.reviews || []}
         works={data.ourWorks || []}
@@ -237,6 +239,15 @@ export default async function DirectoryDetailPage({
         isSupplier={type === "supplier"}
         tenant={tenant}
       />
+
+      <div className="mt-6">
+        <div className="rounded-xl border bg-white shadow-sm p-4 sm:p-6">
+          <DirectoryOffersSection
+            tenant={tenant}
+            tenantType={type === "supplier" ? "supplier" : "company"}
+          />
+        </div>
+      </div>
     </div>
   );
 }

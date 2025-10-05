@@ -11,10 +11,16 @@ export async function getOffersForTenant(tenantType, tenantId) {
   ]);
   // Auto-deactivate offers whose endDate has passed
   try {
-    const nowIso = new Date().toISOString();
-    const expired = (items || []).filter(
-      (o) => o?.status === "active" && o?.endDate && o.endDate < nowIso
-    );
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split("T")[0];
+
+    const expired = (items || []).filter((o) => {
+      if (o?.status !== "active" || !o?.endDate) return false;
+      // Compare dates only (YYYY-MM-DD format)
+      const endDateStr = o.endDate.split("T")[0];
+      return endDateStr < todayStr;
+    });
     if (expired.length > 0) {
       const tx = writeClient.transaction();
       expired.forEach((o) => {
@@ -27,10 +33,10 @@ export async function getOffersForTenant(tenantType, tenantId) {
       items = items.map((o) =>
         expired.find((e) => e._id === o._id)
           ? {
-              ...o,
-              status: "inactive",
-              deactivatedAt: new Date().toISOString(),
-            }
+            ...o,
+            status: "inactive",
+            deactivatedAt: new Date().toISOString(),
+          }
           : o
       );
       // Update stats locally

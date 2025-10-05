@@ -112,9 +112,9 @@ export async function POST(req) {
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
-      if (end <= start) {
+      if (end < start) {
         return NextResponse.json(
-          { error: "End date must be after start date" },
+          { error: "End date must be on or after start date" },
           { status: 400 }
         );
       }
@@ -131,7 +131,6 @@ export async function POST(req) {
       startDate: startDate ? String(startDate) : undefined,
       endDate: endDate ? String(endDate) : undefined,
       [tenantType]: { _type: "reference", _ref: parent._id },
-      views: 0,
       createdAt: new Date().toISOString(),
     };
 

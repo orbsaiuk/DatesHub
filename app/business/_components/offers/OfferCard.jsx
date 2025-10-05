@@ -1,5 +1,5 @@
 "use client";
-import { Package, Eye } from "lucide-react";
+import { Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 import OfferActions from "./OfferActions";
 import Image from "next/image";
@@ -15,8 +15,8 @@ export default function OfferCard({
       className={cn(
         "bg-card rounded-xl border p-4 md:p-5 transition-all duration-300 hover:shadow-md",
         pending.id === offer._id &&
-          pending.type === "delete" &&
-          "animate-pulse bg-red-50 border-red-200 opacity-60 scale-95 transform",
+        pending.type === "delete" &&
+        "animate-pulse bg-red-50 border-red-200 opacity-60 scale-95 transform",
         pending.id === offer._id && pending.type === "toggle" && "opacity-75"
       )}
     >
@@ -39,7 +39,7 @@ export default function OfferCard({
               </div>
             )}
           </div>
-          {/* Status and views overlay */}
+          {/* Status overlay */}
           <div className="absolute left-3 top-3">
             {offer.status === "active" ? (
               <span className="inline-flex items-center rounded-full bg-green-100/90 text-green-700 px-2.5 py-1 text-xs font-medium ring-1 ring-green-200 backdrop-blur">
@@ -53,11 +53,7 @@ export default function OfferCard({
               </span>
             )}
           </div>
-          <div className="absolute right-3 top-3">
-            <span className="text-xs text-muted-foreground flex items-center gap-1 rounded-full bg-gray-100/90 px-2.5 py-1 font-medium ring-1 ring-gray-200 backdrop-blur">
-              {offer.views ?? 0} <Eye className="w-4 h-4" />
-            </span>
-          </div>
+
         </div>
       </div>
 

@@ -39,6 +39,16 @@ export default function OfferForm({
     return form.startDate;
   }, [form.startDate]);
 
+  // Calculate offer duration in days
+  const offerDuration = useMemo(() => {
+    if (!form.startDate || !form.endDate) return null;
+    const start = new Date(form.startDate);
+    const end = new Date(form.endDate);
+    const diffTime = end - start;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end days
+    return diffDays;
+  }, [form.startDate, form.endDate]);
+
   return (
     <form
       className="space-y-4"
@@ -60,48 +70,66 @@ export default function OfferForm({
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-        <OfferDatePicker
-          label="تاريخ البداية"
-          required={true}
-          value={form.startDate}
-          onChange={(startDate) => {
-            let end = form.endDate;
-            if (end && new Date(end) < new Date(startDate)) {
-              end = "";
-            }
-            onChange({ ...form, startDate, endDate: end });
-          }}
-          minDate={todayStr}
-          placeholder="اختر تاريخ البداية"
-        />
-        <OfferDatePicker
-          label="تاريخ النهاية"
-          required={true}
-          value={form.endDate}
-          onChange={(endDate) => onChange({ ...form, endDate })}
-          minDate={minEndStr || todayStr}
-          disabled={!form.startDate}
-          placeholder="اختر تاريخ النهاية"
-        />
-        <div className="space-y-1">
-          <label className="text-sm font-medium">
-            الحالة <span className="text-red-600">*</span>
-          </label>
-          <Select
-            value={form.status}
-            onValueChange={(v) => onChange({ ...form, status: v })}
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+          <OfferDatePicker
+            label="تاريخ البداية"
+            required={true}
+            value={form.startDate}
+            onChange={(startDate) => {
+              let end = form.endDate;
+              if (end && new Date(end) < new Date(startDate)) {
+                end = "";
+              }
+              onChange({ ...form, startDate, endDate: end });
+            }}
+            minDate={todayStr}
+            placeholder="اختر تاريخ البداية"
+          />
+          <OfferDatePicker
+            label="تاريخ النهاية"
+            required={true}
+            value={form.endDate}
+            onChange={(endDate) => onChange({ ...form, endDate })}
+            minDate={minEndStr || todayStr}
+            disabled={!form.startDate}
+            placeholder="اختر تاريخ النهاية"
+          />
+          <div className="space-y-1">
+            <label className="text-sm font-medium">
+              الحالة <span className="text-red-600">*</span>
+            </label>
+            <Select
+              value={form.status}
+              onValueChange={(v) => onChange({ ...form, status: v })}
+              dir="rtl"
+            >
+              <SelectTrigger className="h-12 md:h-10 text-base md:text-sm">
+                <SelectValue placeholder="الحالة" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="active">نشط</SelectItem>
+                <SelectItem value="inactive">غير نشط</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {offerDuration !== null && (
+          <div
+            className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-right"
             dir="rtl"
           >
-            <SelectTrigger className="h-12 md:h-10 text-base md:text-sm">
-              <SelectValue placeholder="الحالة" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="active">نشط</SelectItem>
-              <SelectItem value="inactive">غير نشط</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+            <p className="text-sm font-medium text-blue-900">
+              مدة العرض:{" "}
+              {offerDuration === 1
+                ? "يوم واحد"
+                : offerDuration === 2
+                  ? "يومان"
+                  : `${offerDuration} أيام`}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="space-y-1">

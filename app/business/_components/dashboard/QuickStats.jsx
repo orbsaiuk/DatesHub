@@ -1,4 +1,5 @@
 import StatCard from "./StatCard";
+import { formatArabicNumber, formatArabicDecimal } from "@/lib/utils/arabic";
 
 export default function QuickStats({ entity, entityType }) {
   const rating = Number(entity?.rating || 0);
@@ -9,7 +10,7 @@ export default function QuickStats({ entity, entityType }) {
   const stats = [
     {
       title: "إجمالي المشاهدات",
-      value: totalViews,
+      value: formatArabicNumber(totalViews),
       icon: "📊",
       gradientFrom: "blue-50",
       gradientTo: "blue-100",
@@ -19,20 +20,20 @@ export default function QuickStats({ entity, entityType }) {
     ...(entityType !== "company"
       ? []
       : [
-          {
-            title: "متوسط التقييم",
-            value: rating ? rating.toFixed(1) : "0.0",
-            subtitle: `${ratingCount} تقييم`,
-            icon: "⭐",
-            gradientFrom: "green-50",
-            gradientTo: "green-100",
-            iconBgColor: "bg-green-500/10",
-            iconColor: "text-green-600",
-          },
-        ]),
+        {
+          title: "متوسط التقييم",
+          value: formatArabicDecimal(rating, 1),
+          subtitle: `${formatArabicNumber(ratingCount)} تقييم`,
+          icon: "⭐",
+          gradientFrom: "green-50",
+          gradientTo: "green-100",
+          iconBgColor: "bg-green-500/10",
+          iconColor: "text-green-600",
+        },
+      ]),
     {
       title: "الرسائل",
-      value: messagesCount,
+      value: formatArabicNumber(messagesCount),
       icon: "💬",
       gradientFrom: "orange-50",
       gradientTo: "orange-100",
@@ -43,9 +44,8 @@ export default function QuickStats({ entity, entityType }) {
 
   return (
     <div
-      className={`grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 md:gap-6 ${
-        entityType === "supplier" ? "lg:grid-cols-2" : "lg:grid-cols-3"
-      }`}
+      className={`grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 md:gap-6 ${entityType === "supplier" ? "lg:grid-cols-2" : "lg:grid-cols-3"
+        }`}
     >
       {stats.map((stat, index) => (
         <StatCard key={index} {...stat} />

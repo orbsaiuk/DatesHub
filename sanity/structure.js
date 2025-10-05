@@ -85,6 +85,15 @@ export const structure = (S) =>
             .filter("_type == 'supplier' && tenantType == 'supplier'")
         ),
       S.listItem()
+        .title("Promotional Banners")
+        .icon(() => "🎯")
+        .child(
+          S.documentList()
+            .title("Promotional Banners")
+            .filter("_type == 'promotionalBanner'")
+            .defaultOrdering([{ field: "displayOrder", direction: "asc" }])
+        ),
+      S.listItem()
         .title("Offers")
         .child(
           S.list()

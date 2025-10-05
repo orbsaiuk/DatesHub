@@ -25,8 +25,10 @@ const isMessagesRoute = createRouteMatcher(["/messages(.*)"]);
 export default clerkMiddleware(async (auth, req) => {
   const { userId, sessionClaims } = await auth();
 
-  // Allow public offers endpoints without authentication
-  if (req.nextUrl.pathname.startsWith("/api/offers/public")) {
+  // Allow public endpoints without authentication
+  if (req.nextUrl.pathname.startsWith("/api/offers/public") || 
+      req.nextUrl.pathname.startsWith("/api/offers/tenant") ||
+      req.nextUrl.pathname.startsWith("/api/promotional-banners/public")) {
     return NextResponse.next();
   }
 

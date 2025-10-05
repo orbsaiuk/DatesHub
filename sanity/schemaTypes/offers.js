@@ -88,13 +88,6 @@ export default defineType({
       type: "date",
       options: { dateFormat: "YYYY-MM-DD" },
     }),
-    defineField({
-      name: "views",
-      title: "Views",
-      type: "number",
-      readOnly: true,
-      initialValue: 0,
-    }),
   ],
   preview: {
     select: {

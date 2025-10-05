@@ -14,17 +14,16 @@ export default function ReviewsHeader({ company }) {
       <div className="sm:text-right">
         <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
           <span className="text-xl sm:text-2xl font-bold">
-            {company.rating ? company.rating.toFixed(1) : "0.0"}
+            {company.rating ? company.rating.toFixed(1).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]) : "٠.٠"}
           </span>
           <div className="flex">
             {[...Array(5)].map((_, i) => (
               <span
                 key={i}
-                className={`text-base sm:text-lg ${
-                  i < Math.floor(company.rating || 0)
+                className={`text-base sm:text-lg ${i < Math.floor(company.rating || 0)
                     ? "text-yellow-400"
                     : "text-gray-300"
-                }`}
+                  }`}
               >
                 ★
               </span>

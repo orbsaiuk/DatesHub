@@ -7,7 +7,7 @@ import How from "@/components/sections/How";
 import Why from "@/components/sections/Why";
 import FAQ from "@/components/sections/FAQ";
 import Blog from "@/components/sections/Blog";
-import OffersSection from "@/components/sections/OffersSection";
+import PromotionalBannersSection from "@/components/sections/PromotionalBannersSection";
 import Categories from "@/components/sections/Categories";
 import CompanyHomeHero from "@/components/sections/CompanyHomeHero";
 import JoinSection from "@/components/sections/JoinSection";
@@ -43,7 +43,7 @@ export default async function Home() {
           companyContent={
             <>
               <CompanyHomeHero />
-              <OffersSection type="supplier" />
+              <PromotionalBannersSection targetAudience="suppliers,all" />
               <Categories />
             </>
           }
@@ -52,7 +52,7 @@ export default async function Home() {
             <>
               <Hero />
               <Discover />
-              <OffersSection type="company" />
+              <PromotionalBannersSection targetAudience="companies,all" />
               <Categories />
               <FeaturedCompanies />
               <How items={settings?.how} />

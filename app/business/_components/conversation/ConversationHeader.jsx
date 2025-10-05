@@ -95,7 +95,7 @@ export default function ConversationHeader({ otherParticipant, onBackClick }) {
                   className={`${typeof userRating === "number" ? "fill-yellow-400 text-yellow-400" : "text-gray-300"} h-3.5 w-3.5`}
                 />
                 {typeof userRating === "number"
-                  ? `${userRating.toFixed(2)} / 5`
+                  ? `${userRating.toFixed(2).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d])} / ٥`
                   : "لا توجد تقييمات"}
                 <span className="text-muted-foreground">
                   · {userRatingCount}

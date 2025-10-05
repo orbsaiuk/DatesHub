@@ -49,8 +49,8 @@ export default function UserProfileModal({
         setTotalReviews(data.count || 0);
         setPageCount(data.pageCount || 1);
       })
-      .catch(() => {})
-      .finally(() => {});
+      .catch(() => { })
+      .finally(() => { });
   }, [open, userId, page, limit]);
 
   return (
@@ -91,7 +91,7 @@ export default function UserProfileModal({
                     className={`${typeof profile.rating === "number" ? "fill-yellow-400 text-yellow-400" : "text-gray-300"} h-3.5 w-3.5`}
                   />
                   {typeof profile.rating === "number"
-                    ? `${profile.rating.toFixed(2)} / 5`
+                    ? `${profile.rating.toFixed(2).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d])} / ٥`
                     : "لا توجد تقييمات"}
                   <span className="text-muted-foreground">
                     · {profile.ratingCount || 0}
