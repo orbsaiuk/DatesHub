@@ -17,6 +17,7 @@ import { RoleBasedLayout } from "@/components/ClientRoleDetector";
 import { client } from "@/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
 import { getRecentBlogs } from "@/services/sanity/blogs";
+import { getActivePromotionalBanners } from "@/services/sanity/promotionalBanners";
 
 export const metadata = {
   title: "OrbsAI — اكتشف الشركات والموردين",
@@ -27,9 +28,11 @@ export const metadata = {
 
 export default async function Home() {
   // Fetch data server-side for all components
-  const [settings, recentBlogs] = await Promise.all([
+  const [settings, recentBlogs, companyBanners, userBanners] = await Promise.all([
     client.fetch(SITE_SETTINGS_QUERY),
     getRecentBlogs(3),
+    getActivePromotionalBanners("suppliers,all"),
+    getActivePromotionalBanners("companies,all"),
   ]);
 
   return (
@@ -43,7 +46,7 @@ export default async function Home() {
           companyContent={
             <>
               <CompanyHomeHero />
-              <PromotionalBannersSection targetAudience="suppliers,all" />
+              <PromotionalBannersSection banners={companyBanners} />
               <Categories />
             </>
           }
@@ -52,7 +55,7 @@ export default async function Home() {
             <>
               <Hero />
               <Discover />
-              <PromotionalBannersSection targetAudience="companies,all" />
+              <PromotionalBannersSection banners={userBanners} />
               <Categories />
               <FeaturedCompanies />
               <How items={settings?.how} />
