@@ -9,8 +9,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 // Dynamic import for Autoplay to avoid SSR issues
 
@@ -65,7 +63,22 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
 
             return endDate >= today;
           });
-          setOffers(activeOffers);
+
+          // Sort offers by end date - offers ending soon appear first
+          const sortedOffers = activeOffers.sort((a, b) => {
+            // If offer has no end date, put it at the end
+            if (!a.endDate && !b.endDate) return 0;
+            if (!a.endDate) return 1;
+            if (!b.endDate) return -1;
+
+            const endDateA = new Date(a.endDate);
+            const endDateB = new Date(b.endDate);
+
+            // Sort by end date ascending (earliest first)
+            return endDateA - endDateB;
+          });
+
+          setOffers(sortedOffers);
         } else {
           setOffers([]);
         }
@@ -133,10 +146,8 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
 
       <Carousel
         setApi={setCarouselApi}
-        opts={{ loop: offers.length > 1 }}
-        plugins={
-          offers.length > 1 && autoplayPlugin ? [autoplayPlugin] : []
-        }
+        opts={{ loop: true, direction: "rtl" }}
+        plugins={offers.length > 1 && autoplayPlugin ? [autoplayPlugin] : []}
         className="w-full"
       >
         <CarouselContent className="-ml-0">
@@ -146,12 +157,6 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
             </CarouselItem>
           ))}
         </CarouselContent>
-        {offers.length > 1 && (
-          <>
-            <CarouselPrevious className="hidden sm:flex -left-4 h-10 w-10 border-2" />
-            <CarouselNext className="hidden sm:flex -right-4 h-10 w-10 border-2" />
-          </>
-        )}
       </Carousel>
 
       {offers.length > 1 && (
@@ -167,10 +172,11 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
               aria-label={`اذهب إلى العرض ${index + 1}`}
               aria-selected={index === currentIndex}
               role="tab"
-              className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50 ${index === currentIndex
-                ? "bg-primary w-8"
-                : "bg-gray-300 hover:bg-gray-400 w-2"
-                }`}
+              className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+                index === currentIndex
+                  ? "bg-primary w-8"
+                  : "bg-gray-300 hover:bg-gray-400 w-2"
+              }`}
             />
           ))}
         </div>
@@ -233,7 +239,7 @@ function DirectoryOfferCard({ offer, tenant }) {
       )}
 
       {/* Enhanced Last Day Badge */}
-      {isLastDay && (
+      {isLastDay() && (
         <div className="absolute top-4 left-4 z-20">
           <div className="relative">
             <Badge
@@ -250,7 +256,7 @@ function DirectoryOfferCard({ offer, tenant }) {
       )}
 
       {/* New Offer Badge */}
-      {!isLastDay && (
+      {!isLastDay() && (
         <div className="absolute top-4 left-4 z-20">
           <Badge className="bg-primary text-white px-3 py-1.5 text-xs font-bold shadow-lg">
             <Sparkles className="w-3 h-3 mr-1 inline" />
@@ -264,10 +270,11 @@ function DirectoryOfferCard({ offer, tenant }) {
         <div className="space-y-3">
           {/* Title */}
           <h4
-            className={`text-2xl font-bold leading-tight ${hasBackgroundImage
-              ? "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
-              : "text-gray-900"
-              }`}
+            className={`text-2xl font-bold leading-tight ${
+              hasBackgroundImage
+                ? "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                : "text-gray-900"
+            }`}
           >
             {offer.title}
           </h4>
@@ -275,10 +282,11 @@ function DirectoryOfferCard({ offer, tenant }) {
           {/* Description */}
           {offer.description && (
             <p
-              className={`text-base leading-relaxed line-clamp-2 ${hasBackgroundImage
-                ? "text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
-                : "text-gray-600"
-                }`}
+              className={`text-base leading-relaxed line-clamp-2 ${
+                hasBackgroundImage
+                  ? "text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+                  : "text-gray-600"
+              }`}
             >
               {Array.isArray(offer.description)
                 ? offer.description[0]?.children?.[0]?.text || ""
@@ -291,12 +299,13 @@ function DirectoryOfferCard({ offer, tenant }) {
 
         <div className="space-y-3 mt-4">
           {/* Enhanced Date Info */}
-          {!isLastDay && offer.endDate && (
+          {!isLastDay() && offer.endDate && (
             <div
-              className={`w-fit flex items-center justify-center gap-2 px-4 py-3 rounded-xl backdrop-blur-sm transition-all duration-300 ${hasBackgroundImage
-                ? "bg-white/25 text-white border border-white/40 hover:bg-white/30"
-                : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800 border border-blue-200"
-                }`}
+              className={`w-fit flex items-center justify-center gap-2 px-4 py-3 rounded-xl backdrop-blur-sm transition-all duration-300 ${
+                hasBackgroundImage
+                  ? "bg-white/25 text-white border border-white/40 hover:bg-white/30"
+                  : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800 border border-blue-200"
+              }`}
             >
               <Clock className="w-5 h-5" />
               <div className="text-center">
