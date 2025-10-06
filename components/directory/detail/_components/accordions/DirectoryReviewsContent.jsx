@@ -63,8 +63,10 @@ export default function DirectoryReviewsContent({
       };
       setLocalReviews((prev) => [optimistic, ...prev]);
     }
-    window.addEventListener("review-submitted", onNewReview);
-    return () => window.removeEventListener("review-submitted", onNewReview);
+    if (typeof window !== "undefined") {
+      window.addEventListener("review-submitted", onNewReview);
+      return () => window.removeEventListener("review-submitted", onNewReview);
+    }
   }, []);
 
   React.useEffect(() => {
@@ -89,8 +91,10 @@ export default function DirectoryReviewsContent({
     function onOpenDialog() {
       setOpen(true);
     }
-    window.addEventListener("open-review-dialog", onOpenDialog);
-    return () => window.removeEventListener("open-review-dialog", onOpenDialog);
+    if (typeof window !== "undefined") {
+      window.addEventListener("open-review-dialog", onOpenDialog);
+      return () => window.removeEventListener("open-review-dialog", onOpenDialog);
+    }
   }, []);
 
   return (

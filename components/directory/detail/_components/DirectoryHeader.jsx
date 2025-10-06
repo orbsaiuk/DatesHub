@@ -60,7 +60,9 @@ export default function DirectoryHeader({
       });
       if (res.status === 401) {
         const redirect = encodeURIComponent(`${basePath}/${tenant.id}`);
-        window.location.href = `/sign-in?redirect_url=${redirect}`;
+        if (typeof window !== "undefined") {
+          window.location.href = `/sign-in?redirect_url=${redirect}`;
+        }
         return;
       }
       const data = await res.json();

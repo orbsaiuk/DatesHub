@@ -50,7 +50,9 @@ export default function ReviewDialog({
       });
       if (res.status === 401) {
         const redirect = encodeURIComponent(`/companies/${companyId}`);
-        window.location.href = `/sign-in?redirect_url=${redirect}`;
+        if (typeof window !== "undefined") {
+          window.location.href = `/sign-in?redirect_url=${redirect}`;
+        }
         return;
       }
       if (!res.ok) throw new Error("Failed");

@@ -65,18 +65,18 @@ export default function DirectoryList({
     if (previousPageRef.current === currentPage) return;
     if (typeof window === "undefined") return;
 
-    const headerEl = document.querySelector("header");
+    const headerEl = typeof document !== "undefined" ? document.querySelector("header") : null;
     const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
     const extraSpacing = 200;
 
-    if (listTopRef.current) {
+    if (listTopRef.current && typeof window !== "undefined") {
       const targetTop =
         listTopRef.current.getBoundingClientRect().top + window.scrollY;
       window.scrollTo({
         top: Math.max(0, targetTop - headerHeight - extraSpacing),
         behavior: "smooth",
       });
-    } else {
+    } else if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -97,8 +97,10 @@ export default function DirectoryList({
       });
 
       if (res.status === 401) {
-        const redirect = encodeURIComponent(window.location.pathname);
-        window.location.href = `/sign-in?redirect_url=${redirect}`;
+        if (typeof window !== "undefined") {
+          const redirect = encodeURIComponent(window.location.pathname);
+          window.location.href = `/sign-in?redirect_url=${redirect}`;
+        }
         return;
       }
 

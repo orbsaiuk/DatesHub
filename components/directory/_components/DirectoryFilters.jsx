@@ -79,7 +79,7 @@ export default function DirectoryFilters({
 
   const applyFilters = () => {
     setIsApplying(true);
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
     if (location.trim()) params.set("loc", location.trim());
     else params.delete("loc");
     if (selectedSpecialization) params.set("spec", selectedSpecialization);
