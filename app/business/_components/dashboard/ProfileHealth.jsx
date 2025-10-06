@@ -38,27 +38,14 @@ export default function ProfileHealth({ entity, entityType }) {
     ? entity.categories.filter(Boolean).length > 0
     : false;
 
-  const hasOurWorks = (() => {
-    const count = Number(entity?.worksCount) || 0;
-    const listLen = Array.isArray(entity?.ourWorks)
-      ? entity.ourWorks.length
-      : 0;
-    return count > 0 || listLen > 0;
-  })();
 
-  const hasAwards = (() => {
-    const count = Number(entity?.awardsCount) || 0;
-    const listLen = Array.isArray(entity?.awards) ? entity.awards.length : 0;
-    return count > 0 || listLen > 0;
-  })();
 
   const checks = [
     hasCompanyInfo,
     hasLocations,
     hasContact,
     hasServices,
-    hasOurWorks,
-    hasAwards,
+
   ];
   const completed = checks.filter(Boolean).length;
   const total = checks.length;

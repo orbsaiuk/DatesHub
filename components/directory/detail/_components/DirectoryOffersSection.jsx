@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { urlFor } from "@/sanity/lib/image";
-import { Clock, Tag, Sparkles, Timer, Zap } from "lucide-react";
+import { Clock, Tag, Sparkles, Timer } from "lucide-react";
 import ImageOptimized from "@/components/ImageOptimized";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -12,15 +12,29 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
+// Dynamic import for Autoplay to avoid SSR issues
 
 export default function DirectoryOffersSection({ tenant, tenantType }) {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [carouselApi, setCarouselApi] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [autoplayPlugin, setAutoplayPlugin] = useState(null);
 
   useEffect(() => {
+    // Load Autoplay plugin dynamically to avoid SSR issues
+    const loadAutoplay = async () => {
+      if (typeof window !== "undefined") {
+        try {
+          const { default: Autoplay } = await import("embla-carousel-autoplay");
+          setAutoplayPlugin(Autoplay({ delay: 5000, stopOnMouseEnter: true }));
+        } catch (error) {
+          console.error("Failed to load autoplay plugin:", error);
+        }
+      }
+    };
+    loadAutoplay();
+
     const fetchOffers = async () => {
       if (!tenant?.id) {
         setLoading(false);
@@ -29,7 +43,7 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
 
       try {
         const response = await fetch(
-          `/api/offers/tenant?tenantType=${tenantType}&tenantId=${tenant.id}`
+          `/api/offers/tenant?tenantType=${tenantType}&tenantId=${tenant.id}&publicView=true`
         );
 
         if (!response.ok) {
@@ -39,7 +53,19 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
         const data = await response.json();
 
         if (data.success && data.items) {
-          setOffers(data.items);
+          // Filter out expired offers as a safety net
+          const activeOffers = data.items.filter((offer) => {
+            if (offer.status !== "active") return false;
+            if (!offer.endDate) return true;
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const endDate = new Date(offer.endDate);
+            endDate.setHours(0, 0, 0, 0);
+
+            return endDate >= today;
+          });
+          setOffers(activeOffers);
         } else {
           setOffers([]);
         }
@@ -109,9 +135,7 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
         setApi={setCarouselApi}
         opts={{ loop: offers.length > 1 }}
         plugins={
-          offers.length > 1
-            ? [Autoplay({ delay: 5000, stopOnMouseEnter: true })]
-            : []
+          offers.length > 1 && autoplayPlugin ? [autoplayPlugin] : []
         }
         className="w-full"
       >
@@ -143,11 +167,10 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
               aria-label={`اذهب إلى العرض ${index + 1}`}
               aria-selected={index === currentIndex}
               role="tab"
-              className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                index === currentIndex
-                  ? "bg-primary w-8"
-                  : "bg-gray-300 hover:bg-gray-400 w-2"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50 ${index === currentIndex
+                ? "bg-primary w-8"
+                : "bg-gray-300 hover:bg-gray-400 w-2"
+                }`}
             />
           ))}
         </div>
@@ -241,11 +264,10 @@ function DirectoryOfferCard({ offer, tenant }) {
         <div className="space-y-3">
           {/* Title */}
           <h4
-            className={`text-2xl font-bold leading-tight ${
-              hasBackgroundImage
-                ? "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
-                : "text-gray-900"
-            }`}
+            className={`text-2xl font-bold leading-tight ${hasBackgroundImage
+              ? "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+              : "text-gray-900"
+              }`}
           >
             {offer.title}
           </h4>
@@ -253,11 +275,10 @@ function DirectoryOfferCard({ offer, tenant }) {
           {/* Description */}
           {offer.description && (
             <p
-              className={`text-base leading-relaxed line-clamp-2 ${
-                hasBackgroundImage
-                  ? "text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
-                  : "text-gray-600"
-              }`}
+              className={`text-base leading-relaxed line-clamp-2 ${hasBackgroundImage
+                ? "text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+                : "text-gray-600"
+                }`}
             >
               {Array.isArray(offer.description)
                 ? offer.description[0]?.children?.[0]?.text || ""
@@ -272,11 +293,10 @@ function DirectoryOfferCard({ offer, tenant }) {
           {/* Enhanced Date Info */}
           {!isLastDay && offer.endDate && (
             <div
-              className={`w-fit flex items-center justify-center gap-2 px-4 py-3 rounded-xl backdrop-blur-sm transition-all duration-300 ${
-                hasBackgroundImage
-                  ? "bg-white/25 text-white border border-white/40 hover:bg-white/30"
-                  : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800 border border-blue-200"
-              }`}
+              className={`w-fit flex items-center justify-center gap-2 px-4 py-3 rounded-xl backdrop-blur-sm transition-all duration-300 ${hasBackgroundImage
+                ? "bg-white/25 text-white border border-white/40 hover:bg-white/30"
+                : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800 border border-blue-200"
+                }`}
             >
               <Clock className="w-5 h-5" />
               <div className="text-center">

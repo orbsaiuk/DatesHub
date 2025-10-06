@@ -27,12 +27,12 @@ export default function EditPageClient({ initialEntity, entityType }) {
     awards: initial?.awards || [],
     ...(entityType === "company"
       ? {
-          socialLinks: Array.isArray(initial?.socialLinks)
-            ? initial.socialLinks
-            : [],
-          companyType: initial?.companyType || "",
-          totalEmployees: initial?.totalEmployees || "",
-        }
+        socialLinks: Array.isArray(initial?.socialLinks)
+          ? initial.socialLinks
+          : [],
+        companyType: initial?.companyType || "",
+        totalEmployees: initial?.totalEmployees || "",
+      }
       : {}),
   });
 
@@ -49,10 +49,7 @@ export default function EditPageClient({ initialEntity, entityType }) {
   const isAwardComplete = (a) =>
     !!a && isNonEmpty(a.name) && isNonEmpty(a.description) && !!a.image;
 
-  const hasIncompleteWork = () => {
-    const arr = Array.isArray(formData?.ourWorks) ? formData.ourWorks : [];
-    return arr.some((w) => !isWorkComplete(w));
-  };
+
 
   const hasIncompleteAward = () => {
     const arr = Array.isArray(formData?.awards) ? formData.awards : [];
@@ -193,11 +190,10 @@ export default function EditPageClient({ initialEntity, entityType }) {
                 <button
                   key={s.id}
                   onClick={() => handleSectionChange(s.id)}
-                  className={`whitespace-nowrap px-3 py-2 rounded-full text-sm border ${
-                    currentSection === s.id
+                  className={`whitespace-nowrap px-3 py-2 rounded-full text-sm border ${currentSection === s.id
                       ? "bg-muted text-foreground"
                       : "text-muted-foreground hover:bg-muted/60"
-                  }`}
+                    }`}
                 >
                   {s.label}
                 </button>

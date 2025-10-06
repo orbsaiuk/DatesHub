@@ -14,8 +14,6 @@ export const SUPPLIER_BY_TENANT_QUERY = `
   extraServices,
   foundingYear,
   registrationNumber,
-  ourWorks,
-  awards,
   "descriptionText": pt::text(description),
   "locationString": coalesce(
     select(
@@ -67,8 +65,6 @@ export const SUPPLIER_BY_ID_OR_SLUG_QUERY = `
   categories,
   extraServices,
   openingHours,
-  ourWorks,
-  awards,
   "addressLine": select(
     defined(locations[0]) => select(
       defined(locations[0].address) && defined(locations[0].city) && defined(locations[0].region) && defined(locations[0].country) =>
@@ -103,8 +99,6 @@ export const SUPPLIER_DASHBOARD_QUERY = `
   "totalViews": coalesce(totalViews, 0),
   "viewsRecent": views | order(createdAt desc)[0...1000]{ createdAt },
   "messagesCount": 0,
-  ourWorks,
-  awards,
 }`;
 
 export const USER_SUPPLIER_MEMBERSHIPS_QUERY = `
@@ -135,6 +129,4 @@ export const SUPPLIER_EDIT_QUERY = `
   categories,
   extraServices,
   openingHours,
-  ourWorks,
-  awards,
 }`;

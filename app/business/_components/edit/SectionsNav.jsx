@@ -31,9 +31,9 @@ export default function SectionsNav({
         );
         const hasCompanyErrors = Boolean(
           errors?.name ||
-            errors?.website ||
-            errors?.foundingYear ||
-            errors?.description
+          errors?.website ||
+          errors?.foundingYear ||
+          errors?.description
         );
         if (hasCompanyErrors) return "error";
         return nameFilled && typeFilled && logoFilled && descriptionFilled
@@ -82,21 +82,7 @@ export default function SectionsNav({
           : "incomplete";
       }
 
-      case "section-our-works": {
-        const works = Array.isArray(formData?.ourWorks)
-          ? formData.ourWorks
-          : [];
-        return works.length > 0
-            ? "complete"
-            : "incomplete"
-      }
 
-      case "section-awards": {
-        const awards = Array.isArray(formData?.awards) ? formData.awards : [];
-        return  awards.length > 0
-            ? "complete"
-            : "incomplete"
-      }
 
       default:
         return "incomplete";
@@ -133,11 +119,10 @@ export default function SectionsNav({
                 onClick={() => {
                   onSectionChange?.(s.id);
                 }}
-                className={`w-full text-left px-3 py-2.5 rounded-md flex items-center justify-between transition-colors ${
-                  active === s.id
+                className={`w-full text-left px-3 py-2.5 rounded-md flex items-center justify-between transition-colors ${active === s.id
                     ? "bg-muted text-foreground"
                     : "text-muted-foreground hover:bg-muted/60"
-                }`}
+                  }`}
                 aria-current={active === s.id ? "page" : undefined}
               >
                 <span className="text-sm sm:text-base">{s.label}</span>

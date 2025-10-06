@@ -234,8 +234,6 @@ export default async function DirectoryDetailPage({
 
       <DirectoryAccordions
         reviews={data.reviews || []}
-        works={data.ourWorks || []}
-        awards={data.awards || []}
         isSupplier={type === "supplier"}
         tenant={tenant}
       />

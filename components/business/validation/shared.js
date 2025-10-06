@@ -93,19 +93,7 @@ export const flexibleLocationSchema = z.object({
 // CONTENT SCHEMAS
 // ============================================================================
 
-export const awardSchema = z.object({
-  name: optionalString,
-  description: optionalString,
-  issuer: optionalString,
-  date: optionalString,
-  image: imageFileSchema, // Just validate File objects
-});
 
-export const workSchema = z.object({
-  title: optionalString,
-  description: optionalString,
-  images: z.array(imageFileSchema).optional(), // Array of File objects
-});
 
 // ============================================================================
 // VALIDATION HELPERS

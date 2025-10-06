@@ -35,7 +35,7 @@ export default function DirectoryHeader({
         if (sessionStorage.getItem(storageKey)) return;
         sessionStorage.setItem(storageKey, "1");
       }
-    } catch {}
+    } catch { }
 
     if (hasIncrementedRef.current) return;
     hasIncrementedRef.current = true;
@@ -45,7 +45,7 @@ export default function DirectoryHeader({
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
       body: JSON.stringify({ id: tenant.id }),
-    }).catch(() => {});
+    }).catch(() => { });
   }, [tenant?.id]);
 
   async function toggleBookmark() {
@@ -83,7 +83,7 @@ export default function DirectoryHeader({
         <CompanyLogo
           tenant={tenant}
           size="xl"
-          className="rounded-md w-[250px] h-[150px] object-cover"
+          className="rounded-md w-full sm:w-[250px] h-[150px] object-cover"
           priority
         />
 
@@ -108,7 +108,7 @@ export default function DirectoryHeader({
             <span className="text-muted-foreground">
               {tenant.location}
               {Array.isArray(tenant.locationList) &&
-              tenant.locationList.length > 1 ? (
+                tenant.locationList.length > 1 ? (
                 <>
                   {" "}
                   <span
@@ -122,7 +122,7 @@ export default function DirectoryHeader({
             </span>
           </div>
           {Array.isArray(tenant.extraServices) &&
-          tenant.extraServices.length > 0 ? (
+            tenant.extraServices.length > 0 ? (
             <div className="mt-2 flex flex-wrap gap-2">
               {tenant.extraServices.slice(0, 8).map((t) => (
                 <span
@@ -135,7 +135,7 @@ export default function DirectoryHeader({
             </div>
           ) : null}
 
-          <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+          <div className="mt-4 flex gap-2">
             <CompanyInteractionButton
               companyTenantId={tenant.id}
               companyName={tenant.name}
@@ -144,7 +144,7 @@ export default function DirectoryHeader({
             <Button
               variant="outline"
               size="sm"
-              className="cursor-pointer col-span-2 sm:col-span-1 w-full sm:w-auto"
+              className="cursor-pointer w-auto"
             >
               زيارة الموقع <ExternalLink className="size-4" />
             </Button>

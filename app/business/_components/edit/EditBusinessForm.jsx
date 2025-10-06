@@ -6,8 +6,7 @@ import { Check } from "lucide-react";
 import BusinessBasicInfo from "./BusinessBasicInfo";
 import LocationsStepWrapper from "./LocationsStepWrapper";
 import ServicesForm from "./ServicesForm";
-import OurWorksForm from "./OurWorksForm";
-import AwardsForm from "./AwardsForm";
+
 import ContactInfo from "./ContactInfo";
 import { ArrowLeft } from "lucide-react";
 import { ArrowRight } from "lucide-react";
@@ -37,16 +36,15 @@ export default function EditBusinessForm({
     openingHours: initialBusiness?.openingHours || Array(7).fill(""),
     ...(entityType === "company"
       ? {
-          socialLinks: Array.isArray(initialBusiness?.socialLinks)
-            ? initialBusiness.socialLinks
-            : [],
-          companyType: initialBusiness?.companyType || "",
-          totalEmployees: initialBusiness?.totalEmployees || "",
-        }
+        socialLinks: Array.isArray(initialBusiness?.socialLinks)
+          ? initialBusiness.socialLinks
+          : [],
+        companyType: initialBusiness?.companyType || "",
+        totalEmployees: initialBusiness?.totalEmployees || "",
+      }
       : {}),
     contact: initialBusiness?.contact || {},
-    ourWorks: initialBusiness?.ourWorks || [],
-    awards: initialBusiness?.awards || [],
+
   }));
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -73,16 +71,7 @@ export default function EditBusinessForm({
       label: "الخدمات",
       component: "services",
     },
-    {
-      id: "section-our-works",
-      label: "أعمالنا",
-      component: "our-works",
-    },
-    {
-      id: "section-awards",
-      label: "الجوائز",
-      component: "awards",
-    },
+
   ];
 
   const currentSectionData =
@@ -103,16 +92,15 @@ export default function EditBusinessForm({
       openingHours: initialBusiness?.openingHours || Array(7).fill(""),
       ...(entityType === "company"
         ? {
-            socialLinks: Array.isArray(initialBusiness?.socialLinks)
-              ? initialBusiness.socialLinks
-              : [],
-            companyType: initialBusiness?.companyType || "",
-            totalEmployees: initialBusiness?.totalEmployees || "",
-          }
+          socialLinks: Array.isArray(initialBusiness?.socialLinks)
+            ? initialBusiness.socialLinks
+            : [],
+          companyType: initialBusiness?.companyType || "",
+          totalEmployees: initialBusiness?.totalEmployees || "",
+        }
         : {}),
       contact: initialBusiness?.contact || {},
-      ourWorks: initialBusiness?.ourWorks || [],
-      awards: initialBusiness?.awards || [],
+
     };
 
     const hasChanges = JSON.stringify(form) !== JSON.stringify(initialForm);
@@ -125,12 +113,7 @@ export default function EditBusinessForm({
 
     // Create a safe version for parent state (without File objects for JSON serialization)
     const safeForm = { ...newForm };
-    if (Array.isArray(safeForm.ourWorks)) {
-      safeForm.ourWorks = safeForm.ourWorks.map((work) => ({
-        ...work,
-        images: work.images || [], // Keep File objects but ensure array exists
-      }));
-    }
+
     if (Array.isArray(safeForm.awards)) {
       safeForm.awards = safeForm.awards.map((award) => ({
         ...award,
@@ -203,58 +186,24 @@ export default function EditBusinessForm({
       // sanitize locations: drop completely empty rows and coerce geo
       const cleanedLocations = Array.isArray(form.locations)
         ? form.locations
-            .map((loc) => loc || {})
-            .filter((loc) => {
-              const values = [
-                loc.address,
-                loc.city,
-                loc.region,
-                loc.country,
-                loc.zipCode,
-                loc?.geo?.lat,
-                loc?.geo?.lng,
-              ];
-              return values
-                .map((v) => (typeof v === "string" ? v.trim() : v))
-                .some(Boolean);
-            })
+          .map((loc) => loc || {})
+          .filter((loc) => {
+            const values = [
+              loc.address,
+              loc.city,
+              loc.region,
+              loc.country,
+              loc.zipCode,
+              loc?.geo?.lat,
+              loc?.geo?.lng,
+            ];
+            return values
+              .map((v) => (typeof v === "string" ? v.trim() : v))
+              .some(Boolean);
+          })
         : undefined;
 
-      // Process awards - upload images and clean empty rows
-      const processedAwards = Array.isArray(form.awards)
-        ? await Promise.all(
-            form.awards
-              .map((a) => a || {})
-              .filter((a) => {
-                const values = [a.name, a.description];
-                return values
-                  .map((v) => (typeof v === "string" ? v.trim() : v))
-                  .some(Boolean);
-              })
-              .map(async (award) => ({
-                ...award,
-                image: await processImages(award.image),
-              }))
-          )
-        : undefined;
 
-      // Process our works - upload images and clean empty rows
-      const processedOurWorks = Array.isArray(form.ourWorks)
-        ? await Promise.all(
-            form.ourWorks
-              .map((w) => w || {})
-              .filter((w) => {
-                const values = [w.title, w.description];
-                return values
-                  .map((v) => (typeof v === "string" ? v.trim() : v))
-                  .some(Boolean);
-              })
-              .map(async (work) => ({
-                ...work,
-                images: await processImages(work.images),
-              }))
-          )
-        : undefined;
 
       // Process logo upload if it's a File
       const processedLogo = await processImages(form.logo);
@@ -268,14 +217,12 @@ export default function EditBusinessForm({
         ...form,
         logo: processedLogo,
         locations: cleanedLocations,
-        awards: processedAwards,
-        ourWorks: processedOurWorks,
         ...(entityType === "company"
           ? {
-              socialLinks: filteredSocialLinks,
-              companyType: form.companyType,
-              totalEmployees: form.totalEmployees,
-            }
+            socialLinks: filteredSocialLinks,
+            companyType: form.companyType,
+            totalEmployees: form.totalEmployees,
+          }
           : {}),
       };
 
@@ -343,22 +290,7 @@ export default function EditBusinessForm({
           />
         );
 
-      case "our-works":
-        return (
-          <OurWorksForm
-            form={form}
-            updateField={updateField}
-            workErrors={errors?.ourWorks}
-          />
-        );
-      case "awards":
-        return (
-          <AwardsForm
-            form={form}
-            updateField={updateField}
-            awardErrors={errors?.awards}
-          />
-        );
+
       default:
         return (
           <BusinessBasicInfo
@@ -447,25 +379,25 @@ export default function EditBusinessForm({
       if (leavingLocations) {
         const hasBlockingNew = Array.isArray(form.locations)
           ? form.locations.some((loc) => {
-              if (!loc || !loc.__new) return false;
-              const address = (loc.address || "").trim();
-              const city = (loc.city || "").trim();
-              const region = (loc.region || "").trim();
-              const country = (loc.country || "").trim();
-              const zipCode = (loc.zipCode || "").trim();
-              const hasGeo =
-                loc.geo &&
-                Number.isFinite(Number(loc.geo.lat)) &&
-                Number.isFinite(Number(loc.geo.lng));
-              return !(
-                address &&
-                city &&
-                region &&
-                country &&
-                zipCode &&
-                hasGeo
-              );
-            })
+            if (!loc || !loc.__new) return false;
+            const address = (loc.address || "").trim();
+            const city = (loc.city || "").trim();
+            const region = (loc.region || "").trim();
+            const country = (loc.country || "").trim();
+            const zipCode = (loc.zipCode || "").trim();
+            const hasGeo =
+              loc.geo &&
+              Number.isFinite(Number(loc.geo.lat)) &&
+              Number.isFinite(Number(loc.geo.lng));
+            return !(
+              address &&
+              city &&
+              region &&
+              country &&
+              zipCode &&
+              hasGeo
+            );
+          })
           : false;
         if (hasBlockingNew) {
           if (typeof window !== "undefined") {

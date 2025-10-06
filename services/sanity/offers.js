@@ -19,7 +19,7 @@ export async function getOffersForTenant(tenantType, tenantId) {
       if (o?.status !== "active" || !o?.endDate) return false;
       // Compare dates only (YYYY-MM-DD format)
       const endDateStr = o.endDate.split("T")[0];
-      return endDateStr < todayStr;
+      return endDateStr <= todayStr;
     });
     if (expired.length > 0) {
       const tx = writeClient.transaction();

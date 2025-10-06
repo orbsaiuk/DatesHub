@@ -13,7 +13,7 @@ export async function POST() {
     today.setHours(0, 0, 0, 0);
     const todayStr = today.toISOString().split("T")[0];
     const toExpire = await writeClient.fetch(
-      `*[_type == "offers" && status == "active" && defined(endDate) && endDate < $todayStr]{ _id }`,
+      `*[_type == "offers" && status == "active" && defined(endDate) && endDate <= $todayStr]{ _id }`,
       { todayStr }
     );
     const ids = (toExpire || []).map((d) => d._id);

@@ -36,8 +36,6 @@ export const COMPANY_BY_TENANT_QUERY = `
     ),
     locations[0].country
   ),
-  ourWorks,
-  awards,
   "reviews": *[_type=="review" && tenantType == $tenantType && tenantId == $tenantId && company._ref == ^._id] | order(createdAt desc)[0...50]{
     _id, title, rating, content, authorName, createdAt
   }
@@ -94,8 +92,6 @@ export const COMPANY_BY_ID_OR_SLUG_QUERY = `
     ),
     locations[0].country
   ),
-  ourWorks,
-  awards,
   "reviews": *[_type=="review" && company._ref == ^._id] | order(createdAt desc)[0...50]{
     _id, title, rating, content, authorName, createdAt
   }
@@ -121,11 +117,7 @@ export const COMPANY_DASHBOARD_QUERY = `
   ratingCount,
   
   
-  ourWorks,
-  awards,
-  "totalViews": coalesce(totalViews, 0),
-  "worksCount": count(ourWorks),
-  "awardsCount": count(awards), 
+  "totalViews": coalesce(totalViews, 0), 
   "reviewsCount": count(*[_type=="review" && company._ref == ^._id]),
   "viewsRecent": views | order(createdAt desc)[0...1000]{ createdAt },
   "messagesCount": 0,
@@ -165,8 +157,6 @@ export const COMPANY_EDIT_QUERY = `
   extraServices,
   locations,
   openingHours,
-  ourWorks,
-  awards
 }`;
 
 // Query for company reviews

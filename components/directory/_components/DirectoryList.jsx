@@ -65,7 +65,8 @@ export default function DirectoryList({
     if (previousPageRef.current === currentPage) return;
     if (typeof window === "undefined") return;
 
-    const headerEl = typeof document !== "undefined" ? document.querySelector("header") : null;
+    const headerEl =
+      typeof document !== "undefined" ? document.querySelector("header") : null;
     const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
     const extraSpacing = 200;
 

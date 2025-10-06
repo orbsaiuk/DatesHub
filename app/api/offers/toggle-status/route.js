@@ -20,6 +20,7 @@ export async function POST(req) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const end = new Date(offer.endDate);
+        end.setHours(0, 0, 0, 0);
         if (end < today) {
           return NextResponse.json(
             { error: "Offer has expired and cannot be activated" },

@@ -150,56 +150,7 @@ export default defineType({
         },
       ],
     }),
-    defineField({
-      name: "ourWorks",
-      title: "Our Works",
-      type: "array",
-      of: [
-        {
-          type: "object",
-          name: "ourWork",
-          fields: [
-            defineField({ name: "title", title: "Title", type: "string" }),
-            defineField({
-              name: "description",
-              title: "Description",
-              type: "text",
-            }),
-            defineField({
-              name: "images",
-              title: "Images",
-              type: "array",
-              of: [{ type: "image", options: { hotspot: true } }],
-            }),
-          ],
-        },
-      ],
-    }),
-    defineField({
-      name: "awards",
-      title: "Awards",
-      type: "array",
-      of: [
-        {
-          type: "object",
-          name: "award",
-          fields: [
-            defineField({ name: "name", title: "Name", type: "string" }),
-            defineField({
-              name: "description",
-              title: "Description",
-              type: "text",
-            }),
-            defineField({
-              name: "image",
-              title: "Image",
-              type: "image",
-              options: { hotspot: true },
-            }),
-          ],
-        },
-      ],
-    }),
+
     defineField({
       name: "subscription",
       title: "Current Subscription",

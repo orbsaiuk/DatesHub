@@ -93,7 +93,8 @@ export default function DirectoryReviewsContent({
     }
     if (typeof window !== "undefined") {
       window.addEventListener("open-review-dialog", onOpenDialog);
-      return () => window.removeEventListener("open-review-dialog", onOpenDialog);
+      return () =>
+        window.removeEventListener("open-review-dialog", onOpenDialog);
     }
   }, []);
 

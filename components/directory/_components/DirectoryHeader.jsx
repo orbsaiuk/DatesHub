@@ -24,7 +24,9 @@ export default function DirectoryHeader({
   }, [searchParams]);
 
   const doSearch = () => {
-    const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+    const params = new URLSearchParams(
+      typeof window !== "undefined" ? window.location.search : ""
+    );
     if (q.trim()) params.set("q", q.trim());
     else params.delete("q");
     router.push(

@@ -100,9 +100,7 @@ export async function PATCH(request) {
       ourWorks: Array.isArray(rawUpdate.ourWorks)
         ? rawUpdate.ourWorks
         : undefined,
-      awards: Array.isArray(rawUpdate.awards)
-        ? rawUpdate.awards
-        : undefined,
+
     };
     const updates = Object.fromEntries(
       Object.entries(allowed).filter(([, v]) => typeof v !== "undefined")
