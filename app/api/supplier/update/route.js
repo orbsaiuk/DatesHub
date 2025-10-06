@@ -97,9 +97,6 @@ export async function PATCH(request) {
         : undefined,
       contact: rawUpdate.contact,
       locations: sanitizeLocations(rawUpdate.locations),
-      ourWorks: Array.isArray(rawUpdate.ourWorks)
-        ? rawUpdate.ourWorks
-        : undefined,
 
     };
     const updates = Object.fromEntries(

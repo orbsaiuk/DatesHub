@@ -6,8 +6,8 @@ import { Check } from "lucide-react";
 import BusinessBasicInfo from "./BusinessBasicInfo";
 import LocationsStepWrapper from "./LocationsStepWrapper";
 import ServicesForm from "./ServicesForm";
-
 import ContactInfo from "./ContactInfo";
+import { validateLocations } from "./validationUtils";
 import { ArrowLeft } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 
@@ -71,7 +71,6 @@ export default function EditBusinessForm({
       label: "الخدمات",
       component: "services",
     },
-
   ];
 
   const currentSectionData =
@@ -113,13 +112,6 @@ export default function EditBusinessForm({
 
     // Create a safe version for parent state (without File objects for JSON serialization)
     const safeForm = { ...newForm };
-
-    if (Array.isArray(safeForm.awards)) {
-      safeForm.awards = safeForm.awards.map((award) => ({
-        ...award,
-        image: award.image || null, // Keep File objects
-      }));
-    }
 
     onFormChange?.(safeForm);
 
@@ -178,6 +170,13 @@ export default function EditBusinessForm({
 
     if (saveDisabled) {
       if (saveDisabledReason) toast.error(saveDisabledReason);
+      return;
+    }
+
+    // Additional validation check before submitting
+    const locationValidation = validateLocations(form.locations, true);
+    if (!locationValidation.isValid) {
+      toast.error(locationValidation.message);
       return;
     }
 
@@ -374,36 +373,12 @@ export default function EditBusinessForm({
         }
       }
 
-      // Block leaving Locations if there is any new, incomplete location
+      // Block leaving Locations if there are incomplete locations
       const leavingLocations = currentSectionData.component === "locations";
       if (leavingLocations) {
-        const hasBlockingNew = Array.isArray(form.locations)
-          ? form.locations.some((loc) => {
-            if (!loc || !loc.__new) return false;
-            const address = (loc.address || "").trim();
-            const city = (loc.city || "").trim();
-            const region = (loc.region || "").trim();
-            const country = (loc.country || "").trim();
-            const zipCode = (loc.zipCode || "").trim();
-            const hasGeo =
-              loc.geo &&
-              Number.isFinite(Number(loc.geo.lat)) &&
-              Number.isFinite(Number(loc.geo.lng));
-            return !(
-              address &&
-              city &&
-              region &&
-              country &&
-              zipCode &&
-              hasGeo
-            );
-          })
-          : false;
-        if (hasBlockingNew) {
-          if (typeof window !== "undefined") {
-            const el = document.getElementById("section-locations");
-            el?.scrollIntoView?.({ behavior: "smooth", block: "start" });
-          }
+        const locationValidation = validateLocations(form.locations, true);
+        if (!locationValidation.isValid) {
+          toast.error(locationValidation.message);
           return;
         }
       }

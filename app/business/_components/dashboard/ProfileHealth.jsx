@@ -1,19 +1,17 @@
 import Link from "next/link";
 import { formatArabicNumber } from "@/lib/utils/arabic";
+import { validateLocations } from "../edit/validationUtils";
 
 export default function ProfileHealth({ entity, entityType }) {
-  // Align checks with Edit page sections (6):
-  // 1) Company Information, 2) Locations, 3) Contact, 4) Services,
-  // 5) Our Works, 6) Awards
+  // Align checks with Edit page sections (4):
+  // 1) Company Information, 2) Locations, 3) Contact, 4) Services
   const hasCompanyInfo = Boolean(
     entity?.name &&
     entity.name.trim() &&
     (entity?.descriptionText?.trim() || entity?.logo)
   );
 
-  const hasLocations = Array.isArray(entity?.locations)
-    ? entity.locations.length > 0
-    : false;
+  const hasLocations = validateLocations(entity?.locations, true).isValid;
 
   const hasContact = (() => {
     const contact = entity?.contact || {};

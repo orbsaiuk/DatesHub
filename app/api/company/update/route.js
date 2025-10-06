@@ -66,8 +66,6 @@ function pickAllowedFields(input) {
       typeof input.description === "string"
         ? toPortableText(input.description)
         : input.description,
-    awards: input.awards,
-    ourWorks: input.ourWorks,
   };
   return Object.fromEntries(
     Object.entries(allowed).filter(([, v]) => typeof v !== "undefined")

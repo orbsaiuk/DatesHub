@@ -8,6 +8,7 @@ export default function LocationsStepWrapper({ form, updateField }) {
   const methods = useForm({
     mode: "onChange",
     defaultValues: { locations: form.locations || [] },
+    resolver: undefined, // We'll handle validation manually in the parent components
   });
 
   const initialLoadedRef = useRef(false);

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import SectionsNav from "./SectionsNav";
 import EditBusinessForm from "./EditBusinessForm";
+import { validateLocations } from "./validationUtils";
 
 export default function EditPageClient({ initialEntity, entityType }) {
   const initial = initialEntity || {};
@@ -23,8 +24,6 @@ export default function EditPageClient({ initialEntity, entityType }) {
       : [],
     description: initial?.descriptionText || "",
     logo: initial?.logo || null,
-    ourWorks: initial?.ourWorks || [],
-    awards: initial?.awards || [],
     ...(entityType === "company"
       ? {
         socialLinks: Array.isArray(initial?.socialLinks)
@@ -38,23 +37,6 @@ export default function EditPageClient({ initialEntity, entityType }) {
 
   const [errors, setErrors] = useState({});
   const [currentSection, setCurrentSection] = useState("section-company-info");
-
-  const isNonEmpty = (val) => typeof val === "string" && val.trim().length > 0;
-  const isWorkComplete = (w) =>
-    !!w &&
-    isNonEmpty(w.title) &&
-    isNonEmpty(w.description) &&
-    Array.isArray(w.images) &&
-    w.images.length > 0;
-  const isAwardComplete = (a) =>
-    !!a && isNonEmpty(a.name) && isNonEmpty(a.description) && !!a.image;
-
-
-
-  const hasIncompleteAward = () => {
-    const arr = Array.isArray(formData?.awards) ? formData.awards : [];
-    return arr.some((a) => !isAwardComplete(a));
-  };
 
   const handleSectionChange = (nextId) => {
     // Block leaving services if no categories are selected
@@ -116,23 +98,16 @@ export default function EditPageClient({ initialEntity, entityType }) {
       }
     }
 
-    // Block leaving works/awards if there are incomplete entries (company only)
-    if (
-      entityType === "company" &&
-      currentSection === "section-our-works" &&
-      hasIncompleteWork()
-    ) {
-      toast.error("يرجى إكمال أو حذف العمل المضاف قبل مغادرة هذا القسم.");
-      return;
+    // Block leaving Locations if there are incomplete locations
+    if (currentSection === "section-locations") {
+      const locationValidation = validateLocations(formData.locations, true);
+      if (!locationValidation.isValid) {
+        toast.error(locationValidation.message);
+        return;
+      }
     }
-    if (
-      entityType === "company" &&
-      currentSection === "section-awards" &&
-      hasIncompleteAward()
-    ) {
-      toast.error("يرجى إكمال أو حذف الجائزة المضافة قبل مغادرة هذا القسم.");
-      return;
-    }
+
+
 
     setCurrentSection(nextId);
   };
@@ -140,23 +115,19 @@ export default function EditPageClient({ initialEntity, entityType }) {
   const sections = [
     {
       id: "section-company-info",
-      label: "معلومات الشركة",
+      label: entityType === "supplier" ? "معلومات المورد" : "معلومات الشركة",
     },
     {
-      id: "section-services",
-      label: "الخدمات",
+      id: "section-locations",
+      label: "المواقع",
     },
     {
       id: "section-contact",
       label: "الاتصال",
     },
     {
-      id: "section-our-works",
-      label: "الاعمال",
-    },
-    {
-      id: "section-awards",
-      label: "الجوائز",
+      id: "section-services",
+      label: "الخدمات",
     },
   ];
 
@@ -164,16 +135,23 @@ export default function EditPageClient({ initialEntity, entityType }) {
     !Array.isArray(formData.categories) ||
     formData.categories.filter(Boolean).length === 0;
 
-  const saveDisabled =
-    hasNoCategories ||
-    (entityType === "company" && (hasIncompleteAward() || hasIncompleteWork()));
+  // Check for incomplete locations
+  const locationValidation = validateLocations(formData.locations, true);
+  const hasIncompleteLocations = !locationValidation.isValid;
+
+  // Debug logging
+  console.log('Location validation:', {
+    locations: formData.locations,
+    validation: locationValidation,
+    hasIncompleteLocations
+  });
+
+  const saveDisabled = hasNoCategories || hasIncompleteLocations;
   const saveDisabledReason = hasNoCategories
     ? "يرجى تحديد فئة واحدة على الأقل قبل الحفظ."
-    : entityType === "company" && hasIncompleteAward()
-      ? "يرجى إكمال أو حذف الجائزة المضافة قبل الحفظ."
-      : entityType === "company" && hasIncompleteWork()
-        ? "يرجى إكمال أو حذف العمل المضاف قبل الحفظ."
-        : "";
+    : hasIncompleteLocations
+      ? locationValidation.message
+      : "";
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -191,8 +169,8 @@ export default function EditPageClient({ initialEntity, entityType }) {
                   key={s.id}
                   onClick={() => handleSectionChange(s.id)}
                   className={`whitespace-nowrap px-3 py-2 rounded-full text-sm border ${currentSection === s.id
-                      ? "bg-muted text-foreground"
-                      : "text-muted-foreground hover:bg-muted/60"
+                    ? "bg-muted text-foreground"
+                    : "text-muted-foreground hover:bg-muted/60"
                     }`}
                 >
                   {s.label}

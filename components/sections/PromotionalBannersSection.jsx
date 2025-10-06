@@ -9,8 +9,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
@@ -35,26 +33,22 @@ export default function PromotionalBannersSection({ banners = [] }) {
   return (
     <section className="py-12 sm:py-16 bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Carousel
-          setApi={setCarouselApi}
-          opts={{ loop: true }}
-          plugins={[Autoplay({ delay: 4000, stopOnMouseEnter: true })]}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-0">
-            {banners.map((banner, index) => (
-              <CarouselItem key={banner._id || index} className="pl-0">
-                <SimpleBanner banner={banner} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          {banners.length > 1 && (
-            <>
-              <CarouselPrevious className="hidden sm:flex" />
-              <CarouselNext className="hidden sm:flex" />
-            </>
-          )}
-        </Carousel>
+        <div className="relative">
+          <Carousel
+            setApi={setCarouselApi}
+            opts={{ loop: true, direction: "rtl" }}
+            plugins={[Autoplay({ delay: 4000, stopOnMouseEnter: true })]}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-0">
+              {banners.map((banner, index) => (
+                <CarouselItem key={banner._id || index} className="pl-0">
+                  <SimpleBanner banner={banner} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </div>
 
         {banners.length > 1 && (
           <div className="flex items-center justify-center gap-2 mt-6">
