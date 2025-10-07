@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -27,6 +28,7 @@ export default function OfferActions({
   onDelete,
   className = "",
 }) {
+  const [open, setOpen] = useState(false);
   const isExpired = (() => {
     if (!offer.endDate) return false;
     const end = new Date(offer.endDate);
@@ -39,7 +41,7 @@ export default function OfferActions({
   const cannotActivate = offer.status !== "active" && isExpired;
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
@@ -101,11 +103,12 @@ export default function OfferActions({
                 إلغاء
               </AlertDialogCancel>
               <AlertDialogAction
-                onClick={() =>
+                onClick={() => {
+                  setOpen(false);
                   onToggleStatus(offer._id, offer.status, {
                     endDate: offer.endDate,
-                  })
-                }
+                  });
+                }}
                 disabled={isDisabled || cannotActivate}
                 className="cursor-pointer h-12 md:h-10"
               >
@@ -138,7 +141,7 @@ export default function OfferActions({
               <AlertDialogTitle className="text-red-600 flex items-center gap-2">
                 ⚠️ حذف العرض نهائياً؟
               </AlertDialogTitle>
-              <AlertDialogDescription className="space-y-2">
+              <AlertDialogDescription className="space-y-2 text-right">
                 <div>
                   لا يمكن التراجع عن هذا الإجراء. سيتم حذف العرض نهائياً من لوحة
                   التحكم ولن يكون مرئياً للعملاء المحتملين.
@@ -153,7 +156,10 @@ export default function OfferActions({
                 الاحتفاظ بالعرض
               </AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => onDelete(offer._id)}
+                onClick={() => {
+                  setOpen(false);
+                  onDelete(offer._id);
+                }}
                 disabled={isDisabled}
                 className="bg-red-600 hover:bg-red-700 focus:ring-red-600 cursor-pointer h-12 md:h-10"
               >

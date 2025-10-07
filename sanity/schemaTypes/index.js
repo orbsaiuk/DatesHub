@@ -3,6 +3,7 @@ import supplier from "./supplier";
 import category from "./category";
 import review from "./review";
 import offers from "./offers";
+import product from "./product";
 import promotionalBanner from "./promotionalBanner";
 import siteSettings from "./siteSettings";
 import user from "./user";
@@ -23,6 +24,7 @@ export const schema = {
     category,
     review,
     offers,
+    product,
     promotionalBanner,
     siteSettings,
     user,

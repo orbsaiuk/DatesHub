@@ -29,64 +29,56 @@ export default function ImageUploader({
   maxSizeMB = 5,
   className = "",
   placeholder = "Add image",
-  multiple = false,
-  maxFiles = 5,
 }) {
   const inputRef = useRef(null);
-  const [previewUrls, setPreviewUrls] = useState([]);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [fileKey, setFileKey] = useState(0); // Add key to force re-render when file changes
 
-  // Generate preview URLs for File objects with caching
-  const generatePreviewUrls = useMemo(() => {
-    if (!image) return [];
+  // Generate preview URL for single image
+  const generatePreviewUrl = useMemo(() => {
+    if (!image) return null;
 
     const cache = globalFileUrlCache;
 
-    if (multiple && Array.isArray(image)) {
-      return image
-        .map((item) => {
-          if (item instanceof File) {
-            // Use cached URL if available, otherwise create new one
-            if (!cache.has(item)) {
-              cache.set(item, URL.createObjectURL(item));
-            }
-            return cache.get(item);
-          }
-          // Handle existing Sanity image references
-          if (item?.asset?._ref) {
-            try {
-              return urlFor(item).width(120).height(120).fit("crop").url();
-            } catch (error) {
-              // Error generating Sanity preview URL
-              return null;
-            }
-          }
-          return null;
-        })
-        .filter(Boolean);
-    } else {
-      // Single image
-      if (image instanceof File) {
-        if (!cache.has(image)) {
-          cache.set(image, URL.createObjectURL(image));
-        }
-        return [cache.get(image)];
+    // Handle File object (new upload)
+    if (image instanceof File) {
+      if (!cache.has(image)) {
+        cache.set(image, URL.createObjectURL(image));
       }
-      if (image?.asset?._ref) {
-        try {
-          return [urlFor(image).width(120).height(120).fit("crop").url()];
-        } catch (error) {
-          // Error generating Sanity preview URL
-          return [];
-        }
+      return cache.get(image);
+    }
+
+    // Handle Sanity image with _ref (use urlFor helper)
+    if (image?.asset?._ref) {
+      try {
+        return urlFor(image).width(120).height(120).fit("crop").url();
+      } catch (error) {
+        console.error("Error generating Sanity preview URL:", error);
+        return null;
       }
     }
-    return [];
-  }, [image, multiple]);
 
-  // Update preview URLs when they change
+    // Handle Sanity image with direct URL
+    if (image?.asset?.url) {
+      return image.asset.url;
+    }
+
+    // Handle plain string URL
+    if (typeof image === "string" && image.startsWith("http")) {
+      return image;
+    }
+
+    return null;
+  }, [image]);
+
+  // Update preview URL when it changes
   useEffect(() => {
-    setPreviewUrls(generatePreviewUrls);
-  }, [generatePreviewUrls]);
+    // Only update the preview URL from the image prop if we don't already have a local preview URL
+    // This prevents the server image from replacing our local preview after form submission
+    if (!previewUrl || !previewUrl.startsWith("blob:")) {
+      setPreviewUrl(generatePreviewUrl);
+    }
+  }, [generatePreviewUrl, previewUrl]);
 
   // Cleanup object URLs when component unmounts
   useEffect(() => {
@@ -97,18 +89,17 @@ export default function ImageUploader({
   }, []);
 
   const handleFileSelect = (e) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    // Validate file sizes
+    // Validate file size
     const maxSize = maxSizeMB * 1024 * 1024;
-    const oversizedFiles = files.filter((file) => file.size > maxSize);
-    if (oversizedFiles.length > 0) {
-      toast.error(`File size must be less than ${maxSizeMB}MB`);
+    if (file.size > maxSize) {
+      toast.error(`حجم الملف يجب أن يكون أقل من ${maxSizeMB}MB`);
       return;
     }
 
-    // Validate file types
+    // Validate file type
     const validTypes = [
       "image/jpeg",
       "image/png",
@@ -116,30 +107,24 @@ export default function ImageUploader({
       "image/webp",
       "image/svg+xml",
     ];
-    const invalidFiles = files.filter(
-      (file) => !validTypes.includes(file.type)
-    );
-    if (invalidFiles.length > 0) {
-      toast.error("Please select valid image files (JPG, PNG, GIF, WebP, SVG)");
+    if (!validTypes.includes(file.type)) {
+      toast.error("يرجى اختيار صورة صالحة (JPG, PNG, GIF, WebP, SVG)");
       return;
     }
 
-    // Validate file count for multiple uploads
-    if (multiple && image && Array.isArray(image)) {
-      const totalFiles = image.length + files.length;
-      if (totalFiles > maxFiles) {
-        toast.error(`Maximum ${maxFiles} images allowed`);
-        return;
-      }
+    // Clear previous preview if exists
+    if (previewUrl && previewUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(previewUrl);
     }
 
-    // Store files locally for preview
-    if (multiple) {
-      const currentImages = Array.isArray(image) ? image : [];
-      onImageChange([...currentImages, ...files]);
-    } else {
-      onImageChange(files[0]);
-    }
+    // Create new preview URL
+    const newPreviewUrl = URL.createObjectURL(file);
+    globalFileUrlCache.set(file, newPreviewUrl);
+    setPreviewUrl(newPreviewUrl);
+    setFileKey((prevKey) => prevKey + 1); // Increment key to force re-render
+
+    // Update image
+    onImageChange(file);
 
     // Reset input
     if (inputRef.current) {
@@ -147,64 +132,30 @@ export default function ImageUploader({
     }
   };
 
-  const removeImage = (indexToRemove = null) => {
+  const removeImage = () => {
     const cache = globalFileUrlCache;
 
-    if (multiple && Array.isArray(image)) {
-      const imageToRemove = image[indexToRemove];
-      if (imageToRemove instanceof File && cache.has(imageToRemove)) {
-        URL.revokeObjectURL(cache.get(imageToRemove));
-        cache.delete(imageToRemove);
-      }
-      const newImages = image.filter((_, index) => index !== indexToRemove);
-      onImageChange(newImages);
-    } else {
-      if (image instanceof File && cache.has(image)) {
-        URL.revokeObjectURL(cache.get(image));
-        cache.delete(image);
-      }
-      onImageChange(null);
+    // Clean up any blob URLs
+    if (previewUrl && previewUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(previewUrl);
     }
+
+    if (image instanceof File && cache.has(image)) {
+      URL.revokeObjectURL(cache.get(image));
+      cache.delete(image);
+    }
+
+    // Reset state
+    setPreviewUrl(null);
+    setFileKey((prevKey) => prevKey + 1); // Force re-render
+    onImageChange(null);
   };
 
   const openFilePicker = () => {
     inputRef.current?.click();
   };
 
-  const renderPreview = (previewUrl, index = null) => {
-    if (!previewUrl) return null;
-
-    return (
-      <div key={index || 0} className="relative group">
-        <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border">
-          <Image
-            src={previewUrl}
-            alt={`Preview ${index !== null ? index + 1 : ""}`}
-            width={80}
-            height={80}
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <Button
-          type="button"
-          variant="destructive"
-          size="icon"
-          className="absolute -top-2 -right-2 w-6 h-6 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"
-          onClick={() => removeImage(index)}
-        >
-          <X className="w-3 h-3" />
-        </Button>
-      </div>
-    );
-  };
-
-  const hasImages = multiple
-    ? Array.isArray(image) && image.length > 0
-    : Boolean(image);
-
-  const canAddMore = multiple
-    ? !Array.isArray(image) || image.length < maxFiles
-    : !image;
+  const hasImage = Boolean(image);
 
   return (
     <div className={`space-y-3 ${className}`}>
@@ -212,49 +163,61 @@ export default function ImageUploader({
         ref={inputRef}
         type="file"
         accept="image/*"
-        multiple={multiple}
         onChange={handleFileSelect}
         className="hidden"
       />
 
       {/* Preview Area */}
-      {hasImages && previewUrls.length > 0 && (
-        <div className="flex flex-wrap gap-2.5 sm:gap-3">
-          {multiple
-            ? previewUrls.map((url, index) => renderPreview(url, index))
-            : renderPreview(previewUrls[0])}
+      {hasImage && previewUrl && (
+        <div className="relative group inline-block">
+          <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border">
+            <Image
+              key={fileKey} // Add key to force re-render when file changes
+              src={previewUrl}
+              alt="Preview"
+              width={80}
+              height={80}
+              className="w-full h-full object-cover"
+              unoptimized={
+                previewUrl.startsWith("blob:") ||
+                previewUrl.includes("cdn.sanity.io")
+              }
+            />
+          </div>
+          <Button
+            type="button"
+            variant="destructive"
+            size="icon"
+            className="absolute -top-2 -right-2 w-6 h-6 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={removeImage}
+          >
+            <X className="w-3 h-3" />
+          </Button>
         </div>
       )}
 
       {/* Upload Button/Area */}
-      {!hasImages && (
+      {!hasImage && (
         <div
           className="border-2 border-dashed border-muted-foreground/30 rounded-lg p-4 sm:p-5 text-center cursor-pointer hover:border-muted-foreground/50 transition-colors"
           onClick={openFilePicker}
         >
           <div className="flex flex-col items-center space-y-2">
             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-muted">
-              {hasImages ? (
-                <Upload className="w-5 h-5" />
-              ) : (
-                <ImageIcon className="w-5 h-5" />
-              )}
+              <ImageIcon className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm sm:text-base font-medium">
-                {hasImages ? "Add More" : placeholder}
-              </p>
+              <p className="text-sm sm:text-base font-medium">{placeholder}</p>
               <p className="text-xs sm:text-sm text-muted-foreground">
                 JPG, PNG, SVG up to {maxSizeMB}MB
-                {multiple ? ` (max ${maxFiles})` : ""}
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Add More Button (alternative to drop area when at limit) */}
-      {hasImages && canAddMore && (
+      {/* Change Image Button */}
+      {hasImage && (
         <Button
           type="button"
           variant="outline"
@@ -262,7 +225,7 @@ export default function ImageUploader({
           className="w-full px-4 py-2"
         >
           <Upload className="w-4 h-4 me-2" />
-          إضافة المزيد من الصور
+          تغيير الصورة
         </Button>
       )}
     </div>

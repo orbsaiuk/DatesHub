@@ -2,19 +2,16 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
-import { MenuIcon, Bookmark } from "lucide-react";
+import { Bookmark } from "lucide-react";
 import { SignedIn, useUser } from "@clerk/nextjs";
 import HeaderAuthButtons from "./HeaderAuthButtons";
 import ImageOptimized from "@/components/ImageOptimized";
 import InboxDropdown from "@/components/messaging/InboxDropdown";
+import MobileNav from "@/components/MobileNav";
+import logo from "@/public/logo.png";
+import { usePathname } from "next/navigation";
 
-/**
- * Client-side Header with instant role detection
- * No server-side blocking - uses Clerk's client hooks
- */
-export default function HeaderClient({ brandTitle, logoUrl }) {
+export default function HeaderClient() {
   const { user, isLoaded } = useUser();
 
   // Get role from user metadata (available immediately after hydration)
@@ -24,33 +21,38 @@ export default function HeaderClient({ brandTitle, logoUrl }) {
   const dashboardHref = isBusiness ? `/business/${role}/dashboard` : "#";
   const directoryHref = isCompany ? "/suppliers" : "/companies";
   const directoryLabel = isCompany ? "الموردين" : "الشركات";
-  const title = "العلامة";
-
+  const logoUrl = logo;
+  const pathname = usePathname();
   return (
-    <header className="w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+    <header className="w-full border-b bg-secondary/80 backdrop-blur-md sticky top-0 z-50">
       <div className="mx-auto container px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link
           href="/"
           className="font-semibold text-base sm:text-lg flex items-center gap-2"
         >
-          {logoUrl ? (
-            <ImageOptimized
-              src={logoUrl}
-              alt={`شعار ${title}`}
-              width={120}
-              height={32}
-              className="h-6 w-auto"
-              priority
-              context="brand logo"
-            />
-          ) : (
-            <span>{title}</span>
-          )}
+          <ImageOptimized
+            src={logoUrl}
+            alt={`شعار المنصة`}
+            width={300}
+            height={300}
+            className="h-20 w-32"
+            priority
+            context="brand logo"
+          />
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm">
-          <Link href="#featured">شركات مميزة</Link>
-          <Link href="#how">كيف تعمل المنصة</Link>
-          <Link href={directoryHref}>{directoryLabel}</Link>
+          <Link
+            href="/"
+            className={`${pathname === "/" ? " text-lg font-bold text-primary" : " hover:text-primary"}`}
+          >
+            الرئيسية
+          </Link>
+          <Link
+            href={directoryHref}
+            className={`${pathname === directoryHref ? " text-lg font-bold text-primary" : " hover:text-primary"}`}
+          >
+            {directoryLabel}
+          </Link>
           <SignedIn>
             <Link href="/bookmarks">
               <Bookmark className="size-5" />
@@ -76,35 +78,14 @@ export default function HeaderClient({ brandTitle, logoUrl }) {
           <HeaderAuthButtons />
         </div>
         <div className="md:hidden">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="فتح القائمة">
-                <MenuIcon className="size-5" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent showCloseButton={true} className="p-0 sm:max-w-sm">
-              <div className="p-4">{/* Brand removed as requested */}</div>
-              <Separator />
-              <nav className="p-4 grid gap-2 text-sm">
-                <Link href="#featured">شركات مميزة</Link>
-                <Link href="#how">كيف تعمل المنصة</Link>
-                <Link href="/companies">الشركات</Link>
-                <SignedIn>
-                  <Link href="/bookmarks">المحفوظات</Link>
-                  {!isBusiness && <Link href="/messages">الرسائل</Link>}
-                  {isLoaded && isBusiness ? (
-                    <Link href={dashboardHref}>لوحة التحكم</Link>
-                  ) : (
-                    <Link href="/become">انضم كشركة</Link>
-                  )}
-                </SignedIn>
-              </nav>
-              <Separator />
-              <div className="p-4">
-                <HeaderAuthButtons />
-              </div>
-            </DialogContent>
-          </Dialog>
+          <MobileNav
+            role={role}
+            isBusiness={isBusiness}
+            isCompany={isCompany}
+            dashboardHref={dashboardHref}
+            directoryHref={directoryHref}
+            directoryLabel={directoryLabel}
+          />
         </div>
       </div>
     </header>

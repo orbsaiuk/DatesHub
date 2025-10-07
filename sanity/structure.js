@@ -144,6 +144,28 @@ export const structure = (S) =>
                 ),
             ])
         ),
+      S.listItem()
+        .title("Products")
+        .child(
+          S.list()
+            .title("Products")
+            .items([
+              S.listItem()
+                .title("Company Products")
+                .child(
+                  S.documentList()
+                    .title("Company Products")
+                    .filter("_type == 'product' && tenantType == 'company'")
+                ),
+              S.listItem()
+                .title("Supplier Products")
+                .child(
+                  S.documentList()
+                    .title("Supplier Products")
+                    .filter("_type == 'product' && tenantType == 'supplier'")
+                ),
+            ])
+        ),
       S.divider(),
       S.documentTypeListItem("category"),
       // Messaging

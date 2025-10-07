@@ -107,7 +107,7 @@ export async function getRelatedBlogs(currentBlogId, authorId = null) {
         currentBlogId,
         authorId,
       });
-      
+
       // If we found related blogs by author, return them
       if (relatedBlogs && relatedBlogs.length > 0) {
         return relatedBlogs;
