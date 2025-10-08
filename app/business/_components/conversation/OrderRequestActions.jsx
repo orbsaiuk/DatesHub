@@ -4,8 +4,8 @@ import { Check, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-export default function EventRequestActions({
-  eventRequestId,
+export default function OrderRequestActions({
+  orderRequestId,
   onActionComplete,
   disabled = false,
 }) {
@@ -24,7 +24,7 @@ export default function EventRequestActions({
 
     try {
       const response = await fetch(
-        `/api/event-requests/${eventRequestId}/action`,
+        `/api/order-requests/${orderRequestId}/action`,
         {
           method: "POST",
           headers: {
@@ -41,9 +41,7 @@ export default function EventRequestActions({
 
       if (response.ok && data.success) {
         toast.success(
-          action === "accept"
-            ? "تم قبول طلب الفعالية بنجاح!"
-            : "تم رفض طلب الفعالية"
+          action === "accept" ? "تم قبول الطلب بنجاح!" : "تم رفض الطلب"
         );
 
         // Reset form state
@@ -51,18 +49,18 @@ export default function EventRequestActions({
 
         // Notify parent component
         if (onActionComplete) {
-          onActionComplete(action, data.eventRequest);
+          onActionComplete(action, data.orderRequest);
         }
       } else {
-        throw new Error(data.error || "فشل في معالجة طلب الفعالية");
+        throw new Error(data.error || "فشل في معالجة الطلب");
       }
     } catch (error) {
-      console.error("Error processing event request:", error);
-      let errorMessage = "فشل في معالجة طلب الفعالية";
+      console.error("Error processing order request:", error);
+      let errorMessage = "فشل في معالجة الطلب";
       if (error.message.includes("Unauthorized")) {
         errorMessage = "ليس لديك إذن للرد على هذا الطلب";
       } else if (error.message.includes("not found")) {
-        errorMessage = "لم يتم العثور على طلب الفعالية";
+        errorMessage = "لم يتم العثور على الطلب";
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -77,7 +75,7 @@ export default function EventRequestActions({
     <div className="mt-3 space-y-3">
       {disabled && (
         <div className="text-xs text-muted-foreground">
-          باقتك الحالية لا تسمح بالرد على طلبات الفعاليات.{" "}
+          باقتك الحالية لا تسمح بالرد على الطلبات.{" "}
           <a
             href="/business/company/packages"
             className="text-primary underline"

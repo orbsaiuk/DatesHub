@@ -47,12 +47,58 @@ export async function GET(req) {
         { status: 403 }
       );
 
-    const items = await listTenantConversations({
+    const rawItems = await listTenantConversations({
       tenantType,
       tenantId,
       offset,
       limit,
     });
+
+    // Transform data to match frontend expectations
+    const items = rawItems.map((conv) => {
+      const participantKey = `${tenantType}:${tenantId}`;
+
+      // Build participants array
+      const participants = [];
+      if (conv.participant1Data) {
+        participants.push({
+          kind: conv.participant1Data._type,
+          tenantId: conv.participant1Data.tenantId,
+          clerkId: conv.participant1Data.clerkId,
+          displayName: conv.participant1Data.name,
+          name: conv.participant1Data.name,
+          avatar: conv.participant1Data.image || conv.participant1Data.logo,
+        });
+      }
+      if (conv.participant2Data) {
+        participants.push({
+          kind: conv.participant2Data._type,
+          tenantId: conv.participant2Data.tenantId,
+          clerkId: conv.participant2Data.clerkId,
+          displayName: conv.participant2Data.name,
+          name: conv.participant2Data.name,
+          avatar: conv.participant2Data.image || conv.participant2Data.logo,
+        });
+      }
+
+      // Build unread array (legacy format for frontend)
+      const unread = [
+        {
+          participantKey,
+          count: conv.unreadCount || 0,
+        },
+      ];
+
+      return {
+        ...conv,
+        participants,
+        unread,
+        // Use lastMessagePreview from query if available, otherwise fallback to lastMessage.text
+        lastMessagePreview: conv.lastMessagePreview || conv.lastMessage?.text || "",
+        lastMessageAt: conv.lastMessageAt || conv.lastMessage?.createdAt || conv.createdAt,
+      };
+    });
+
     return NextResponse.json({ ok: true, items });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 });
@@ -94,13 +140,27 @@ export async function POST(req) {
         { status: 403 }
       );
 
+    // Get the business document IDs
+    const business1 = await writeClient.fetch(
+      `*[_type in ["company", "supplier"] && tenantId == $tenantId][0]`,
+      { tenantId }
+    );
+
+    const business2 = await writeClient.fetch(
+      `*[_type in ["company", "supplier"] && tenantId == $counterpartTenantId][0]`,
+      { counterpartTenantId: counterpartTenantId }
+    );
+
+    if (!business1?._id || !business2?._id) {
+      return NextResponse.json(
+        { ok: false, error: "Business not found" },
+        { status: 404 }
+      );
+    }
+
     const conversation = await getOrCreateConversation({
-      conversationType: "company-supplier",
-      participants: [
-        { kind: tenantType, tenantId },
-        { kind: counterpartType, tenantId: counterpartTenantId },
-      ],
-      tenantContext: { tenantType, tenantId },
+      participant1: business1._id,
+      participant2: business2._id,
     });
     return NextResponse.json({ ok: true, conversation });
   } catch (e) {

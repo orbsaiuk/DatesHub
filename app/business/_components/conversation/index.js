@@ -5,4 +5,4 @@ export { default as MessageComposer } from "./MessageComposer";
 export { default as MessageItem } from "./MessageItem";
 export { default as MessageGroup } from "./MessageGroup";
 export { default as EmptyMessagesState } from "./EmptyMessagesState";
-export { default as EventRequestActions } from "./EventRequestActions";
+export { default as EventRequestActions } from "./OrderRequestActions";

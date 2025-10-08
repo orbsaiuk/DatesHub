@@ -23,11 +23,11 @@ export async function POST(request) {
       );
     }
 
-    // Verify the user has permission to respond to this event request
+    // Verify the user has permission to respond to this order request
     const eventRequest = await writeClient.getDocument(eventRequestId);
     if (!eventRequest) {
       return NextResponse.json(
-        { error: "Event request not found" },
+        { error: "Order request not found" },
         { status: 404 }
       );
     }
@@ -63,23 +63,24 @@ export async function POST(request) {
       .commit();
 
     // Find and update the corresponding message
-    const messageQuery = `*[_type == "message" && eventRequestData.eventRequestId == $eventRequestId][0]`;
+    const messageQuery = `*[_type == "message" && orderRequest._ref == $eventRequestId][0]`;
     const message = await writeClient.fetch(messageQuery, { eventRequestId });
 
     if (message) {
+      // Update the order request document directly since it's now a reference
       await writeClient
-        .patch(message._id)
+        .patch(eventRequestId)
         .set({
-          "eventRequestData.status": action,
-          "eventRequestData.companyResponse": companyResponse || "",
+          status: action,
+          companyResponse: companyResponse || "",
         })
         .commit();
 
       // Send a follow-up message in the conversation
       const followUpText =
         action === "accepted"
-          ? `✅ تم قبول طلب الفعالية! ${companyResponse ? `\n\n${companyResponse}` : ""}`
-          : `❌ تم رفض طلب الفعالية. ${companyResponse ? `\n\nالسبب: ${companyResponse}` : ""}`;
+          ? `✅ تم قبول طلبك! ${companyResponse ? `\n\n${companyResponse}` : ""}`
+          : `❌ تم رفض الطلب. ${companyResponse ? `\n\nالسبب: ${companyResponse}` : ""}`;
 
       const followUpMessage = {
         _type: "message",
@@ -111,7 +112,7 @@ export async function POST(request) {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to process event request action" },
+      { error: "Failed to process order request action" },
       { status: 500 }
     );
   }

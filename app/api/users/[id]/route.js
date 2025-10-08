@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { UserReviewService } from "@/services/sanity/UserReviewService";
 
 export async function GET(_req, { params }) {
-  const id = params?.id;
+  const id = (await params)?.id;
   if (!id) return new NextResponse("Missing id", { status: 400 });
 
   try {

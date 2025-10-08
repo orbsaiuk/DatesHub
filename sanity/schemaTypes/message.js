@@ -15,28 +15,16 @@ export default defineType({
     defineField({
       name: "sender",
       title: "Sender",
-      type: "object",
-      fields: [
-        defineField({
-          name: "kind",
-          title: "Kind",
-          type: "string",
-          validation: (Rule) =>
-            Rule.required().valid("user", "company", "supplier"),
-        }),
-        defineField({
-          name: "clerkId",
-          title: "Clerk User ID",
-          type: "string",
-        }),
-        defineField({ name: "tenantId", title: "Tenant ID", type: "string" }),
-      ],
+      type: "reference",
+      to: [{ type: "user" }, { type: "company" }, { type: "supplier" }],
+      description: "The participant who sent this message",
     }),
     defineField({
       name: "text",
       title: "Text",
       type: "text",
       validation: (Rule) => Rule.required(),
+      hidden: ({ parent }) => parent?.messageType !== "text",
     }),
     defineField({
       name: "messageType",
@@ -45,82 +33,21 @@ export default defineType({
       options: {
         list: [
           { title: "Regular Message", value: "text" },
-          { title: "Event Request", value: "event_request" },
+          { title: "Order Request", value: "order_request" },
         ],
       },
       initialValue: "text",
     }),
+
     defineField({
-      name: "eventRequestData",
-      title: "Event Request Data",
-      type: "object",
-      hidden: ({ parent }) => parent?.messageType !== "event_request",
-      fields: [
-        defineField({
-          name: "eventRequestId",
-          title: "Event Request ID",
-          type: "string",
-        }),
-        defineField({
-          name: "fullName",
-          title: "Client Full Name",
-          type: "string",
-        }),
-        defineField({
-          name: "eventDate",
-          title: "Event Date",
-          type: "date",
-        }),
-        defineField({
-          name: "eventTime",
-          title: "Event Time",
-          type: "string",
-        }),
-        defineField({
-          name: "numberOfGuests",
-          title: "Number of Guests",
-          type: "string",
-        }),
-        defineField({
-          name: "category",
-          title: "Service Category",
-          type: "string",
-        }),
-        defineField({
-          name: "serviceRequired",
-          title: "Service Required",
-          type: "string",
-        }),
-        defineField({
-          name: "eventLocation",
-          title: "Event Location",
-          type: "string",
-        }),
-        defineField({
-          name: "eventDescription",
-          title: "Event Description",
-          type: "text",
-        }),
-        defineField({
-          name: "status",
-          title: "Status",
-          type: "string",
-          options: {
-            list: [
-              { title: "Pending", value: "pending" },
-              { title: "Accepted", value: "accepted" },
-              { title: "Declined", value: "declined" },
-            ],
-          },
-          initialValue: "pending",
-        }),
-        defineField({
-          name: "companyResponse",
-          title: "Company Response",
-          type: "text",
-        }),
-      ],
+      name: "orderRequest",
+      title: "Order Request",
+      type: "reference",
+      to: [{ type: "orderRequest" }],
+      description: "Reference to the full order request document",
+      hidden: ({ parent }) => parent?.messageType !== "order_request",
     }),
+
     defineField({ name: "createdAt", title: "Created At", type: "datetime" }),
     defineField({
       name: "readBy",
@@ -143,8 +70,26 @@ export default defineType({
   ],
   preview: {
     select: {
-      title: "text",
-      subtitle: "createdAt",
+      text: "text",
+      messageType: "messageType",
+      createdAt: "createdAt",
+      orderRequestTitle: "orderRequest.title",
+    },
+    prepare({ text, messageType, createdAt, orderRequestTitle }) {
+      const date = createdAt
+        ? new Date(createdAt).toLocaleDateString()
+        : "No date";
+
+      let title = text || "Message";
+
+      if (messageType === "order_request") {
+        title = "طلب جديد";
+      }
+
+      return {
+        title: title,
+        subtitle: `${date}`,
+      };
     },
   },
 });

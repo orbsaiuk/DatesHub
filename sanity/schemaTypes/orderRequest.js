@@ -1,64 +1,60 @@
 export default {
-  name: "eventRequest",
-  title: "Event Request",
+  name: "orderRequest",
+  title: "Order Request",
   type: "document",
   fields: [
     {
-      name: "title",
-      title: "Request Title",
-      type: "string",
-      validation: (Rule) => Rule.required().min(1).max(100),
+      name: "business",
+      title: "Business",
+      type: "reference",
+      validation: (Rule) => Rule.required(),
+      to: [{ type: "company" }, { type: "supplier" }],
+    },
+    {
+      name: "user",
+      title: "User",
+      type: "reference",
+      validation: (Rule) => Rule.required(),
+      to: [{ type: "user" }],
+      description: "The user who made this order request",
     },
     {
       name: "fullName",
-      title: "Client Full Name",
+      title: "Client Name",
       type: "string",
-      validation: (Rule) => Rule.required().min(2).max(100),
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: "eventDate",
-      title: "Event Date",
+      name: "deliveryDate",
+      title: "Delivery Date",
       type: "date",
       validation: (Rule) => Rule.required(),
     },
     {
-      name: "eventTime",
-      title: "Event Time",
-      type: "string",
+      name: "quantity",
+      title: "Quantity (kg)",
+      type: "number",
       validation: (Rule) => Rule.required(),
-    },
-    {
-      name: "numberOfGuests",
-      title: "Number of Guests",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-      description:
-        "Number of guests (can be a range like '10-20' or single number)",
+      description: "Quantity in kilograms",
     },
     {
       name: "category",
-      title: "Service Category",
+      title: "Dates Type",
       type: "string",
       validation: (Rule) => Rule.required(),
-      description: "The category of service requested",
+      description: "The type of dates requested",
     },
     {
-      name: "serviceRequired",
-      title: "Service Required",
-      type: "string",
-      validation: (Rule) => Rule.required().min(2).max(200),
-    },
-    {
-      name: "eventLocation",
-      title: "Event Location",
+      name: "deliveryAddress",
+      title: "Delivery Address",
       type: "string",
       validation: (Rule) => Rule.required().min(5).max(300),
     },
     {
-      name: "eventDescription",
-      title: "Event Description",
+      name: "additionalNotes",
+      title: "Additional Notes",
       type: "text",
-      validation: (Rule) => Rule.required().min(10).max(1000),
+      validation: (Rule) => Rule.optional().min(10).max(1000),
     },
     {
       name: "status",
@@ -78,7 +74,7 @@ export default {
       title: "Target Company Tenant ID",
       type: "string",
       validation: (Rule) => Rule.required(),
-      description: "The tenant ID of the company this event request is for",
+      description: "The tenant ID of the company this order request is for",
       hidden: true,
     },
     {
@@ -86,20 +82,20 @@ export default {
       title: "Requested By (User ID)",
       type: "string",
       validation: (Rule) => Rule.required(),
-      description: "The user ID of the person making the request",
+      description: "The user ID of the person making the order",
       hidden: true,
     },
     {
       name: "companyResponse",
       title: "Company Response",
       type: "text",
-      description: "Optional response message from the company",
+      description: "Response message from the company",
     },
     {
       name: "responseDate",
       title: "Response Date",
       type: "datetime",
-      description: "When the company responded to the request",
+      description: "When the company responded to the order",
     },
     {
       name: "createdAt",
@@ -119,18 +115,16 @@ export default {
   ],
   preview: {
     select: {
-      title: "title",
       fullName: "fullName",
-      eventDate: "eventDate",
-      status: "status",
+      deliveryDate: "deliveryDate",
     },
-    prepare({ title, fullName, eventDate, status }) {
-      const date = eventDate
-        ? new Date(eventDate).toLocaleDateString()
+    prepare({ fullName, deliveryDate }) {
+      const date = deliveryDate
+        ? new Date(deliveryDate).toLocaleDateString()
         : "No date";
       return {
-        title: title || `Event Request by ${fullName}`,
-        subtitle: `${date} • ${status} • ${fullName}`,
+        title: `Order Request by ${fullName}`,
+        subtitle: `${date} • ${fullName}`,
       };
     },
   },
@@ -141,9 +135,9 @@ export default {
       by: [{ field: "createdAt", direction: "desc" }],
     },
     {
-      title: "Event Date, Upcoming",
-      name: "eventDateAsc",
-      by: [{ field: "eventDate", direction: "asc" }],
+      title: "Delivery Date, Upcoming",
+      name: "deliveryDateAsc",
+      by: [{ field: "deliveryDate", direction: "asc" }],
     },
     {
       title: "Status",

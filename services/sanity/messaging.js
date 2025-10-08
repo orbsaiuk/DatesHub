@@ -21,58 +21,28 @@ export function makeCompositeKey(participants) {
   return norm.join("|");
 }
 
-// Create or get a conversation by composite key.
-export async function getOrCreateConversation({
-  conversationType,
-  participants,
-  tenantContext, // { tenantType, tenantId } for business inbox filtering (optional for user-company)
-}) {
-  const compositeKey = makeCompositeKey(participants);
-  const existing = await writeClient.fetch(CONVERSATION_BY_KEY_QUERY, {
-    key: compositeKey,
-  });
+// Create or get a conversation between two participants.
+export async function getOrCreateConversation({ participant1, participant2 }) {
+  // Check if conversation already exists between these two participants
+  const existing = await writeClient.fetch(
+    `*[_type == "conversation" && 
+      ((participant1._ref == $p1 && participant2._ref == $p2) || 
+       (participant1._ref == $p2 && participant2._ref == $p1))][0]`,
+    { p1: participant1, p2: participant2 }
+  );
+
   if (existing?._id) {
-    // If a tenantContext is provided but the existing conversation lacks it, patch it.
-    if (
-      tenantContext &&
-      (!existing.tenantType ||
-        !existing.tenantId ||
-        existing.tenantType !== tenantContext.tenantType ||
-        existing.tenantId !== tenantContext.tenantId)
-    ) {
-      try {
-        await writeClient
-          .patch(existing._id)
-          .set({
-            tenantType: tenantContext.tenantType,
-            tenantId: tenantContext.tenantId,
-          })
-          .commit();
-        return { ...existing, ...tenantContext };
-      } catch (_) {
-        // best-effort; fall through to return existing as-is
-      }
-    }
     return existing;
   }
 
-  const now = new Date().toISOString();
-  const unread = participants.map((p) => ({
-    participantKey: participantKey(p),
-    count: 0,
-    updatedAt: now,
-  }));
-
+  // Create new conversation
   const doc = {
     _type: "conversation",
-    conversationType,
-    participants,
-    compositeKey,
-    lastMessageAt: now,
-    lastMessagePreview: "",
-    unread,
-    ...(tenantContext || {}),
+    participant1: { _type: "reference", _ref: participant1 },
+    participant2: { _type: "reference", _ref: participant2 },
+    createdAt: new Date().toISOString(),
   };
+
   const created = await writeClient.create(doc);
   return created;
 }
@@ -82,15 +52,29 @@ export async function findOrCreateUserConversation({
   userId,
   companyTenantId,
 }) {
-  const participants = [
-    { kind: "user", clerkId: userId },
-    { kind: "company", tenantId: companyTenantId },
-  ];
+  // First, get the user document ID
+  const user = await writeClient.fetch(
+    `*[_type == "user" && clerkId == $userId][0]`,
+    { userId }
+  );
+
+  if (!user?._id) {
+    throw new Error("User not found");
+  }
+
+  // Get the company document ID
+  const company = await writeClient.fetch(
+    `*[_type == "company" && tenantId == $tenantId][0]`,
+    { tenantId: companyTenantId }
+  );
+
+  if (!company?._id) {
+    throw new Error("Company not found");
+  }
 
   return await getOrCreateConversation({
-    conversationType: "user-company",
-    participants,
-    tenantContext: { tenantType: "company", tenantId: companyTenantId },
+    participant1: user._id,
+    participant2: company._id,
   });
 }
 
@@ -101,6 +85,7 @@ export async function listUserConversations({
 }) {
   return await writeClient.fetch(CONVERSATIONS_FOR_USER_QUERY, {
     clerkId,
+    participantKey: `user:${clerkId}`,
     offset,
     end: offset + limit,
   });
@@ -115,6 +100,7 @@ export async function listTenantConversations({
   return await writeClient.fetch(CONVERSATIONS_FOR_TENANT_QUERY, {
     tenantType,
     tenantId,
+    participantKey: `${tenantType}:${tenantId}`,
     offset,
     end: offset + limit,
   });
@@ -139,59 +125,90 @@ export async function sendMessage({
   sender,
   text,
   messageType = "text",
-  eventRequestData = null,
+  orderRequest = null,
 }) {
   const now = new Date().toISOString();
-  // Create message
+
+  // Resolve sender to Sanity document ID
+  let senderRef = null;
+  if (sender) {
+    if (sender.kind === "user") {
+      const user = await writeClient.fetch(
+        `*[_type == "user" && clerkId == $clerkId][0]._id`,
+        { clerkId: sender.clerkId }
+      );
+      senderRef = user;
+    } else {
+      // company or supplier
+      const tenant = await writeClient.fetch(
+        `*[_type == $kind && tenantId == $tenantId][0]._id`,
+        { kind: sender.kind, tenantId: sender.tenantId }
+      );
+      senderRef = tenant;
+    }
+  }
+
+  // Create participantKey for sender (so they don't see their own message as unread)
+  const senderParticipantKey = sender
+    ? sender.kind === "user"
+      ? `user:${sender.clerkId}`
+      : `${sender.kind}:${sender.tenantId}`
+    : null;
+
+  // Create message with sender already marked as having read it
   const messageData = {
     _type: "message",
     conversation: { _type: "reference", _ref: conversationId },
-    sender,
-    text,
     messageType,
     createdAt: now,
+    readBy: senderParticipantKey
+      ? [
+        {
+          _key: `${senderParticipantKey}-${Date.now()}`,
+          participantKey: senderParticipantKey,
+          readAt: now,
+        },
+      ]
+      : [],
   };
 
-  // Add event request data if it's an event request message
-  if (messageType === "event_request" && eventRequestData) {
-    messageData.eventRequestData = eventRequestData;
+  if (senderRef) {
+    messageData.sender = { _type: "reference", _ref: senderRef };
+  }
+
+  if (messageType === "order_request" && orderRequest) {
+    messageData.orderRequest = orderRequest;
+  } else {
+    messageData.text = text;
   }
 
   const msg = await writeClient.create(messageData);
-
-  const preview = (text || "").slice(0, 120);
-
-  // Fetch conversation to compute unread
-  const conv = await writeClient.getDocument(conversationId);
-  const senderKey = participantKey(sender);
-  const updatedUnread = (conv.unread || []).map((u) =>
-    u.participantKey === senderKey
-      ? { ...u, updatedAt: now }
-      : { ...u, count: Math.max(0, (u.count || 0) + 1), updatedAt: now }
-  );
-
-  await writeClient
-    .patch(conversationId)
-    .set({
-      lastMessageAt: now,
-      lastMessagePreview: preview,
-      unread: updatedUnread,
-    })
-    .commit();
-
   return msg;
 }
 
 export async function markConversationRead({ conversationId, participant }) {
   const now = new Date().toISOString();
   const key = participantKey(participant);
-  const conv = await writeClient.getDocument(conversationId);
-  const updatedUnread = (conv.unread || []).map((u) =>
-    u.participantKey === key ? { ...u, count: 0, updatedAt: now } : u
+
+  // Get all unread messages in this conversation for this participant
+  const messages = await writeClient.fetch(
+    `*[_type == "message" && conversation._ref == $conversationId && !($participantKey in readBy[].participantKey)]`,
+    { conversationId, participantKey: key }
   );
-  await writeClient
-    .patch(conversationId)
-    .set({ unread: updatedUnread })
-    .commit();
+
+  // Mark each message as read by this participant
+  const transaction = writeClient.transaction();
+  messages.forEach((msg) => {
+    const readByEntry = {
+      _key: `${key}-${Date.now()}`,
+      participantKey: key,
+      readAt: now,
+    };
+    transaction.patch(msg._id, (patch) =>
+      patch.setIfMissing({ readBy: [] }).append("readBy", [readByEntry])
+    );
+  });
+
+  await transaction.commit();
   return { ok: true };
 }

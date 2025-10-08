@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -15,7 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export default function EventRequestDatePicker({
+export default function OrderRequestDatePicker({
   name,
   label,
   required = true,
@@ -28,24 +27,21 @@ export default function EventRequestDatePicker({
   const [date, setDate] = useState(value ? new Date(value) : undefined);
   const [open, setOpen] = useState(false);
 
-  // Get minimum date (today)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const handleDateSelect = (selectedDate) => {
     setDate(selectedDate);
     if (selectedDate) {
-      // Format date to YYYY-MM-DD format for the form
       const formattedDate = format(selectedDate, "yyyy-MM-dd");
       setValue(name, formattedDate);
-      trigger(name); // Trigger validation
+      trigger(name);
     } else {
       setValue(name, "");
     }
     setOpen(false);
   };
 
-  // Update local state when value prop changes
   useEffect(() => {
     if (value && value !== date?.toISOString().split("T")[0]) {
       setDate(new Date(value));
@@ -78,7 +74,7 @@ export default function EventRequestDatePicker({
             {date ? (
               format(date, "PPP", { locale: ar })
             ) : (
-              <span>اختر تاريخ الفعالية</span>
+              <span>اختر تاريخ الاستلام</span>
             )}
           </Button>
         </PopoverTrigger>

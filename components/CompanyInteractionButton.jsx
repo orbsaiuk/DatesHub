@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
-import EventRequestButton from "./EventRequestButton";
+import OrderRequestButton from "./OrderRequestButton";
 import MessageCompanyButton from "./messaging/MessageCompanyButton";
 import WaitingForResponseButton from "./WaitingForResponseButton";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -85,9 +85,9 @@ export default function CompanyInteractionButton({
     );
   }
 
-  // Show event request button for first-time interactions
+  // Show order request button for first-time interactions
   return (
-    <EventRequestButton
+    <OrderRequestButton
       companyTenantId={companyTenantId}
       companyName={companyName}
       className={className}

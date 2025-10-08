@@ -1,6 +1,4 @@
 "use client";
-import { formatTime } from "@/lib/dateUtils";
-
 const formatEventDate = (dateString) => {
   if (!dateString) return dateString;
   try {
@@ -49,68 +47,56 @@ export default function MessageItem({
             </p>
           )
         )}
-        {/* Event request details when available */}
-        {message.messageType === "event_request" &&
-          message.eventRequestData && (
+        {/* Order request details when available */}
+        {message.messageType === "order_request" &&
+          message.orderRequestData && (
             <div className="text-sm text-foreground bg-muted/30 rounded-md p-3 mt-2">
+              <h3 className="text-lg font-medium mb-4">تفاصيل الطلب:</h3>
               <div className="grid grid-cols-1 gap-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   <div>
                     <span className="text-muted-foreground font-medium block sm:inline">
-                      تاريخ الفعالية:{" "}
+                      تاريخ الطلب:{" "}
                     </span>
                     <span className="font-medium">
-                      {formatEventDate(message.eventRequestData.eventDate)}
+                      {formatEventDate(message.orderRequestData.deliveryDate)}
                     </span>
                   </div>
                   <div>
                     <span className="text-muted-foreground font-medium block sm:inline">
-                      وقت الفعالية:{" "}
+                      الكمية:{" "}
                     </span>
                     <span className="font-medium">
-                      {formatTime(message.eventRequestData.eventTime)}
+                      {message.orderRequestData.quantity.toLocaleString(
+                        "ar-EG"
+                      )}{" "}
+                      كيلو
                     </span>
                   </div>
                   <div>
                     <span className="text-muted-foreground font-medium block sm:inline">
-                      عدد الضيوف:{" "}
+                      نوع التمور:{" "}
                     </span>
                     <span className="font-medium">
-                      {message.eventRequestData.numberOfGuests}
+                      {getCategoryName(message.orderRequestData.category)}
                     </span>
                   </div>
                   <div>
                     <span className="text-muted-foreground font-medium block sm:inline">
-                      الفئة:{" "}
+                      عنوان التوصيل:{" "}
                     </span>
                     <span className="font-medium">
-                      {getCategoryName(message.eventRequestData.category)}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground font-medium block sm:inline">
-                      الخدمة:{" "}
-                    </span>
-                    <span className="font-medium">
-                      {message.eventRequestData.serviceRequired}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground font-medium block sm:inline">
-                      الموقع:{" "}
-                    </span>
-                    <span className="font-medium break-words">
-                      {message.eventRequestData.eventLocation}
+                      {message.orderRequestData.deliveryAddress}
                     </span>
                   </div>
                 </div>
-                {message.eventRequestData.eventDescription && (
+                {message.orderRequestData.additionalNotes && (
                   <div className="pt-3 border-t border-muted-foreground/20">
                     <div className="text-muted-foreground font-medium mb-2">
-                      الوصف:
+                      الملاحظات:
                     </div>
                     <p className="whitespace-pre-wrap text-foreground/90 leading-relaxed">
-                      {message.eventRequestData.eventDescription}
+                      {message.orderRequestData.additionalNotes}
                     </p>
                   </div>
                 )}

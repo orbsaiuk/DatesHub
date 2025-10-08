@@ -12,8 +12,8 @@ export default function MessageGroup({
   allMessages = [],
   currentGroupIndex = 0,
   tenantType = "company",
-  onEventRequestAction,
-  disableEventRequestResponse = false,
+  onOrderRequestAction,
+  disableOrderRequestResponse = false,
 }) {
   const formatGroupDate = (dateString) => {
     if (!dateString) return "";
@@ -92,8 +92,8 @@ export default function MessageGroup({
                 isAfterDecision={isAfterDecision}
                 formatMessageTime={formatMessageTime}
                 getCategoryName={getCategoryName}
-                onEventRequestAction={onEventRequestAction}
-                disableEventRequestResponse={disableEventRequestResponse}
+                onOrderRequestAction={onOrderRequestAction}
+                disableOrderRequestResponse={disableOrderRequestResponse}
               />
             );
           });

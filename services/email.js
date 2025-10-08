@@ -3,14 +3,14 @@ import { writeClient } from "@/sanity/lib/serverClient";
 import { currentUser } from "@clerk/nextjs/server";
 import { formatTime } from "@/lib/dateUtils";
 
-// Sends a confirmation email to the customer after submitting an event request
-export async function sendEventRequestConfirmationToCustomer(eventRequest) {
+// Sends a confirmation email to the customer after submitting an order request
+export async function sendOrderRequestConfirmationToCustomer(orderRequest) {
   try {
     // Try to get the email of the currently authenticated user (the requester)
     let customerEmail = null;
     try {
       const user = await currentUser();
-      if (user?.id === eventRequest.requestedBy) {
+      if (user?.id === orderRequest.requestedBy) {
         customerEmail =
           user?.primaryEmailAddress?.emailAddress ||
           user?.emailAddresses?.[0]?.emailAddress;
@@ -19,37 +19,38 @@ export async function sendEventRequestConfirmationToCustomer(eventRequest) {
       // Silent fail - try alternative email sources
     }
 
-    if (!customerEmail && eventRequest?.email) {
-      customerEmail = eventRequest.email;
+    if (!customerEmail && orderRequest?.email) {
+      customerEmail = orderRequest.email;
     }
 
     if (!customerEmail) {
       return { ok: false, reason: "no customer email" };
     }
 
-    const subject = "✅ تم استلام طلب الفعالية الخاص بك بنجاح";
+    const subject = "✅ تم استلام طلبك بنجاح";
     const html = buildBasicHtmlEmail(
       "تم استلام طلبك بنجاح",
       [
-        `عزيزي/عزيزتي ${eventRequest.fullName || "العميل الكريم"},`,
+        `عزيزي/عزيزتي ${orderRequest.fullName || "العميل الكريم"},`,
         "",
-        "نشكرك على اختيار منصة OrbsAI لتنظيم فعاليتك المميزة. يسعدنا إبلاغك بأننا استلمنا طلبك بنجاح وقمنا بإرساله فوراً إلى مزود الخدمة المختص.",
+        "نشكرك على اختيار منصة OrbsAI لطلب التمور. يسعدنا إبلاغك بأننا استلمنا طلبك بنجاح وقمنا بإرساله فوراً إلى المورد المختص.",
         "",
         "**تفاصيل طلبك:**",
-        `• الخدمة المطلوبة: ${eventRequest.serviceRequired}`,
-        `• تاريخ الفعالية: ${new Date(eventRequest.eventDate).toLocaleDateString("ar-SA")}`,
-        `• وقت الفعالية: ${formatTime(eventRequest.eventTime)}`,
-        `• عدد الضيوف المتوقع: ${eventRequest.numberOfGuests} ضيف`,
-        `• موقع الفعالية: ${eventRequest.eventLocation}`,
+        `• نوع التمور: ${orderRequest.category}`,
+        `• التغليف المطلوب: ${orderRequest.serviceRequired}`,
+        `• تاريخ التوصيل: ${new Date(orderRequest.eventDate).toLocaleDateString("ar-SA")}`,
+        `• وقت التوصيل: ${formatTime(orderRequest.eventTime)}`,
+        `• الكمية المطلوبة: ${orderRequest.numberOfGuests} كيلو`,
+        `• عنوان التوصيل: ${orderRequest.eventLocation}`,
         "",
         "**الخطوات القادمة:**",
-        "1. سيقوم مزود الخدمة بمراجعة طلبك خلال 24 ساعة",
+        "1. سيقوم المورد بمراجعة طلبك خلال 24 ساعة",
         "2. ستصلك رسالة بريد إلكتروني فور الموافقة على الطلب أو الرد عليه",
         "3. يمكنك متابعة حالة طلبك من خلال لوحة التحكم الخاصة بك",
         "",
         "نحن هنا لضمان تجربة استثنائية لك. في حال وجود أي استفسار، فريق الدعم جاهز لمساعدتك.",
         "",
-        "مع أطيب التمنيات بفعالية ناجحة،",
+        "مع أطيب التمنيات،",
         "فريق OrbsAI",
       ],
       { primaryColor: "#10b981" }
@@ -65,7 +66,7 @@ export async function sendEventRequestConfirmationToCustomer(eventRequest) {
   }
 }
 
-export async function sendApprovalEmail(reqDoc) {
+export async function sendOrderRequestApprovalEmail(reqDoc) {
   try {
     const to = reqDoc.email || reqDoc.contact?.email;
     if (!to) return { ok: false, reason: "no email address" };
@@ -116,7 +117,7 @@ export async function sendApprovalEmail(reqDoc) {
   }
 }
 
-export async function sendRejectionEmail(reqDoc) {
+export async function sendOrderRequestRejectionEmail(reqDoc) {
   try {
     const to = reqDoc.email || reqDoc.contact?.email;
     if (!to) {
@@ -171,8 +172,8 @@ export async function sendRejectionEmail(reqDoc) {
   }
 }
 
-// Send notification to company when a new event request is received
-export async function sendEventRequestNotificationToCompany(eventRequest) {
+// Send notification to company when a new order request is received
+export async function sendOrderRequestNotificationToCompany(orderRequest) {
   try {
     // Get company information
     const company = await writeClient.fetch(
@@ -181,7 +182,7 @@ export async function sendEventRequestNotificationToCompany(eventRequest) {
         name,
         contact
       }`,
-      { companyTenantId: eventRequest.targetCompanyTenantId }
+      { companyTenantId: orderRequest.targetCompanyTenantId }
     );
 
     if (!company) {
@@ -194,33 +195,34 @@ export async function sendEventRequestNotificationToCompany(eventRequest) {
     }
 
     // Get requester information
-    let requesterName = eventRequest.fullName || "A customer";
+    let requesterName = orderRequest.fullName || "A customer";
 
-    const subject = `🔔 طلب فعالية جديد - ${eventRequest.serviceRequired}`;
+    const subject = `🔔 طلب جديد - ${orderRequest.category}`;
     const html = buildBasicHtmlEmail(
-      `لديك طلب فعالية جديد`,
+      `لديك طلب جديد`,
       [
         `عزيزنا ${company.name},`,
         "",
-        `يسعدنا إبلاغك بوصول طلب فعالية جديد من العميل ${requesterName}. هذه فرصة رائعة لتقديم خدماتك المميزة وتوسيع نطاق أعمالك.`,
+        `يسعدنا إبلاغك بوصول طلب جديد من العميل ${requesterName}. هذه فرصة رائعة لتقديم منتجاتك المميزة وتوسيع نطاق أعمالك.`,
         "",
-        "**تفاصيل الفعالية المطلوبة:**",
-        `• نوع الخدمة: ${eventRequest.serviceRequired}`,
-        `• تاريخ الفعالية: ${new Date(eventRequest.eventDate).toLocaleDateString("ar-SA")}`,
-        `• الوقت المحدد: ${formatTime(eventRequest.eventTime)}`,
-        `• عدد الضيوف المتوقع: ${eventRequest.numberOfGuests} ضيف`,
-        `• موقع الفعالية: ${eventRequest.eventLocation}`,
+        "**تفاصيل الطلب:**",
+        `• نوع التمور: ${orderRequest.category}`,
+        `• التغليف المطلوب: ${orderRequest.serviceRequired}`,
+        `• تاريخ التوصيل: ${new Date(orderRequest.eventDate).toLocaleDateString("ar-SA")}`,
+        `• وقت التوصيل: ${formatTime(orderRequest.eventTime)}`,
+        `• الكمية المطلوبة: ${orderRequest.numberOfGuests} كيلو`,
+        `• عنوان التوصيل: ${orderRequest.eventLocation}`,
         "",
-        "**وصف الفعالية:**",
-        eventRequest.eventDescription || "لم يتم تقديم وصف إضافي",
+        "**ملاحظات العميل:**",
+        orderRequest.eventDescription || "لم يتم تقديم ملاحظات إضافية",
         "",
         "**معلومات التواصل مع العميل:**",
-        `• اسم العميل: ${eventRequest.fullName}`,
+        `• اسم العميل: ${orderRequest.fullName}`,
         `• الاتصال: متاح عبر منصة الرسائل بعد قبول الطلب`,
         "",
         "**خطواتك القادمة للرد:**",
         "1. قم بتسجيل الدخول إلى لوحة التحكم لعرض جميع تفاصيل الطلب",
-        "2. راجع متطلبات العميل بعناية وتحقق من مدى توافرك",
+        "2. راجع متطلبات العميل بعناية وتحقق من توفر المنتج",
         "3. قم بقبول أو رفض الطلب مع إضافة ردك وملاحظاتك",
         "4. عند القبول، يمكنك التواصل مباشرة مع العميل لترتيب التفاصيل",
         "",
@@ -246,23 +248,29 @@ export async function sendEventRequestNotificationToCompany(eventRequest) {
   }
 }
 
-// Send notification to customer when company responds to their event request
-export async function sendEventRequestResponseToCustomer(
-  eventRequest,
-  response
-) {
+// Send notification to customer when company responds to their order request
+export async function sendOrderRequestResponseToCustomer(orderRequest) {
   try {
-    // Get customer email from Clerk
+    // Get customer email using Clerk API
     let customerEmail = null;
-    try {
-      const user = await currentUser();
-      if (user?.id === eventRequest.requestedBy) {
+
+    // Fetch user from Sanity to get clerkId
+    const userDoc = await writeClient.fetch(
+      `*[_type == "user" && clerkId == $clerkId][0]{clerkId}`,
+      { clerkId: orderRequest.requestedBy }
+    );
+
+    if (userDoc?.clerkId) {
+      try {
+        // Import clerkClient dynamically to avoid issues
+        const { clerkClient } = await import("@clerk/nextjs/server");
+        const user = await clerkClient.users.getUser(userDoc.clerkId);
         customerEmail =
           user?.primaryEmailAddress?.emailAddress ||
           user?.emailAddresses?.[0]?.emailAddress;
+      } catch (error) {
+        console.error("Error fetching user from Clerk:", error);
       }
-    } catch (error) {
-      // Silent fail - try alternative email sources
     }
 
     if (!customerEmail) {
@@ -276,20 +284,20 @@ export async function sendEventRequestResponseToCustomer(
         name,
         contact
       }`,
-      { companyTenantId: eventRequest.targetCompanyTenantId }
+      { companyTenantId: orderRequest.targetCompanyTenantId }
     );
 
-    const companyName = company?.name || "The company";
-    const isAccepted = eventRequest.status === "accepted";
+    const companyName = company?.name || "الشركة";
+    const isAccepted = orderRequest.status === "accepted";
 
     const subject = isAccepted
-      ? `🎉 أخبار رائعة! تم قبول طلب الفعالية الخاص بك`
-      : `📢 تحديث مهم حول طلب الفعالية الخاص بك`;
+      ? `🎉 أخبار رائعة! تم قبول طلبك من ${companyName}`
+      : `📢 تحديث حول طلبك من ${companyName}`;
 
     const bodyLines = [
-      `عزيزي/عزيزتي ${eventRequest.fullName},`,
+      `عزيزي العميل،`,
       "",
-      `تلقينا رداً من ${companyName} على طلب الفعالية الخاص بك لخدمة "${eventRequest.serviceRequired}".`,
+      `تلقينا رداً من ${companyName} على طلبك.`,
       "",
     ];
 
@@ -297,57 +305,58 @@ export async function sendEventRequestResponseToCustomer(
       bodyLines.push(
         "🎉 **أخبار سارة - تم قبول طلبك بنجاح!**",
         "",
-        "نهنئك! لقد وافق مزود الخدمة على طلبك ويسعده تقديم خدماته لك. الآن يمكنك المضي قدماً في ترتيبات فعاليتك المميزة.",
+        "نهنئك! لقد وافقت الشركة على طلبك وتسعد بخدمتك.",
         "",
-        "**ملخص تفاصيل الفعالية:**",
-        `• نوع الخدمة: ${eventRequest.serviceRequired}`,
-        `• التاريخ المحدد: ${new Date(eventRequest.eventDate).toLocaleDateString("ar-SA")}`,
-        `• الوقت: ${formatTime(eventRequest.eventTime)}`,
-        `• عدد الضيوف: ${eventRequest.numberOfGuests} ضيف`,
-        `• الموقع: ${eventRequest.eventLocation}`,
+        "**ملخص تفاصيل الطلب:**",
+        `• الفئة: ${orderRequest.category || "غير محدد"}`,
+        `• الخدمة المطلوبة: ${orderRequest.serviceRequired || "غير محدد"}`,
+        `• تاريخ التوصيل: ${orderRequest.deliveryDate ? new Date(orderRequest.deliveryDate).toLocaleDateString("ar-SA") : "غير محدد"}`,
+        `• الوقت: ${orderRequest.deliveryTime || "غير محدد"}`,
+        `• الكمية: ${orderRequest.quantity || "غير محدد"}`,
+        `• العنوان: ${orderRequest.deliveryAddress || "غير محدد"}`,
         ""
       );
 
-      if (response?.companyResponse) {
+      if (orderRequest.companyResponse) {
         bodyLines.push(
-          "**رسالة من مزود الخدمة:**",
-          `"${response.companyResponse}"`,
+          "**رسالة من الشركة:**",
+          `"${orderRequest.companyResponse}"`,
           ""
         );
       }
 
       bodyLines.push(
         "**خطواتك القادمة:**",
-        "1. تواصل مع مزود الخدمة عبر نظام الرسائل لمناقشة التفاصيل الدقيقة",
+        "1. تواصل مع الشركة عبر الرسائل علي الموقع لمناقشة التفاصيل الدقيقة",
         "2. قم بمراجعة والاتفاق على الترتيبات النهائية (الأسعار، المتطلبات الخاصة، إلخ)",
         "3. أكد جميع التفاصيل وتأكد من فهم الطرفين للاتفاق",
         "4. أتمم أي دفعات أو عربون مطلوب حسب الاتفاق المتبادل",
         "",
-        "نحن هنا لضمان نجاح فعاليتك! إذا واجهت أي مشكلة، فريق الدعم جاهز لمساعدتك.",
+        "نحن هنا لضمان نجاح طلبك! إذا واجهت أي مشكلة، فريق الدعم جاهز لمساعدتك.",
         ""
       );
     } else {
       bodyLines.push(
-        "نأسف لإبلاغك بأن مزود الخدمة غير قادر على قبول طلبك في الوقت الحالي.",
+        "نأسف لإبلاغك بأن الشركة غير قادرة على قبول طلبك في الوقت الحالي.",
         ""
       );
 
-      if (response?.companyResponse) {
+      if (orderRequest.companyResponse) {
         bodyLines.push(
-          "**رسالة من مزود الخدمة:**",
-          `"${response.companyResponse}"`,
+          "**رسالة من الشركة:**",
+          `"${orderRequest.companyResponse}"`,
           ""
         );
       }
 
       bodyLines.push(
         "**خيارات بديلة متاحة لك:**",
-        "• قدّم طلباً جديداً بتواريخ أو متطلبات مختلفة قد تناسب مزود الخدمة",
-        "• تصفح قائمة مزودي الخدمات الآخرين في منصتنا الذين قد يكونون متاحين",
-        "• تواصل مباشرة مع الشركة للاستفسار عن مواعيد بديلة",
-        "• استخدم خاصية البحث المتقدم للعثور على مزودين متخصصين آخرين",
+        "• قدّم طلباً جديداً بتواريخ أو متطلبات مختلفة قد تناسب الشركة",
+        "• تصفح قائمة الشركات الأخرى في منصتنا الذين قد يكونون متاحين",
+        "• تواصل مباشرة مع الشركة للاستفسار عن مواعيد بديلة عبر الموقع",
+        "• استخدم خاصية البحث المتقدم للعثور على شركات أخرى",
         "",
-        "💡 لا تقلق - لدينا العديد من مزودي الخدمات المميزين. الخيار المثالي لفعاليتك بانتظارك!",
+        "💡 لا تقلق - لدينا العديد من الشركات المميزة. الخيار المثالي لك بانتظارك!",
         ""
       );
     }
@@ -360,7 +369,7 @@ export async function sendEventRequestResponseToCustomer(
     );
 
     const html = buildBasicHtmlEmail(
-      isAccepted ? "تم قبول طلب الفعالية!" : "تحديث حالة طلب الفعالية",
+      isAccepted ? "تم قبول طلبك!" : "تحديث حالة طلبك",
       bodyLines,
       { primaryColor: isAccepted ? "#10b981" : "#f59e0b" }
     );
@@ -373,6 +382,7 @@ export async function sendEventRequestResponseToCustomer(
       return { ok: false, error: emailResult.error || emailResult.reason };
     }
   } catch (error) {
+    console.error("Error sending order request response email:", error);
     return { ok: false, error: String(error) };
   }
 }

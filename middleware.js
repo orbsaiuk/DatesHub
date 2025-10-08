@@ -11,6 +11,7 @@ const isProtectedRoute = createRouteMatcher([
   "/api/tenant-requests(.*)",
   "/api/messaging(.*)",
   "/api/event-requests(.*)",
+  "/api/order-requests(.*)",
   "/api/subscriptions(.*)",
   "/api/offers(.*)",
   "/api/company/update(.*)",
@@ -26,9 +27,9 @@ export default clerkMiddleware(async (auth, req) => {
   const { userId, sessionClaims } = await auth();
 
   // Allow public endpoints without authentication
-  if (req.nextUrl.pathname.startsWith("/api/offers/public") || 
-      req.nextUrl.pathname.startsWith("/api/offers/tenant") ||
-      req.nextUrl.pathname.startsWith("/api/promotional-banners/public")) {
+  if (req.nextUrl.pathname.startsWith("/api/offers/public") ||
+    req.nextUrl.pathname.startsWith("/api/offers/tenant") ||
+    req.nextUrl.pathname.startsWith("/api/promotional-banners/public")) {
     return NextResponse.next();
   }
 

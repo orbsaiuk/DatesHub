@@ -15,7 +15,7 @@ import plan from "./plan";
 import subscription from "./subscription";
 import payment from "./payment";
 import event from "./event";
-import eventRequest from "./eventRequest";
+import orderRequest from "./orderRequest";
 
 export const schema = {
   types: [
@@ -36,6 +36,6 @@ export const schema = {
     subscription,
     payment,
     event,
-    eventRequest,
+    orderRequest,
   ],
 };

@@ -18,11 +18,57 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const limit = Number(searchParams.get("limit") || 20);
     const offset = Number(searchParams.get("offset") || 0);
-    const items = await listUserConversations({
+    const rawItems = await listUserConversations({
       clerkId: userId,
       offset,
       limit,
     });
+
+    // Transform data to match frontend expectations
+    const items = rawItems.map((conv) => {
+      const participantKey = `user:${userId}`;
+
+      // Build participants array
+      const participants = [];
+      if (conv.participant1Data) {
+        participants.push({
+          kind: conv.participant1Data._type,
+          tenantId: conv.participant1Data.tenantId,
+          clerkId: conv.participant1Data.clerkId,
+          displayName: conv.participant1Data.name,
+          name: conv.participant1Data.name,
+          avatar: conv.participant1Data.image || conv.participant1Data.logo,
+        });
+      }
+      if (conv.participant2Data) {
+        participants.push({
+          kind: conv.participant2Data._type,
+          tenantId: conv.participant2Data.tenantId,
+          clerkId: conv.participant2Data.clerkId,
+          displayName: conv.participant2Data.name,
+          name: conv.participant2Data.name,
+          avatar: conv.participant2Data.image || conv.participant2Data.logo,
+        });
+      }
+
+      // Build unread array (legacy format for frontend)
+      const unread = [
+        {
+          participantKey,
+          count: conv.unreadCount || 0,
+        },
+      ];
+
+      return {
+        ...conv,
+        participants,
+        unread,
+        // Use lastMessagePreview from query if available, otherwise fallback to lastMessage.text
+        lastMessagePreview: conv.lastMessagePreview || conv.lastMessage?.text || "",
+        lastMessageAt: conv.lastMessageAt || conv.lastMessage?.createdAt || conv.createdAt,
+      };
+    });
+
     return NextResponse.json({ ok: true, items });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 });

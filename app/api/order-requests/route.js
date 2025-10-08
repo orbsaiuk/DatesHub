@@ -3,13 +3,15 @@ import { auth } from "@clerk/nextjs/server";
 import { writeClient } from "@/sanity/lib/serverClient";
 import { hasTenanMembership } from "@/lib/auth/authorization";
 import {
-  sendEventRequestNotificationToCompany,
-  sendEventRequestConfirmationToCustomer,
+  sendOrderRequestNotificationToCompany,
+  sendOrderRequestConfirmationToCustomer,
 } from "@/services/email";
 import {
   findOrCreateUserConversation,
   sendMessage,
 } from "@/services/sanity/messaging";
+import { COMPANY_BY_TENANT_QUERY } from "@/sanity/queries/company";
+import { USER_ID_BY_CLERK_ID_QUERY } from "@/sanity/queries/user";
 
 export async function GET(request) {
   try {
@@ -22,10 +24,10 @@ export async function GET(request) {
     const status = searchParams.get("status");
     const companyTenantId = searchParams.get("companyTenantId");
 
-    let query = `*[_type == "eventRequest"`;
+    let query = `*[_type == "orderRequest"`;
     let params = {};
 
-    // Filter by user's requests or company's received requests
+    // Filter by user's order requests or company's received requests
     if (companyTenantId) {
       // Verify user has access to this company
       const hasAccess = await hasTenanMembership(
@@ -54,12 +56,12 @@ export async function GET(request) {
 
     query += `] | order(createdAt desc)`;
 
-    const eventRequests = await writeClient.fetch(query, params);
+    const orderRequests = await writeClient.fetch(query, params);
 
-    return NextResponse.json(eventRequests);
+    return NextResponse.json(orderRequests);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch event requests" },
+      { error: "Failed to fetch order requests" },
       { status: 500 }
     );
   }
@@ -74,57 +76,79 @@ export async function POST(request) {
 
     const body = await request.json();
 
-    // Validate required fields for event request
+    // Validate required fields for order request
     const {
       fullName,
-      eventDate,
-      eventTime,
-      numberOfGuests,
+      deliveryDate,
+      quantity,
       category,
-      serviceRequired,
-      eventLocation,
-      eventDescription,
+      deliveryAddress,
+      additionalNotes,
       targetCompanyTenantId,
     } = body;
 
     if (
       !fullName ||
-      !eventDate ||
-      !eventTime ||
-      !numberOfGuests ||
+      !deliveryDate ||
+      !quantity ||
       !category ||
-      !serviceRequired ||
-      !eventLocation ||
-      !eventDescription ||
+      !deliveryAddress ||
       !targetCompanyTenantId
     ) {
       return NextResponse.json(
-        { error: "All event request fields are required" },
+        { error: "Required order request fields are missing" },
         { status: 400 }
       );
     }
 
-    // Create event request document
-    const eventRequestData = {
-      _type: "eventRequest",
-      title: body.title || `Event Request for ${serviceRequired}`,
+    // Fetch the company document to create a reference
+    const company = await writeClient.fetch(COMPANY_BY_TENANT_QUERY, {
+      tenantType: "company",
+      tenantId: targetCompanyTenantId,
+    });
+
+    if (!company?._id) {
+      return NextResponse.json({ error: "Company not found" }, { status: 404 });
+    }
+
+    // Fetch the user document to create a reference
+    const user = await writeClient.fetch(USER_ID_BY_CLERK_ID_QUERY, {
+      uid: userId,
+    });
+
+    if (!user?._id) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Create order request document
+    const orderRequestData = {
+      _type: "orderRequest",
+      title: body.title || `طلب ${category} - ${quantity}`,
+      business: {
+        _type: "reference",
+        _ref: company._id,
+      },
+      user: {
+        _type: "reference",
+        _ref: user._id,
+      },
       fullName,
-      eventDate,
-      eventTime,
-      numberOfGuests: numberOfGuests, // Keep as string to support ranges like "10-20"
+      deliveryDate,
+      quantity,
       category,
-      serviceRequired,
-      eventLocation,
-      eventDescription,
+      deliveryAddress,
       status: "pending",
-      priority: body.priority || "medium",
       targetCompanyTenantId,
       requestedBy: userId,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
 
-    const result = await writeClient.create(eventRequestData);
+    // Only add additionalNotes if it's provided
+    if (additionalNotes) {
+      orderRequestData.additionalNotes = additionalNotes;
+    }
+
+    const result = await writeClient.create(orderRequestData);
 
     // Create or find conversation between user and company
     try {
@@ -133,26 +157,18 @@ export async function POST(request) {
         companyTenantId: targetCompanyTenantId,
       });
 
-      // Send event request as a message
+      // Send order request as a message
       await sendMessage({
         conversationId: conversation._id,
         sender: {
           kind: "user",
           clerkId: userId,
         },
-        text: `طلب فعالية جديد: ${serviceRequired}`,
-        messageType: "event_request",
-        eventRequestData: {
-          eventRequestId: result._id,
-          fullName,
-          eventDate,
-          eventTime,
-          numberOfGuests,
-          category,
-          serviceRequired,
-          eventLocation,
-          eventDescription,
-          status: "pending",
+        text: "طلب جديد",
+        messageType: "order_request",
+        orderRequest: {
+          _type: "reference",
+          _ref: result._id,
         },
       });
     } catch (conversationError) {
@@ -161,8 +177,8 @@ export async function POST(request) {
 
     // CRITICAL: Send emails in parallel and WAIT before returning (serverless requirement)
     const emailPromises = [
-      sendEventRequestNotificationToCompany(eventRequestData),
-      sendEventRequestConfirmationToCustomer(eventRequestData),
+      sendOrderRequestNotificationToCompany(orderRequestData),
+      sendOrderRequestConfirmationToCustomer(orderRequestData),
     ];
 
     const emailResults = await Promise.allSettled(emailPromises);
@@ -172,7 +188,7 @@ export async function POST(request) {
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to create event request" },
+      { error: "Failed to create order request" },
       { status: 500 }
     );
   }

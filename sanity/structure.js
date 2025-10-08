@@ -65,11 +65,11 @@ export const structure = (S) =>
             ])
         ),
       S.listItem()
-        .title("Event Requests")
+        .title("Order Requests")
         .child(
           S.documentList()
-            .title("Event Requests")
-            .filter("_type == 'eventRequest'")
+            .title("Order Requests")
+            .filter("_type == 'orderRequest'")
         ),
       S.divider(),
       S.listItem()
@@ -182,7 +182,7 @@ export const structure = (S) =>
                     .title("Conversations")
                     .filter("_type == 'conversation'")
                     .defaultOrdering([
-                      { field: "lastMessageAt", direction: "desc" },
+                      { field: "createdAt", direction: "desc" },
                     ])
                     .child((conversationId) =>
                       S.documentList()

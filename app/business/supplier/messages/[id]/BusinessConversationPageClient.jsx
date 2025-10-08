@@ -26,7 +26,7 @@ export default function BusinessConversationPageClient({
   const [error, setError] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
-  const [hasPendingEventRequest, setHasPendingEventRequest] = useState(false);
+  const [hasPendingOrderRequest, setHasPendingOrderRequest] = useState(false);
   const [subscription, setSubscription] = useState(null);
   const [isFreePlan, setIsFreePlan] = useState(false);
   const messagesEndRef = useRef(null);
@@ -79,11 +79,11 @@ export default function BusinessConversationPageClient({
         // Check if there's a pending event request
         const hasPending = messagesList.some(
           (message) =>
-            message.messageType === "event_request" &&
-            message.eventRequestData?.status === "pending" &&
+            message.messageType === "order_request" &&
+            message.orderRequestData?.status === "pending" &&
             message.sender?.kind !== tenantType // Not sent by business
         );
-        setHasPendingEventRequest(hasPending);
+        setHasPendingOrderRequest(hasPending);
       } else {
         setError(messagesData.error || "فشل في تحميل الرسائل");
       }
@@ -164,7 +164,7 @@ export default function BusinessConversationPageClient({
   };
 
   // Handle event request action (accept/decline)
-  const handleEventRequestAction = async (action, eventRequest) => {
+  const handleOrderRequestAction = async (action, orderRequest) => {
     try {
       // Reload the conversation to get updated messages
       await loadConversation();
@@ -296,23 +296,23 @@ export default function BusinessConversationPageClient({
                 allMessages={messages}
                 currentGroupIndex={groupIndex}
                 tenantType={tenantType}
-                onEventRequestAction={handleEventRequestAction}
-                disableEventRequestResponse={isFreePlan}
+                onOrderRequestAction={handleOrderRequestAction}
+                disableOrderRequestResponse={isFreePlan}
               />
             ))
           )}
           <div ref={messagesEndRef} />
         </CardContent>
         {/* Show notice if there's a pending event request */}
-        {hasPendingEventRequest && (
+        {hasPendingOrderRequest && (
           <div className="border-t p-3 sm:p-4 bg-muted/30 text-center">
             <p className="text-sm text-muted-foreground">
-              يرجى الرد على طلب الفعالية أعلاه قبل أن تتمكن من إرسال الرسائل.
+              يرجى الرد على الطلب أعلاه قبل أن تتمكن من إرسال الرسائل.
             </p>
           </div>
         )}
         {/* Email-style reply composer - only show if no pending event requests */}
-        {!hasPendingEventRequest && (
+        {!hasPendingOrderRequest && (
           <MessageComposer
             newMessage={newMessage}
             setNewMessage={setNewMessage}

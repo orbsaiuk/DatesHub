@@ -19,50 +19,58 @@ export async function GET(request) {
       );
     }
 
-    // Check for accepted event requests from this user to this company
-    const acceptedEventRequestQuery = `*[
-      _type == "eventRequest" && 
+    // Check for accepted order requests from this user to this company
+    const acceptedOrderRequestQuery = `*[
+      _type == "orderRequest" && 
       requestedBy == $userId && 
       targetCompanyTenantId == $companyTenantId && 
       status == "accepted"
     ][0]`;
 
-    const acceptedEventRequest = await writeClient.fetch(
-      acceptedEventRequestQuery,
+    const acceptedOrderRequest = await writeClient.fetch(
+      acceptedOrderRequestQuery,
       { userId, companyTenantId }
     );
 
-    // Check for pending event requests from this user to this company
-    const pendingEventRequestQuery = `*[
-      _type == "eventRequest" && 
+    // Check for pending order requests from this user to this company
+    const pendingOrderRequestQuery = `*[
+      _type == "orderRequest" && 
       requestedBy == $userId && 
       targetCompanyTenantId == $companyTenantId && 
       status == "pending"
     ][0]`;
 
-    const pendingEventRequest = await writeClient.fetch(
-      pendingEventRequestQuery,
+    const pendingOrderRequest = await writeClient.fetch(
+      pendingOrderRequestQuery,
       { userId, companyTenantId }
     );
 
     // Check for existing conversations between this user and company
-    const conversationQuery = `*[
-      _type == "conversation" && 
-      "user" in participants[]._ref &&
-      participants[]._ref match $userId &&
-      companyTenantId == $companyTenantId
-    ][0]`;
+    const userDoc = await writeClient.fetch(
+      `*[_type == "user" && clerkId == $userId][0]._id`,
+      { userId }
+    );
 
-    const existingConversation = await writeClient.fetch(conversationQuery, {
-      userId,
-      companyTenantId,
-    });
+    const companyDoc = await writeClient.fetch(
+      `*[_type == "company" && tenantId == $companyTenantId][0]._id`,
+      { companyTenantId }
+    );
+
+    let existingConversation = null;
+    if (userDoc && companyDoc) {
+      existingConversation = await writeClient.fetch(
+        `*[_type == "conversation" && 
+          ((participant1._ref == $userDoc && participant2._ref == $companyDoc) ||
+           (participant1._ref == $companyDoc && participant2._ref == $userDoc))][0]`,
+        { userDoc, companyDoc }
+      );
+    }
 
     return NextResponse.json({
-      hasAcceptedRequest: !!acceptedEventRequest,
-      hasPendingRequest: !!pendingEventRequest,
+      hasAcceptedRequest: !!acceptedOrderRequest,
+      hasPendingRequest: !!pendingOrderRequest,
       hasConversation: !!existingConversation,
-      canMessage: !!(acceptedEventRequest || existingConversation),
+      canMessage: !!(acceptedOrderRequest || existingConversation),
     });
   } catch (error) {
     console.error("Error checking company interaction status:", error);

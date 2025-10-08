@@ -9,20 +9,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Calendar } from "lucide-react";
-import EventRequestForm from "./event-request/EventRequestForm";
+import { ShoppingCart } from "lucide-react";
+import OrderRequestForm from "./order-request/OrderRequestForm";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 
-export default function EventRequestButton({
+export default function OrderRequestButton({
   companyTenantId,
   companyName = "Company",
   className = "",
   variant = "default",
   size = "sm",
-  onRequestSubmitted, // Called when request is submitted
-  onRequestAccepted, // Legacy support - called when request is submitted for now
+  onRequestSubmitted,
+  onRequestAccepted,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,21 +30,17 @@ export default function EventRequestButton({
   const { isSignedIn, isLoaded } = useUser();
 
   const handleButtonClick = () => {
-    // Check if user is signed in before opening the dialog
     if (!isLoaded) {
-      // Still loading user state, wait
       return;
     }
 
     if (!isSignedIn) {
-      // User is not signed in, redirect to sign-in page
       const signInUrl = new URL("/sign-in", window.location.origin);
       signInUrl.searchParams.set("redirect_url", window.location.href);
       router.push(signInUrl.toString());
       return;
     }
 
-    // User is signed in, open the dialog
     setIsOpen(true);
   };
 
@@ -57,27 +53,27 @@ export default function EventRequestButton({
     setIsLoading(true);
 
     try {
-      // Create event request
-      const eventRequestData = {
-        title: `Event Request for ${companyName}`,
+      const orderRequestData = {
+        title: `طلب تمور من ${companyName}`,
         fullName: formData.fullName,
-        eventDate: formData.eventDate,
-        eventTime: formData.eventTime,
-        numberOfGuests: formData.numberOfGuests,
+        deliveryDate: formData.deliveryDate,
+        quantity: formData.quantity,
         category: formData.category,
-        serviceRequired: formData.serviceRequired,
-        eventLocation: formData.eventLocation,
-        eventDescription: formData.eventDescription,
+        deliveryAddress: formData.deliveryAddress,
         targetCompanyTenantId: companyTenantId,
-        priority: "medium",
       };
 
-      const response = await fetch("/api/event-requests", {
+      // Only add additionalNotes if it's not empty
+      if (formData.additionalNotes) {
+        orderRequestData.additionalNotes = formData.additionalNotes;
+      }
+
+      const response = await fetch("/api/order-requests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(eventRequestData),
+        body: JSON.stringify(orderRequestData),
       });
 
       if (response.status === 401) {
@@ -87,20 +83,17 @@ export default function EventRequestButton({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to submit event request");
+        throw new Error(errorData.error || "Failed to submit order request");
       }
 
-      toast.success("طلب الحجز تم إرساله بنجاح!");
+      toast.success("تم إرسال طلبك بنجاح! سنتواصل معك قريباً");
       setIsOpen(false);
 
-      // Call the callbacks if provided
       onRequestSubmitted?.();
       onRequestAccepted?.();
     } catch (error) {
-      console.error("Error submitting event request:", error);
-      toast.error(
-        error.message || "فشل إرسال طلب الحدث. يرجى المحاولة مرة أخرى."
-      );
+      console.error("Error submitting order request:", error);
+      toast.error("فشل إرسال الطلب. يرجى المحاولة مرة أخرى.");
     } finally {
       setIsLoading(false);
     }
@@ -120,18 +113,18 @@ export default function EventRequestButton({
           onClick={handleButtonClick}
           disabled={!isLoaded}
         >
-          <Calendar className="size-4 mr-2" />
-          {!isLoaded ? "جارٍ التحميل..." : "طلب حجز فعالية"}
+          <ShoppingCart className="size-4 mr-2" />
+          {!isLoaded ? "جارٍ التحميل..." : "اطلب الآن"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-center">
-            طلب حجز فعالية من {companyName}
+            اطلب تمورك من {companyName}
           </DialogTitle>
         </DialogHeader>
         <div className="mt-4">
-          <EventRequestForm
+          <OrderRequestForm
             onSubmit={handleSubmit}
             onCancel={handleCancel}
             isLoading={isLoading}

@@ -3,7 +3,7 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
-export default function EventRequestTextarea({
+export default function OrderRequestTextarea({
   name,
   label,
   placeholder = "",
@@ -18,8 +18,7 @@ export default function EventRequestTextarea({
         htmlFor={name}
         className="text-sm font-medium text-gray-700 text-right"
       >
-        {label}
-        {required && <span className="text-red-500 ms-1">*</span>}
+        {label} (اختياري)
       </Label>
       <div className="relative">
         <Textarea
