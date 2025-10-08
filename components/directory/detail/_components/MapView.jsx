@@ -11,7 +11,7 @@ const ClientOnlyMap = dynamic(() => import("./ClientOnlyMap"), {
     <div style={{ height: "100%", width: "100%" }}>
       <div className="p-6 h-full w-full flex items-center justify-center">
         <div className="w-full max-w-md relative">
-          <Skeleton className="h-60 w-full" />
+          <Skeleton className="h-full w-full" />
           <div className="absolute inset-0 flex items-center justify-center">
             <Spinner />
           </div>

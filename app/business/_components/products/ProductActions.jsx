@@ -38,21 +38,22 @@ export default function ProductActions({
           variant="ghost"
           size="icon"
           className={cn(
-            "transition-all duration-200 hover:bg-gray-100 cursor-pointer h-10 w-10 md:h-8 md:w-8",
+            "transition-all duration-200 hover:bg-gray-100 active:bg-gray-200 rounded-full cursor-pointer h-10 w-10 md:h-8 md:w-8",
             isDisabled && "cursor-not-allowed",
             className
           )}
           title="المزيد من الإجراءات"
           disabled={isDisabled}
+          aria-label="خيارات المنتج"
         >
           {isDisabled ? (
-            <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+            <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
           ) : (
-            <MoreVertical className="h-4 w-4" />
+            <MoreVertical className="h-5 w-5" />
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-56 p-1">
+      <PopoverContent align="end" className="w-60 p-1 rounded-xl">
         <UpdateProductDialog
           product={product}
           onUpdated={(updatedProduct) => {
@@ -64,14 +65,14 @@ export default function ProductActions({
           <AlertDialogTrigger asChild>
             <Button
               variant="ghost"
-              className="w-full justify-start text-red-600 hover:text-red-600 hover:bg-red-50 transition-colors duration-200 cursor-pointer h-12 md:h-10"
+              className="w-full justify-start text-red-600 hover:text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors duration-200 cursor-pointer h-14 md:h-10 text-base"
               disabled={isDisabled}
               title="حذف المنتج نهائياً"
             >
               <span className="inline-flex items-center gap-2">حذف</span>
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="max-w-md">
+          <AlertDialogContent className="max-w-md rounded-xl">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-red-600 flex items-center gap-2">
                 ⚠️ حذف المنتج نهائياً؟
@@ -83,10 +84,10 @@ export default function ProductActions({
                 </div>
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter>
+            <AlertDialogFooter className="gap-3 flex-col sm:flex-row">
               <AlertDialogCancel
                 disabled={isDisabled}
-                className="hover:bg-gray-50 cursor-pointer h-12 md:h-10"
+                className="hover:bg-gray-50 active:bg-gray-100 cursor-pointer h-12 md:h-10 w-full sm:w-auto order-1 sm:order-none"
               >
                 الاحتفاظ بالمنتج
               </AlertDialogCancel>
@@ -96,11 +97,11 @@ export default function ProductActions({
                   onDelete(product._id);
                 }}
                 disabled={isDisabled}
-                className="bg-red-600 hover:bg-red-700 focus:ring-red-600 cursor-pointer h-12 md:h-10"
+                className="bg-red-600 hover:bg-red-700 focus:ring-red-600 cursor-pointer h-12 md:h-10 w-full sm:w-auto"
               >
                 {isDisabled && pending.type === "delete" ? (
                   <span className="inline-flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-5 w-5 animate-spin" />
                     جاري الحذف...
                   </span>
                 ) : (

@@ -22,25 +22,14 @@ export default function DirectoryLocationContent({ tenant }) {
                     <span>
                       {i + 1}. {locStr} -{" "}
                     </span>
-                    {marker ? (
-                      <a
-                        href={`https://www.google.com/maps/dir/?api=1&destination=${marker.lat},${marker.lng}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-2 text-blue-600 hover:underline"
-                      >
-                        الاتجاهات
-                      </a>
-                    ) : locStr ? (
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${searchQ}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-2 text-blue-600 hover:underline"
-                      >
-                        البحث في الخرائط
-                      </a>
-                    ) : null}
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${searchQ}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-2 text-blue-600 hover:underline"
+                    >
+                      البحث في الخرائط
+                    </a>
                   </li>
                 );
               })}

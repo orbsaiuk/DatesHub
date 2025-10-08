@@ -8,7 +8,7 @@ import HeaderAuthButtons from "./HeaderAuthButtons";
 import ImageOptimized from "@/components/ImageOptimized";
 import InboxDropdown from "@/components/messaging/InboxDropdown";
 import MobileNav from "@/components/MobileNav";
-import logo from "@/public/logo.png";
+import logo from "@/public/Logo.png";
 import { usePathname } from "next/navigation";
 
 export default function HeaderClient() {
