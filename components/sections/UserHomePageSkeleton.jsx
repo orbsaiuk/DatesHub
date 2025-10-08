@@ -45,19 +45,19 @@ export default function UserHomePageSkeleton() {
           <div className="flex items-center justify-between">
             <Skeleton className="h-8 w-48 sm:w-64" />
             <div className="hidden sm:flex items-center gap-2 pt-6">
-              <Skeleton className="h-10 w-10 rounded-md" />
-              <Skeleton className="h-10 w-10 rounded-md" />
+              <Skeleton className="h-10 w-10 rounded-sm" />
+              <Skeleton className="h-10 w-10 rounded-sm" />
             </div>
           </div>
 
           {/* Grid / Carousel placeholder */}
-          <div className="flex flex-wrap items-center justify-between mt-4">
+          <div className="flex flex-wrap gap-20 mt-4">
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="bg-muted rounded-full p-6 flex flex-col items-center justify-between"
+                className="bg-muted rounded-sm p-5 flex flex-col items-center justify-between"
               >
-                <Skeleton className="w-16 h-16 sm:w-36 sm:h-36 rounded-full" />
+                <Skeleton className="w-16 h-16 sm:w-36 sm:h-36 rounded-sm" />
               </div>
             ))}
           </div>

@@ -58,14 +58,11 @@ export default async function Categories() {
                 ? `/companies?spec=${encodeURIComponent(slug)}`
                 : "/companies";
               return (
-                <CarouselItem
-                  key={key}
-                  className="basis-[40%] sm:basis-1/3 md:basis-1/4"
-                >
+                <CarouselItem key={key} className="basis-[40%] sm:basis-1/4">
                   <Link
                     href={href}
                     aria-label={`تصفح الشركات ضمن ${title}`}
-                    className="group p-2 sm:p-4 flex flex-col gap-2 items-center touch-manipulation cursor-pointer"
+                    className="group flex flex-col gap-2 items-center touch-manipulation cursor-pointer w-fit"
                   >
                     <ImageOptimized
                       src={src}
@@ -73,9 +70,8 @@ export default async function Categories() {
                       alt={`أيقونة فئة ${title} - تصفح شركات ${title.toLowerCase()} على OrbsAI`}
                       width={200}
                       height={200}
-                      className="rounded-full aspect-square object-contain bg-white ring-1 ring-border/50 shadow-sm transition-transform duration-300 group-hover:scale-105 group-active:scale-95 p-4"
+                      className="rounded-sm aspect-square object-contain bg-white ring-1 ring-border/50 shadow-sm transition-transform duration-300 group-hover:scale-105 group-active:scale-95 p-1"
                       loading="lazy"
-                      sizes="(min-width:1024px) 25vw, (min-width:640px) 33vw, 75vw"
                       context="category icon"
                     />
                     <h3 className="text-sm sm:text-base font-semibold tracking-tight text-center">
