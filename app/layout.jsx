@@ -172,6 +172,8 @@ export default function RootLayout({ children }) {
           />
           <link rel="preconnect" href="https://cdn.sanity.io" />
           <link rel="dns-prefetch" href="https://images.unsplash.com" />
+          <link rel="preload" as="image" href="/Hero-home.jpg" />
+          <link rel="preload" as="image" href="/Hero-blog.jpg" />
         </head>
         <body className={` ${almarai.variable} antialiased`}>
           <BreadcrumbProvider>{children}</BreadcrumbProvider>

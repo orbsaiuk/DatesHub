@@ -6,6 +6,7 @@ import { useDebounce } from "use-debounce";
 import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 export default function BlogHero() {
   const router = useRouter();
@@ -51,7 +52,17 @@ export default function BlogHero() {
   };
 
   return (
-    <section className="bg-[url('/Hero-blog.jpg')] bg-cover bg-left text-white h-[50vh] relative overflow-hidden">
+    <section className="text-white h-[50vh] relative overflow-hidden">
+      {/* Optimized background image */}
+      <Image
+        src="/Hero-blog.jpg"
+        alt="Blog hero background"
+        fill
+        priority
+        quality={90}
+        className="object-cover object-left"
+        sizes="100vw"
+      />
       <div className="absolute inset-0 bg-black/50"></div>
       <div className="relative container h-full mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-center z-10">
         <h1 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6 lg:mb-8 leading-tight sm:leading-tight tracking-tight">
