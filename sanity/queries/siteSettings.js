@@ -2,6 +2,8 @@ export const SITE_SETTINGS_QUERY = `
 *[_type == "siteSettings"][0]{
   heroTitle,
   heroDescription,
+  companyHeroTitle,
+  companyHeroDescription,
   logo,
   footerText,
   contact{
@@ -23,5 +25,7 @@ export const SITE_SETTINGS_QUERY = `
   },
   faq[]{q, a},
   how[]{title, description, bullets, icon},
-  why[]{title, description}
+  why[]{title, description},
+  companyHow[]{title, description, bullets, icon},
+  companyWhy[]{title, description}
 }`;

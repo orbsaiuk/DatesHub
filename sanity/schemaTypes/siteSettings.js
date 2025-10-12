@@ -12,6 +12,16 @@ export default defineType({
       type: "text",
     }),
     defineField({
+      name: "companyHeroTitle",
+      title: "Company Hero Title",
+      type: "string",
+    }),
+    defineField({
+      name: "companyHeroDescription",
+      title: "Company Hero Description",
+      type: "text",
+    }),
+    defineField({
       name: "logo",
       title: "Logo",
       type: "image",
@@ -80,13 +90,21 @@ export default defineType({
           fields: [
             { name: "title", title: "Title", type: "string" },
             { name: "description", title: "Description", type: "text" },
-            {
-              name: "bullets",
-              title: "Bullets",
-              type: "array",
-              of: [{ type: "string" }],
-            },
-            { name: "icon", title: "Icon (name)", type: "string" },
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: "companyHow",
+      title: "How It Works (Company)",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "companyHowStep",
+          fields: [
+            { name: "title", title: "Title", type: "string" },
+            { name: "description", title: "Description", type: "text" },
           ],
         },
       ],
@@ -100,6 +118,22 @@ export default defineType({
         {
           type: "object",
           name: "whyFeature",
+          fields: [
+            { name: "title", title: "Title", type: "string" },
+            { name: "description", title: "Description", type: "text" },
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: "companyWhy",
+      title: "Why Choose Us (Company)",
+      type: "array",
+      validation: (Rule) => Rule.required().min(3).max(3),
+      of: [
+        {
+          type: "object",
+          name: "companyWhyFeature",
           fields: [
             { name: "title", title: "Title", type: "string" },
             { name: "description", title: "Description", type: "text" },

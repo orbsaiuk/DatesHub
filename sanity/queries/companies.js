@@ -70,7 +70,7 @@ array::unique(
 `;
 
 export const COMPANIES_IMAGES = `
-*[_type == "company" && defined(logo.asset)] | order(rating desc, ratingCount desc, name asc)[0...6]{
+*[_type == "company" && defined(logo.asset)] | order(coalesce(rating, 0) desc, ratingCount desc, name asc)[0...6]{
         name,
         "id": coalesce(tenantId, slug.current),
         logo{

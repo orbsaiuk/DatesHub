@@ -5,28 +5,9 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
-const defaultSteps = [
-  {
-    title: "الخطوة 1: تصفح الشركات",
-    description:
-      "اكتشف مزودي الخدمات للزهور والبالونات والتصوير والقاعات والمزيد.",
-  },
-  {
-    title: "الخطوة 2: أرسل طلبك",
-    description: "راسل عدة شركات دفعة واحدة بتفاصيل مناسبتك.",
-  },
-  {
-    title: "الخطوة 3: حضّر مناسبتك",
-    description: "أكد اختياراتك وتابع كل شيء من هاتفك.",
-  },
-];
-
 export default function How({ items }) {
-  const baseSteps =
-    Array.isArray(items) && items.length > 0 ? items : defaultSteps;
-  let steps = baseSteps.slice(0, 3);
-  if (steps.length < 3) {
-    steps = steps.concat(defaultSteps.slice(steps.length, 3));
+  if (!items || !Array.isArray(items) || items.length === 0) {
+    return null;
   }
 
   return (
@@ -37,7 +18,7 @@ export default function How({ items }) {
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          {steps.map((step, idx) => {
+          {items.map((step, idx) => {
             return (
               <Card
                 key={idx}

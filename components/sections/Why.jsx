@@ -2,27 +2,9 @@ import { PartyPopper, ShieldCheck, Headset } from "lucide-react";
 
 const fixedIcons = [PartyPopper, ShieldCheck, Headset];
 
-const defaultFeatures = [
-  {
-    title: "بدء سريع",
-    description: "أنشئ حسابك وابدأ خلال دقائق مع خطوات مبسطة.",
-  },
-  {
-    title: "أمان موثوق",
-    description: "بياناتك محمية بتشفير ومعايير أمان معتمدة.",
-  },
-  {
-    title: "دعم على مدار الساعة",
-    description: "نحن هنا متى احتجت إلينا — ليلًا أو نهارًا.",
-  },
-];
-
 export default function Why({ items }) {
-  const baseFeatures =
-    Array.isArray(items) && items.length > 0 ? items : defaultFeatures;
-  let features = baseFeatures.slice(0, 3);
-  if (features.length < 3) {
-    features = features.concat(defaultFeatures.slice(features.length, 3));
+  if (!items || !Array.isArray(items) || items.length === 0) {
+    return null;
   }
 
   return (
@@ -33,7 +15,7 @@ export default function Why({ items }) {
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
-          {features.map((feature, idx) => {
+          {items.map((feature, idx) => {
             const Icon = fixedIcons[idx % fixedIcons.length];
             return (
               <article

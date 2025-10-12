@@ -9,10 +9,7 @@ export default async function Hero() {
 
   return (
     <section
-      className="w-full py-12 sm:py-16 lg:py-24 bg-cover bg-left sm:bg-center bg-no-repeat h-[60vh] relative"
-      style={{
-        backgroundImage: "url('/Hero-home.jpg')",
-      }}
+      className="w-full py-12 sm:py-16 lg:py-24 bg-cover bg-left sm:bg-center bg-no-repeat h-[60vh] relative bg-[url('/Hero-home.jpg')]"
       data-aos="fade"
       data-aos-duration="800"
     >

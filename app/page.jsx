@@ -2,7 +2,7 @@ import HeaderClient from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import Hero from "@/components/sections/Hero";
 import Discover from "@/components/sections/Discover";
-import FeaturedCompanies from "@/components/sections/FeaturedCompanies";
+import FeaturedTenants from "@/components/sections/FeaturedTenants";
 import How from "@/components/sections/How";
 import Why from "@/components/sections/Why";
 import FAQ from "@/components/sections/FAQ";
@@ -18,6 +18,7 @@ import { client } from "@/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
 import { getRecentBlogs } from "@/services/sanity/blogs";
 import { getActivePromotionalBanners } from "@/services/sanity/promotionalBanners";
+import { getFeaturedTenants } from "@/services/sanity/featuredTenants";
 
 export const metadata = {
   title: "تمور — اكتشف الشركات والموردين",
@@ -28,13 +29,21 @@ export const metadata = {
 
 export default async function Home() {
   // Fetch data server-side for all components
-  const [settings, recentBlogs, companyBanners, userBanners] =
-    await Promise.all([
-      client.fetch(SITE_SETTINGS_QUERY),
-      getRecentBlogs(3),
-      getActivePromotionalBanners("suppliers,all"),
-      getActivePromotionalBanners("companies,all"),
-    ]);
+  const [
+    settings,
+    recentBlogs,
+    companyBanners,
+    userBanners,
+    featuredCompanies,
+    featuredSuppliers,
+  ] = await Promise.all([
+    client.fetch(SITE_SETTINGS_QUERY),
+    getRecentBlogs(3),
+    getActivePromotionalBanners("suppliers,all"),
+    getActivePromotionalBanners("companies,all"),
+    getFeaturedTenants("companies", 3),
+    getFeaturedTenants("suppliers", 3),
+  ]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -49,6 +58,11 @@ export default async function Home() {
               <CompanyHomeHero />
               <PromotionalBannersSection banners={companyBanners} />
               <Categories />
+              <FeaturedTenants type="suppliers" items={featuredSuppliers} />
+              <How items={settings?.companyHow} />
+              <Why items={settings?.companyWhy} />
+              <Blog items={recentBlogs} />
+              <FAQ items={settings?.faq} />
             </>
           }
           // Regular user view (default)
@@ -58,7 +72,7 @@ export default async function Home() {
               <Discover />
               <PromotionalBannersSection banners={userBanners} />
               <Categories />
-              <FeaturedCompanies />
+              <FeaturedTenants type="companies" items={featuredCompanies} />
               <How items={settings?.how} />
               <Why items={settings?.why} />
               <SignedOut>
