@@ -60,7 +60,7 @@ export default async function Home() {
               <Categories />
               <FeaturedTenants type="suppliers" items={featuredSuppliers} />
               <How items={settings?.companyHow} />
-              <Why items={settings?.companyWhy} />
+              <Why items={settings?.companyWhy} type="company" />
               <Blog items={recentBlogs} />
               <FAQ items={settings?.faq} />
             </>

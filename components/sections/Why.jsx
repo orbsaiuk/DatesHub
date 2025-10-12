@@ -1,8 +1,18 @@
-import { PartyPopper, ShieldCheck, Headset } from "lucide-react";
+import {
+  PartyPopper,
+  ShieldCheck,
+  Headset,
+  Users,
+  BarChart3,
+  Award,
+} from "lucide-react";
 
 const fixedIcons = [PartyPopper, ShieldCheck, Headset];
 
-export default function Why({ items }) {
+// Company-specific icons for: موردون موثوقون, سهولة المقارنة, جودة مضمونة
+const companyIcons = [Users, BarChart3, Award];
+
+export default function Why({ items, type = "default" }) {
   if (!items || !Array.isArray(items) || items.length === 0) {
     return null;
   }
@@ -16,13 +26,23 @@ export default function Why({ items }) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
           {items.map((feature, idx) => {
-            const Icon = fixedIcons[idx % fixedIcons.length];
+            // Select appropriate icon based on type
+            let Icon;
+
+            if (type === "company") {
+              // Use company-specific icons in order
+              Icon = companyIcons[idx % companyIcons.length];
+            } else {
+              // Use default fixed icons for other types
+              Icon = fixedIcons[idx % fixedIcons.length];
+            }
+
             return (
               <article
                 key={feature.title}
                 className="group relative flex flex-col items-center text-center rounded-2xl border bg-white/70 dark:bg-gray-900/60 backdrop-blur p-6 sm:p-8 shadow-sm hover:shadow-md transition-all duration-300 dark:border-gray-800"
               >
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border shadow-sm ring-1 ring-black/5 bg-violet-50 text-violet-600 border-violet-100 dark:bg-violet-950/40 dark:text-violet-300 dark:border-violet-900 flex items-center justify-center mb-4 sm:mb-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border shadow-sm ring-1 ring-black/5 bg-violet-50 text-section-title border-violet-100 dark:bg-violet-950/40 dark:text-violet-300 dark:border-violet-900 flex items-center justify-center mb-4 sm:mb-6">
                   <Icon className="w-8 h-8 sm:w-10 sm:h-10" />
                 </div>
 
