@@ -33,9 +33,9 @@ export default function HeaderClient() {
           <ImageOptimized
             src={logoUrl}
             alt={`شعار المنصة`}
-            width={300}
-            height={300}
-            className="h-20 w-32"
+            width={128}
+            height={128}
+            className="h-20 w-20"
             priority
             context="brand logo"
           />
@@ -57,26 +57,29 @@ export default function HeaderClient() {
 
         <div className="hidden md:flex items-center gap-6">
           {isLoaded && isBusiness ? (
-            <Link href={dashboardHref}>
-              <Button
-                size="sm"
-                className="cursor-pointer bg-button-1 hover:bg-button-1-hover text-white"
-              >
-                لوحة التحكم
-              </Button>
-            </Link>
+            <Button
+              size="sm"
+              className="cursor-pointer bg-button-1 hover:bg-button-1-hover text-white"
+              asChild
+            >
+              <Link href={dashboardHref}>لوحة التحكم</Link>
+            </Button>
           ) : (
-            <Link href="/become">
-              <Button
-                size="sm"
-                className="cursor-pointer bg-button-1 hover:bg-button-1-hover text-white"
-              >
-                انضم كشركة
-              </Button>
-            </Link>
+            <Button
+              size="sm"
+              className="cursor-pointer bg-button-1 hover:bg-button-1-hover text-white"
+              asChild
+            >
+              <Link href="/become">انضم كشركة</Link>
+            </Button>
           )}
           <SignedIn>
-            <Button variant="ghost" size="icon" className="cursor-pointer">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="cursor-pointer"
+              asChild
+            >
               <Link href="/bookmarks">
                 <Bookmark className="size-5" />
               </Link>
