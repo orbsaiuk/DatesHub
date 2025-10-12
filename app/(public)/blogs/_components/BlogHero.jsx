@@ -59,7 +59,7 @@ export default function BlogHero() {
         alt="Blog hero background"
         fill
         priority
-        quality={90}
+        quality={75}
         className="object-cover object-left"
         sizes="100vw"
       />

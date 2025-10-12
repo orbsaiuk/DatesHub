@@ -29,7 +29,7 @@ export default function ImageOptimized({
       .width(width || 800)
       .height(height || 600)
       .format("webp")
-      .quality(85)
+      .quality(75)
       .url();
 
     return (

@@ -172,8 +172,18 @@ export default function RootLayout({ children }) {
           />
           <link rel="preconnect" href="https://cdn.sanity.io" />
           <link rel="dns-prefetch" href="https://images.unsplash.com" />
-          <link rel="preload" as="image" href="/Hero-home.jpg" />
-          <link rel="preload" as="image" href="/Hero-blog.jpg" />
+          <link
+            rel="preload"
+            as="image"
+            href="/_next/image?url=%2FHero-home.jpg&w=1920&q=75"
+            type="image/webp"
+          />
+          <link
+            rel="preload"
+            as="image"
+            href="/_next/image?url=%2FHero-blog.jpg&w=1920&q=75"
+            type="image/webp"
+          />
         </head>
         <body className={` ${almarai.variable} antialiased`}>
           <BreadcrumbProvider>{children}</BreadcrumbProvider>

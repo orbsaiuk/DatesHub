@@ -25,7 +25,6 @@ export default function FeaturedTenants({
   items = [],
   totalItems = null,
 }) {
-  // Use items prop directly (fetched server-side) and limit to 3 for desktop
 
   // Mobile carousel state
   const [embla, setEmbla] = useState(null);
@@ -168,11 +167,10 @@ export default function FeaturedTenants({
                     aria-label={`Go to slide ${i + 1}`}
                     aria-current={selectedIndex === i ? "true" : "false"}
                     onClick={() => embla && embla.scrollTo(i)}
-                    className={`h-2.5 w-2.5 rounded-full transition-all ${
-                      selectedIndex === i
+                    className={`h-2.5 w-2.5 rounded-full transition-all ${selectedIndex === i
                         ? "bg-primary scale-110"
                         : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                    }`}
+                      }`}
                   />
                 ))}
               </div>
