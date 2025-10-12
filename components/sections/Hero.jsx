@@ -20,6 +20,7 @@ export default async function Hero() {
         alt="Hero background"
         fill
         priority
+        fetchPriority="high"
         quality={75}
         className="object-cover object-left sm:object-center"
         sizes="100vw"
