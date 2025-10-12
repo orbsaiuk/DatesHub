@@ -16,8 +16,6 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 
-const categories = ["زهور", "إلكترونيات", "أثاث"];
-
 const features = [
   { title: "إعداد سريع", description: "ابدأ بسرعة بواجهة حديثة وسهلة." },
   { title: "إتاحة كاملة", description: "دعم لوحة المفاتيح وقارئات الشاشة." },
@@ -26,8 +24,6 @@ const features = [
 ];
 
 export default function FeaturedCompanies() {
-  const [selectedCategory, setSelectedCategory] = useState("Flowers");
-
   // Mobile carousel state
   const [embla, setEmbla] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -52,35 +48,9 @@ export default function FeaturedCompanies() {
     <section id="featured" className="w-full py-10 sm:py-16 bg-gray-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-8 sm:gap-10">
         <div className="flex flex-col gap-2">
-          <h2 className="text-xl sm:text-4xl font-semibold tracking-tight">
+          <h2 className="text-2xl sm:text-4xl tracking-tight text-section-title mb-6 sm:mb-10">
             شركات مميزة
           </h2>
-
-          <div className="relative sm:mx-auto mx-0 my-3 sm:my-6">
-            <div
-              className="flex items-center gap-2 sm:gap-3 overflow-x-auto px-4 sm:px-0 whitespace-nowrap scroll-px-4 snap-x"
-              role="tablist"
-              aria-label="تصفح الفئات"
-            >
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  role="tab"
-                  aria-selected={selectedCategory === cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`cursor-pointer shrink-0 snap-start rounded-full border px-4 py-2 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring ${
-                    selectedCategory === cat
-                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                      : "bg-white text-muted-foreground hover:text-foreground hover:bg-gray-50"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Mobile carousel */}
           <div className="sm:hidden">
             <Carousel opts={{ align: "start", loop: true }} setApi={setEmbla}>
@@ -104,7 +74,10 @@ export default function FeaturedCompanies() {
                         </CardDescription>
                       </CardHeader>
                       <CardFooter>
-                        <Button className="w-full cursor-pointer" size="sm">
+                        <Button
+                          className="w-full cursor-pointer bg-button-1 hover:bg-button-1-hover text-white"
+                          size="sm"
+                        >
                           عرض
                         </Button>
                       </CardFooter>
@@ -160,7 +133,10 @@ export default function FeaturedCompanies() {
                   </CardDescription>
                 </CardHeader>
                 <CardFooter>
-                  <Button className="w-full cursor-pointer" size="sm">
+                  <Button
+                    className="w-full cursor-pointer bg-button-1 hover:bg-button-1-hover text-white"
+                    size="sm"
+                  >
                     عرض
                   </Button>
                 </CardFooter>

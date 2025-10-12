@@ -40,7 +40,13 @@ export default function DirectoryHeader({
           <div className="flex items-center gap-3">
             <h2 className="text-xl sm:text-2xl font-bold">{title}</h2>
             <span className="text-xs sm:text-sm text-muted-foreground">
-              {count} {count === 1 ? "نتيجة" : "نتائج"}
+              ({" "}
+              {count === 1
+                ? "نتيجة واحدة"
+                : count === 2
+                  ? "نتيجتان"
+                  : `${count} نتائج`}{" "}
+              )
             </span>
           </div>
           <div className="w-full sm:w-auto ">

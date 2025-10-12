@@ -87,9 +87,8 @@ export default async function DirectoryPage({
     <div className="min-h-screen flex flex-col">
       <main className="flex-1">
         <DirectoryHero
-          title={`اعثر على ${title.toLowerCase()} المثالية`}
-          subtitle="لخدمة فعاليتك"
-          description="تصفح وتواصل مع مقدمي الخدمات عبر الفئات المختلفة."
+          title={`ابحث عن الخدمة المثالية لاحتياجاتك في عالم التمور`}
+          subtitle="تصفح وتواصل مع أفضل الشركات المتخصصة في إنتاج، تغليف، وتصدير التمور الفاخرة. "
         />
         <DirectoryHeader
           title={`جميع ${title}`}

@@ -20,7 +20,7 @@ import { getRecentBlogs } from "@/services/sanity/blogs";
 import { getActivePromotionalBanners } from "@/services/sanity/promotionalBanners";
 
 export const metadata = {
-  title: "OrbsAI — اكتشف الشركات والموردين",
+  title: "تمور — اكتشف الشركات والموردين",
   description:
     "اكتشف وتواصل مع الشركات والموردين المعتمدين حول العالم. استكشف فئات الأعمال والعروض الحصرية وملفات الشركات التفصيلية. انضم إلى شبكتنا الموثوقة اليوم.",
   alternates: { canonical: "/" },
@@ -28,12 +28,13 @@ export const metadata = {
 
 export default async function Home() {
   // Fetch data server-side for all components
-  const [settings, recentBlogs, companyBanners, userBanners] = await Promise.all([
-    client.fetch(SITE_SETTINGS_QUERY),
-    getRecentBlogs(3),
-    getActivePromotionalBanners("suppliers,all"),
-    getActivePromotionalBanners("companies,all"),
-  ]);
+  const [settings, recentBlogs, companyBanners, userBanners] =
+    await Promise.all([
+      client.fetch(SITE_SETTINGS_QUERY),
+      getRecentBlogs(3),
+      getActivePromotionalBanners("suppliers,all"),
+      getActivePromotionalBanners("companies,all"),
+    ]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -63,7 +64,7 @@ export default async function Home() {
               <SignedOut>
                 <JoinSection />
               </SignedOut>
-              <Blog items={recentBlogs} title="نصائح لتخطيط الفعاليات" />
+              <Blog items={recentBlogs} />
               <FAQ items={settings?.faq} />
             </>
           }

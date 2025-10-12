@@ -2,6 +2,7 @@ import DirectoryHeader from "./_components/DirectoryHeader";
 import DirectoryOverview from "./_components/DirectoryOverview";
 import DirectoryAccordions from "./_components/DirectoryAccordions";
 import DirectoryOffersSection from "./_components/DirectoryOffersSection";
+import DirectoryProductsSection from "./_components/DirectoryProductsSection";
 import DirectoryMap from "./_components/DirectoryMap";
 import ScrollToTop from "@/components/ScrollToTop";
 import BreadcrumbPrefetch from "@/components/navigation/BreadcrumbPrefetch";
@@ -241,6 +242,15 @@ export default async function DirectoryDetailPage({
       <div className="mt-6">
         <div className="rounded-xl border bg-white shadow-sm p-4 sm:p-6">
           <DirectoryOffersSection
+            tenant={tenant}
+            tenantType={type === "supplier" ? "supplier" : "company"}
+          />
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <div className="rounded-xl border bg-white shadow-sm p-4 sm:p-6">
+          <DirectoryProductsSection
             tenant={tenant}
             tenantType={type === "supplier" ? "supplier" : "company"}
           />

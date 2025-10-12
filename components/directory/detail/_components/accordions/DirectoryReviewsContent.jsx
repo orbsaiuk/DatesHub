@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import ReviewDialog from "../ReviewDialog";
 import StarRating from "../StarRating";
+import { User } from "lucide-react";
 
 export default function DirectoryReviewsContent({
   isOpen = false,
@@ -166,23 +167,25 @@ export default function DirectoryReviewsContent({
                     key={r._id}
                     className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
                   >
-                    <div className="rounded-md border bg-white p-3 shadow-sm">
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span className="inline-block size-1.5 rounded-full bg-green-500" />
-                        <span>{r.authorName || "Anonymous"}</span>
-                        <span className="ml-auto">
-                          {new Date(r.createdAt).toLocaleDateString()}
+                    <div className="rounded-md border bg-section-title/20 p-3 shadow-sm">
+                      <div className="flex items-center gap-2 mb-2 justify-between text-section-title text-base">
+                        <span className="flex items-center gap-2">
+                          <User className="size-4 text-section-title" />
+                          <span>{r.authorName}</span>
+                        </span>
+                        <span>
+                          {new Date(r.createdAt).toLocaleDateString("ar-EG")}
                         </span>
                       </div>
                       <div className="mt-1 flex items-center gap-1">
                         <StarRating rating={r.rating || 0} size={14} readOnly />
-                        <span className="text-[11px] text-muted-foreground">
+                        <span className="text-sm text-muted-foreground">
                           {Number(r.rating || 0).toFixed(1)}
                         </span>
                       </div>
-                      <div className="mt-2 space-y-2 text-[11px] text-muted-foreground">
+                      <div className="mt-2 space-y-2 text-sm text-muted-foreground">
                         {r.title ? (
-                          <p className="text-xs font-medium text-foreground line-clamp-1">
+                          <p className="font-medium text-foreground line-clamp-1">
                             {r.title}
                           </p>
                         ) : null}

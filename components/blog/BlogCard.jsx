@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
+import { Button } from "../ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export default function BlogCard({ blog }) {
   if (!blog) return null;
@@ -56,7 +58,7 @@ export default function BlogCard({ blog }) {
           </div>
 
           <div className="p-4 sm:p-6 flex-1 flex flex-col">
-            <h3 className="capitalize text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200 leading-snug">
+            <h3 className="capitalize text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3 line-clamp-2">
               {blog.title}
             </h3>
 
@@ -65,8 +67,6 @@ export default function BlogCard({ blog }) {
                 {blog.excerpt}
               </p>
             )}
-
-
 
             <div className="flex items-center justify-between text-xs text-gray-500 mt-auto">
               {(authorLogoUrl || authorName) && (
@@ -88,19 +88,11 @@ export default function BlogCard({ blog }) {
                   )}
                 </div>
               )}
-
-              {blog.readingTime && (
-                <span className="flex-shrink-0 text-xs">
-                  {blog.readingTime} دقيقة قراءة
-                </span>
-              )}
             </div>
 
-            <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
-              <span className="text-sm font-medium text-blue-600 group-hover:text-blue-700">
-                اقرأ المزيد ←
-              </span>
-            </div>
+            <Button className="w-fit mt-3 sm:mt-4 border-gray-100 bg-button-1 hover:bg-button-1-hover text-white cursor-pointer flex items-center gap-2">
+              المزيد اكتشف <ArrowLeft className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </Link>

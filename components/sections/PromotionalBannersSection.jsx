@@ -11,6 +11,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { toArabicNumerals } from "@/lib/utils/arabic";
 
 export default function PromotionalBannersSection({ banners = [] }) {
   const [carouselApi, setCarouselApi] = useState(null);
@@ -56,10 +57,11 @@ export default function PromotionalBannersSection({ banners = [] }) {
               <button
                 key={index}
                 onClick={() => carouselApi?.scrollTo(index)}
-                className={`h-2 rounded-full transition-all duration-200 ${index === currentIndex
-                  ? "bg-primary w-6"
-                  : "bg-gray-300 hover:bg-gray-400 w-2"
-                  }`}
+                className={`h-2 rounded-full transition-all duration-200 ${
+                  index === currentIndex
+                    ? "bg-primary w-6"
+                    : "bg-gray-300 hover:bg-gray-400 w-2"
+                }`}
                 aria-label={`اذهب إلى البانر ${index + 1}`}
               />
             ))}
@@ -118,10 +120,11 @@ function SimpleBanner({ banner }) {
             {banner.subtitle && (
               <div className="mb-4">
                 <span
-                  className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${hasBackgroundImage
-                    ? "bg-white/20 text-white"
-                    : "bg-blue-50 text-blue-700"
-                    }`}
+                  className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                    hasBackgroundImage
+                      ? "bg-white/20 text-white"
+                      : "bg-blue-50 text-blue-700"
+                  }`}
                 >
                   {banner.subtitle}
                 </span>
@@ -130,28 +133,43 @@ function SimpleBanner({ banner }) {
 
             {/* Title */}
             <h3
-              className={`text-3xl lg:text-4xl font-bold mb-4 leading-tight ${hasBackgroundImage ? "text-white" : "text-gray-900"
-                }`}
+              className={`text-3xl lg:text-4xl font-bold mb-4 leading-tight ${
+                hasBackgroundImage ? "text-white" : "text-gray-900"
+              }`}
             >
-              {banner.title}
+              {(() => {
+                // Fix title order and convert numbers to Arabic
+                const title = banner.title || "";
+                const match = title.match(/^(\d+)(.+)$/);
+                if (match) {
+                  // If title starts with number, move it to the end and convert to Arabic
+                  const arabicNumber = toArabicNumerals(match[1]);
+                  return `${match[2]} ${arabicNumber}`;
+                }
+
+                // Convert any numbers in the title to Arabic
+                return toArabicNumerals(title);
+              })()}
             </h3>
 
             {/* Description */}
             {banner.description &&
               banner.description[0]?.children?.[0]?.text && (
                 <p
-                  className={`text-lg mb-6 leading-relaxed ${hasBackgroundImage ? "text-white/90" : "text-gray-600"
-                    }`}
+                  className={`text-lg mb-6 leading-relaxed ${
+                    hasBackgroundImage ? "text-white/90" : "text-gray-600"
+                  }`}
                 >
-                  {banner.description[0].children[0].text}
+                  {toArabicNumerals(banner.description[0].children[0].text)}
                 </p>
               )}
 
             {/* Date Info */}
             {(banner.startDate || banner.endDate) && (
               <div
-                className={`flex items-center gap-2 mb-6 text-sm ${hasBackgroundImage ? "text-white/80" : "text-gray-500"
-                  }`}
+                className={`flex items-center gap-2 mb-6 text-sm ${
+                  hasBackgroundImage ? "text-white/80" : "text-gray-500"
+                }`}
               >
                 <Clock className="w-4 h-4" />
                 <span>
@@ -169,23 +187,25 @@ function SimpleBanner({ banner }) {
                 href={banner.ctaLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${hasBackgroundImage
-                  ? "bg-white text-gray-900 hover:bg-gray-100"
-                  : "bg-primary text-white hover:bg-primary/90"
-                  }`}
+                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
+                  hasBackgroundImage
+                    ? "bg-white text-gray-900 hover:bg-gray-100"
+                    : "bg-primary text-white hover:bg-primary/90"
+                }`}
               >
-                {banner.ctaText}
+                {toArabicNumerals(banner.ctaText)}
                 <ExternalLink className="w-4 h-4" />
               </a>
             ) : (
               <Link
                 href={banner.ctaLink}
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${hasBackgroundImage
-                  ? "bg-white text-gray-900 hover:bg-gray-100"
-                  : "bg-primary text-white hover:bg-primary/90"
-                  }`}
+                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
+                  hasBackgroundImage
+                    ? "bg-white text-gray-900 hover:bg-gray-100"
+                    : "bg-primary text-white hover:bg-primary/90"
+                }`}
               >
-                {banner.ctaText}
+                {toArabicNumerals(banner.ctaText)}
                 <ArrowLeft className="w-4 h-4" />
               </Link>
             )}

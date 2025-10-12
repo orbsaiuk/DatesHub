@@ -140,11 +140,7 @@ export default function MobileNav({
             {!isBusiness && (
               <SheetClose asChild>
                 <Link href="/become" className="block">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full text-base"
-                  >
+                  <Button size="lg" className="w-full text-base">
                     انضم كشركة
                   </Button>
                 </Link>

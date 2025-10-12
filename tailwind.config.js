@@ -1,4 +1,5 @@
 import animate from "tw-animate-css";
+import lineClamp from "@tailwindcss/line-clamp";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -95,5 +96,5 @@ module.exports = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, lineClamp],
 };

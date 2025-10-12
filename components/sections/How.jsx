@@ -3,15 +3,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
 } from "@/components/ui/card";
-import { Search, Send, PartyPopper } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { DoorOpen } from "lucide-react";
-import { SignedOut } from "@clerk/nextjs";
-
-const fixedIcons = [Search, Send, PartyPopper];
 
 const defaultSteps = [
   {
@@ -38,26 +30,24 @@ export default function How({ items }) {
   }
 
   return (
-    <section id="how" className="w-full py-16 sm:py-20">
+    <section id="how" className="w-full py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-xl sm:text-4xl font-semibold tracking-tight">
-          كيف تعمل المنصة
+        <h2 className="text-2xl sm:text-4xl tracking-tight text-section-title text-center mb-6 sm:mb-10">
+          كيف تعمل المنصة؟
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {steps.map((step, idx) => {
-            const Icon = fixedIcons[idx % fixedIcons.length];
             return (
               <Card
                 key={idx}
                 className="h-full transition-shadow hover:shadow-md"
               >
                 <CardHeader className="flex flex-row items-start gap-4">
-                  <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                    <Icon className="h-6 w-6" aria-hidden="true" />
-                  </div>
                   <div>
-                    <CardTitle className="text-lg">{step.title}</CardTitle>
+                    <CardTitle className="text-lg text-section-title">
+                      {step.title}
+                    </CardTitle>
                     <CardDescription>{step.description}</CardDescription>
                   </div>
                 </CardHeader>
@@ -65,15 +55,6 @@ export default function How({ items }) {
             );
           })}
         </div>
-        <SignedOut>
-          <div className="mt-8 flex justify-center">
-            <Button size="lg" asChild aria-label="ابدأ الآن">
-              <Link href="/sign-up">
-                <DoorOpen className="w-4 h-4 ml-2" /> ابدأ الآن
-              </Link>
-            </Button>
-          </div>
-        </SignedOut>
       </div>
     </section>
   );

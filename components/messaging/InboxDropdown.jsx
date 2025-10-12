@@ -142,7 +142,7 @@ export default function InboxDropdown() {
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative cursor-pointer">
-          <Mail className="h-5 w-5" />
+          <Mail className="size-5" />
           {unreadCount > 0 && (
             <Badge
               variant="destructive"
@@ -210,9 +210,9 @@ export default function InboxDropdown() {
                       ) : (
                         <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
                           {otherParticipant?.kind === "company" ? (
-                            <Mail className="h-4 w-4" />
+                            <Mail className="size-4" />
                           ) : (
-                            <Mail className="h-4 w-4" />
+                            <Mail className="size-4" />
                           )}
                         </div>
                       )}

@@ -37,14 +37,18 @@ export default async function Discover() {
           </div>
         </div>
         <div className="w-full lg:w-1/2 flex flex-col gap-3 sm:gap-4">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight will-change-auto">
-            اكتشف أفضل شركات الفعاليات لكل مناسبة
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight will-change-auto">
+            من أجود مزارع التمور إلى أبرز الموردين
           </h2>
           <p className="text-muted-foreground max-w-xl will-change-auto">
-            من منسقي الزهور إلى المصممين المبدعين — استكشف شركات موثوقة جاهزة
-            لجعل مناسبتك لا تُنسى.
+            اكتشف مجموعة من أفضل الشركات والموردين الموثوقين في عالم التمور، حيث
+            تجتمع الجودة والخبرة لتلبية جميع احتياجاتك — سواء لتجارتك أو
+            لاستهلاكك اليومي بأجود أنواع التمور الفاخرة.
           </p>
-          <Button size="lg" className="w-full sm:w-auto">
+          <Button
+            size="lg"
+            className="w-full sm:w-auto bg-button-1 hover:bg-button-1-hover text-white cursor-pointer"
+          >
             تصفح الشركات
           </Button>
         </div>

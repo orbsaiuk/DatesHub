@@ -9,11 +9,12 @@ import {
   MapPin,
   Star,
 } from "lucide-react";
-import { CompanyLogo } from "@/components/ImageOptimized";
+import ImageOptimized from "@/components/ImageOptimized";
 import { useState } from "react";
 import { toast } from "sonner";
 import { SignedIn } from "@clerk/nextjs";
 import CompanyInteractionButton from "@/components/CompanyInteractionButton";
+import { getFormattedWorkingHours } from "@/lib/utils/workingHours";
 
 function StarRating({ rating = 0 }) {
   const stars = Array.from({ length: 5 });
@@ -67,74 +68,82 @@ export default function DirectoryTenantCard({
   }
 
   return (
-    <div className="rounded-xl border bg-white p-4 sm:p-6 shadow-sm relative">
-      <div className="flex flex-col gap-4 md:flex-row md:gap-6">
-        <CompanyLogo
-          tenant={tenant}
-          size="lg"
-          className="rounded-md w-[160px] h-[160px] object-cover"
-        />
-
-        <div className="flex-1">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2"></div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg sm:text-xl font-semibold truncate">
-                  {name}
-                </h3>
-              </div>
-              <div className="mt-1 flex flex-col items-start gap-2 text-xs text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <StarRating rating={rating} />
-                  <span>
-                    {ratingCount > 0
-                      ? `${Number(rating || 0).toFixed(1)} (${ratingCount} ${ratingCount === 1 ? "تقييم" : "تقييم"})`
-                      : "لا توجد تقييمات بعد"}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="size-4" />
-                  <span>{location}</span>
-                </div>
-                {Array.isArray(openingHours) && openingHours.length > 0 ? (
-                  <div className="flex items-start gap-2">
-                    <Clock3 className="size-4 mt-0.5" />
-                    <div className="flex flex-col">
-                      {openingHours.slice(0, 2).map((line, idx) => (
-                        <span key={idx}>{line}</span>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          </div>
+    <div className="rounded-xl border bg-white p-4 sm:p-6 shadow-sm relative min-h-[250px] h-full">
+      {/* Bookmark button in top left */}
+      <SignedIn>
+        <div className="absolute top-2 left-2 z-10">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`cursor-pointer transition-transform ${pending ? "scale-95" : "hover:scale-105"}`}
+            aria-pressed={isBookmarked}
+            onClick={handleToggle}
+            title={isBookmarked ? "إزالة المرجعية" : "حفظ مرجعية"}
+            aria-label={isBookmarked ? "إزالة المرجعية" : "حفظ مرجعية"}
+            disabled={pending}
+          >
+            {isBookmarked ? (
+              <BookmarkCheck className="size-6 sm:size-8 text-primary" />
+            ) : (
+              <BookmarkPlus className="size-6 sm:size-8 text-muted-foreground hover:text-muted-foreground/80" />
+            )}
+          </Button>
         </div>
+      </SignedIn>
 
-        <div className="md:w-[44%]">
-          <div className="hidden sm:flex md:gap-2 mb-4 w-full">
-            <div className="flex gap-2">
-              <CompanyInteractionButton
-                companyTenantId={tenant.tenantId}
-                companyName={tenant.name}
-              />
-              <Link href={`${basePath}/${tenant.id}`}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full cursor-pointer"
-                >
-                  عرض الملف الشخصي
-                </Button>
-              </Link>
+      {/* Two halves layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* First half: Logo, name, reviews, description */}
+        <div className="flex-1 flex flex-col gap-4">
+          <div className="flex gap-4">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              {tenant?.logo ? (
+                <ImageOptimized
+                  sanityImage={tenant.logo?.asset ? tenant.logo : null}
+                  src={
+                    !tenant.logo?.asset && typeof tenant.logo === "string"
+                      ? tenant.logo
+                      : undefined
+                  }
+                  alt={`شعار شركة ${tenant.name}`}
+                  width={120}
+                  height={120}
+                  className="rounded-lg w-20 h-20 sm:w-24 sm:h-24 object-cover"
+                  tenantName={tenant.name}
+                  context="logo"
+                  priority
+                  sizes="(max-width: 640px) 80px, 120px"
+                />
+              ) : (
+                <div className="rounded-lg w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                  <div className="w-1/2 h-1/2 rounded bg-primary/20" />
+                </div>
+              )}
+            </div>
+
+            {/* Name and reviews */}
+            <div className="flex flex-col gap-2 flex-1">
+              <h2 className="text-lg sm:text-xl font-semibold">{name}</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                <StarRating rating={rating} />
+                <span className="text-sm text-muted-foreground">
+                  {ratingCount > 0
+                    ? `${Number(rating || 0).toFixed(1)} (${ratingCount} ${ratingCount === 1 ? "تقييم" : "تقييم"})`
+                    : "لا توجد تقييمات بعد"}
+                </span>
+              </div>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground line-clamp-4 sm:line-clamp-none">
+
+          {/* Description */}
+          <p className="text-sm text-muted-foreground line-clamp-1 sm:line-clamp-3 leading-relaxed">
             {description}
           </p>
+
+          {/* Extra services */}
           {Array.isArray(extraServices) && extraServices.length > 0 ? (
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className=" flex-wrap gap-2 hidden sm:flex">
               {extraServices.slice(0, 6).map((t) => (
                 <span
                   key={t}
@@ -151,40 +160,54 @@ export default function DirectoryTenantCard({
             </div>
           ) : null}
         </div>
-      </div>
 
-      <div className="mt-4 flex gap-2 md:hidden">
-        <CompanyInteractionButton
-          companyTenantId={tenant.tenantId}
-          companyName={tenant.name}
-          className="flex-1"
-        />
-        <Link href={`${basePath}/${tenant.id}`} className="flex-1">
-          <Button variant="outline" size="sm" className="w-full cursor-pointer">
-            عرض الملف الشخصي
-          </Button>
-        </Link>
-      </div>
-      <SignedIn>
-        <div className="shrink-0 absolute top-1 left-1 sm:top-0 sm:left-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`cursor-pointer transition-transform ${pending ? "scale-95" : "hover:scale-105"}`}
-            aria-pressed={isBookmarked}
-            onClick={handleToggle}
-            title={isBookmarked ? "إزالة المرجعية" : "حفظ مرجعية"}
-            aria-label={isBookmarked ? "إزالة المرجعية" : "حفظ مرجعية"}
-            disabled={pending}
-          >
-            {isBookmarked ? (
-              <BookmarkCheck className="size-6 text-primary" />
-            ) : (
-              <BookmarkPlus className="size-6 text-muted-foreground hover:text-muted-foreground/80" />
-            )}
-          </Button>
+        {/* Second half: Location, working hours, button in column */}
+        <div className="flex flex-col gap-4">
+          {/* Location */}
+          <div className="flex items-start gap-2">
+            <MapPin className="size-4 mt-0.5 flex-shrink-0" />
+            <span className="text-sm">{location}</span>
+          </div>
+
+          {/* Working hours */}
+          {Array.isArray(openingHours) && openingHours.length > 0 ? (
+            <div className="flex flex-col items-start gap-2">
+              <div className="flex items-center gap-2">
+                <Clock3 className="size-4 mt-0.5 flex-shrink-0" />
+                <span className="font-medium">ساعات العمل:</span>
+              </div>
+              <div className="flex flex-col gap-1 mr-5">
+                {getFormattedWorkingHours(openingHours, 2).map((group, idx) => (
+                  <div key={idx} className="flex items-center gap-1">
+                    <span className="text-sm font-medium min-w-[80px]">
+                      {group.dayRange}:
+                    </span>
+                    <span className="text-sm">{group.formattedHours}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {/* Buttons */}
+          <div className="flex items-start gap-2">
+            <CompanyInteractionButton
+              companyTenantId={tenant.tenantId}
+              companyName={tenant.name}
+              className="w-fit"
+            />
+            <Link href={`${basePath}/${tenant.id}`}>
+              <Button
+                variant="default"
+                size="sm"
+                className="w-full cursor-pointer bg-button-1 hover:bg-button-1-hover text-white"
+              >
+                عرض الملف الشخصي
+              </Button>
+            </Link>
+          </div>
         </div>
-      </SignedIn>
+      </div>
     </div>
   );
 }

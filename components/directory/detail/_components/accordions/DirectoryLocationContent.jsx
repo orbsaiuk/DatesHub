@@ -1,17 +1,19 @@
 import DirectoryMap from "../DirectoryMap";
+import { MapPin } from "lucide-react";
 
 export default function DirectoryLocationContent({ tenant }) {
   const allMarkers = Array.isArray(tenant?.locations) ? tenant.locations : [];
-  const hasHours =
-    Array.isArray(tenant?.openingHours) && tenant.openingHours.length > 0;
   return (
     <div className="rounded-xl border bg-white shadow-sm">
       <div className="aspect-[4/3] sm:aspect-[16/6] w-full rounded-xl overflow-hidden">
         <DirectoryMap tenant={tenant} />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3">
-        <div className="rounded-md border bg-white p-3 col-span-1 sm:col-span-2">
-          <p className="text-xs text-muted-foreground">المواقع</p>
+      <div className="p-3">
+        <div className="rounded-md border bg-white p-3">
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin className="size-4 text-muted-foreground" />
+            <p className="text-xs text-muted-foreground font-medium">المواقع</p>
+          </div>
           {Array.isArray(tenant?.locationList) ? (
             <ul className="mt-1 space-y-1">
               {tenant.locationList.map((locStr, i) => {
@@ -34,18 +36,6 @@ export default function DirectoryLocationContent({ tenant }) {
                 );
               })}
             </ul>
-          ) : null}
-        </div>
-        <div className="rounded-md border bg-white p-3">
-          <p className="text-xs text-muted-foreground">ساعات العمل</p>
-          {hasHours ? (
-            <div className="mt-1">
-              {tenant.openingHours.map((line, i) => (
-                <p key={i} className="text-xs text-muted-foreground">
-                  {line}
-                </p>
-              ))}
-            </div>
           ) : null}
         </div>
       </div>

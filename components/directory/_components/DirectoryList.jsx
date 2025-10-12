@@ -140,20 +140,28 @@ export default function DirectoryList({
   const hasNoResults = totalItems === 0;
 
   return (
-    <div ref={listTopRef} className="container mx-auto px-4 my-6 sm:my-8">
+    <div
+      ref={listTopRef}
+      className="container mx-auto px-3 sm:px-4 my-4 sm:my-6"
+    >
       {hasNoResults ? (
-        <div className="flex items-center justify-center py-16">
-          <div className="text-center max-w-md">
+        <div className="flex items-center justify-center py-12 sm:py-16">
+          <div className="text-center max-w-md px-4">
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
               <Search className="h-5 w-5 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold">{emptyTitle}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <h3 className="text-lg font-semibold text-gray-900">
+              {emptyTitle}
+            </h3>
+            <p className="mt-1 text-sm text-gray-600 leading-relaxed">
               {emptyDescription}
             </p>
-            <div className="mt-4">
+            <div className="mt-6">
               <a href={clearHref}>
-                <Button variant="outline" size="sm" className="cursor-pointer">
+                <Button
+                  size="sm"
+                  className="cursor-pointer touch-target bg-button-1 hover:bg-button-1-hover text-white"
+                >
                   مسح المرشحات
                 </Button>
               </a>
@@ -162,7 +170,8 @@ export default function DirectoryList({
         </div>
       ) : (
         <>
-          <div className="space-y-3 sm:space-y-5">
+          {/* Cards grid - mobile optimized */}
+          <div className="grid grid-cols-1 gap-4 sm:gap-6">
             {currentItems.map((tenant) => (
               <DirectoryTenantCard
                 key={tenant.id}
@@ -174,63 +183,115 @@ export default function DirectoryList({
             ))}
           </div>
 
-          {pageCount > 1 ? (
-            <div className="mt-6">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        goToPage(currentPage - 1);
-                      }}
-                      className={
-                        currentPage === 1
-                          ? "pointer-events-none opacity-50"
-                          : ""
-                      }
-                    />
-                  </PaginationItem>
+          {/* Pagination - mobile optimized */}
+          {pageCount > 1 && (
+            <div className="mt-8 sm:mt-10">
+              <div className="flex justify-center">
+                <Pagination className="flex-wrap">
+                  <PaginationContent className="flex-wrap gap-1">
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          goToPage(currentPage - 1);
+                        }}
+                        className={`touch-target ${
+                          currentPage === 1
+                            ? "pointer-events-none opacity-50"
+                            : "hover:bg-gray-100"
+                        }`}
+                      />
+                    </PaginationItem>
 
-                  {getPageNumbers().map((p, idx) => (
-                    <PaginationItem key={`${p}-${idx}`}>
-                      {typeof p === "number" ? (
+                    {/* Mobile: Show fewer page numbers */}
+                    <div className="hidden sm:contents">
+                      {getPageNumbers().map((p, idx) => (
+                        <PaginationItem key={`${p}-${idx}`}>
+                          {typeof p === "number" ? (
+                            <PaginationLink
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                goToPage(p);
+                              }}
+                              isActive={p === currentPage}
+                              aria-current={
+                                p === currentPage ? "page" : undefined
+                              }
+                              className="touch-target"
+                            >
+                              {p}
+                            </PaginationLink>
+                          ) : (
+                            <PaginationEllipsis />
+                          )}
+                        </PaginationItem>
+                      ))}
+                    </div>
+
+                    {/* Mobile: Show only current page and adjacent pages */}
+                    <div className="contents sm:hidden">
+                      {currentPage > 1 && (
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              goToPage(currentPage - 1);
+                            }}
+                            className="touch-target"
+                          >
+                            {currentPage - 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      )}
+
+                      <PaginationItem>
                         <PaginationLink
                           href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            goToPage(p);
-                          }}
-                          isActive={p === currentPage}
-                          aria-current={p === currentPage ? "page" : undefined}
+                          isActive={true}
+                          className="touch-target"
                         >
-                          {p}
+                          {currentPage}
                         </PaginationLink>
-                      ) : (
-                        <PaginationEllipsis />
-                      )}
-                    </PaginationItem>
-                  ))}
+                      </PaginationItem>
 
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        goToPage(currentPage + 1);
-                      }}
-                      className={
-                        currentPage === pageCount
-                          ? "pointer-events-none opacity-50"
-                          : ""
-                      }
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+                      {currentPage < pageCount && (
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              goToPage(currentPage + 1);
+                            }}
+                            className="touch-target"
+                          >
+                            {currentPage + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      )}
+                    </div>
+
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          goToPage(currentPage + 1);
+                        }}
+                        className={`touch-target ${
+                          currentPage === pageCount
+                            ? "pointer-events-none opacity-50"
+                            : "hover:bg-gray-100"
+                        }`}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
             </div>
-          ) : null}
+          )}
         </>
       )}
     </div>

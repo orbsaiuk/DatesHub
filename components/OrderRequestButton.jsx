@@ -19,7 +19,6 @@ export default function OrderRequestButton({
   companyTenantId,
   companyName = "Company",
   className = "",
-  variant = "default",
   size = "sm",
   onRequestSubmitted,
   onRequestAccepted,
@@ -107,9 +106,8 @@ export default function OrderRequestButton({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
-          variant={variant}
           size={size}
-          className={`cursor-pointer ${className}`}
+          className={`cursor-pointer bg-button-1 hover:bg-button-1-hover text-white ${className}`}
           onClick={handleButtonClick}
           disabled={!isLoaded}
         >

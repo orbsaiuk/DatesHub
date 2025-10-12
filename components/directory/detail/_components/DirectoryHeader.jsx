@@ -5,6 +5,7 @@ import {
   ExternalLink,
   BookmarkPlus,
   BookmarkCheck,
+  Clock3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { SignedIn } from "@clerk/nextjs";
 import CompanyInteractionButton from "@/components/CompanyInteractionButton";
+import { getFormattedWorkingHours } from "@/lib/utils/workingHours";
 
 export default function DirectoryHeader({
   tenant,
@@ -35,7 +37,7 @@ export default function DirectoryHeader({
         if (sessionStorage.getItem(storageKey)) return;
         sessionStorage.setItem(storageKey, "1");
       }
-    } catch { }
+    } catch {}
 
     if (hasIncrementedRef.current) return;
     hasIncrementedRef.current = true;
@@ -45,7 +47,7 @@ export default function DirectoryHeader({
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
       body: JSON.stringify({ id: tenant.id }),
-    }).catch(() => { });
+    }).catch(() => {});
   }, [tenant?.id]);
 
   async function toggleBookmark() {
@@ -108,7 +110,7 @@ export default function DirectoryHeader({
             <span className="text-muted-foreground">
               {tenant.location}
               {Array.isArray(tenant.locationList) &&
-                tenant.locationList.length > 1 ? (
+              tenant.locationList.length > 1 ? (
                 <>
                   {" "}
                   <span
@@ -121,8 +123,35 @@ export default function DirectoryHeader({
               ) : null}
             </span>
           </div>
+
+          {/* Working Hours */}
+          {Array.isArray(tenant.openingHours) &&
+          tenant.openingHours.length > 0 ? (
+            <div className="mt-3 flex items-start gap-2 text-xs sm:text-sm">
+              <Clock3 className="mt-0.5 size-4 text-muted-foreground" />
+              <div className="flex flex-col gap-1">
+                <span className="text-muted-foreground font-medium">
+                  ساعات العمل:
+                </span>
+                <div className="flex flex-col gap-1">
+                  {getFormattedWorkingHours(tenant.openingHours, 2).map(
+                    (group, idx) => (
+                      <div key={idx} className="flex items-center gap-1">
+                        <span className="text-xs font-medium min-w-[60px] text-muted-foreground">
+                          {group.dayRange}:
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {group.formattedHours}
+                        </span>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : null}
           {Array.isArray(tenant.extraServices) &&
-            tenant.extraServices.length > 0 ? (
+          tenant.extraServices.length > 0 ? (
             <div className="mt-2 flex flex-wrap gap-2">
               {tenant.extraServices.slice(0, 8).map((t) => (
                 <span
@@ -142,9 +171,9 @@ export default function DirectoryHeader({
               initialStatus={initialInteractionStatus}
             />
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
-              className="cursor-pointer w-auto"
+              className="cursor-pointer w-auto bg-button-1 hover:bg-button-1-hover text-white"
             >
               زيارة الموقع <ExternalLink className="size-4" />
             </Button>

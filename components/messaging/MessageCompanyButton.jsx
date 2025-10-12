@@ -7,7 +7,7 @@ import { MessageSquare } from "lucide-react";
 export default function MessageCompanyButton({
   companyTenantId,
   className = "",
-  variant = "outline",
+  variant = "default",
   size = "sm",
 }) {
   const [busy, setBusy] = useState(false);
@@ -47,14 +47,13 @@ export default function MessageCompanyButton({
   return (
     <Button
       type="button"
-      variant={variant}
       size={size}
-      className={`cursor-pointer ${className}`}
+      className={`cursor-pointer bg-button-1 hover:bg-button-1-hover text-white ${className}`}
       onClick={start}
       disabled={busy}
     >
       <MessageSquare className="size-4 ml-2" />
-      {busy ? "جارٍ الفتح…" : "مراسلة الشركة"}
+      {busy ? "جارٍ الفتح…" : "الرسائل"}
     </Button>
   );
 }

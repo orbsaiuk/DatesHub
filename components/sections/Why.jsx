@@ -26,18 +26,13 @@ export default function Why({ items }) {
   }
 
   return (
-    <section className="w-full py-12 sm:py-16 md:py-24 bg-gray-100">
+    <section className="w-full py-12 sm:py-16 bg-section-title/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-xl sm:text-4xl font-semibold tracking-tight">
-            لماذا تختارنا
-          </h2>
-          <p className="mt-3 sm:mt-4 text-sm sm:text-base text-muted-foreground">
-            مزايا صُممت لتساعدك على النجاح من اليوم الأول.
-          </p>
-        </div>
+        <h2 className="text-2xl sm:text-4xl tracking-tight text-section-title mb-6 sm:mb-10">
+          لماذا تختارنا؟
+        </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 mt-8 sm:mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
           {features.map((feature, idx) => {
             const Icon = fixedIcons[idx % fixedIcons.length];
             return (
@@ -50,7 +45,7 @@ export default function Why({ items }) {
                 </div>
 
                 <div className="flex flex-col gap-2 max-w-xs">
-                  <h3 className="text-base sm:text-lg font-semibold tracking-tight">
+                  <h3 className="text-base sm:text-lg font-semibold tracking-tight text-section-title">
                     {feature.title}
                   </h3>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">

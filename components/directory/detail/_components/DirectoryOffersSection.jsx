@@ -91,6 +91,39 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
     };
 
     fetchOffers();
+
+    // Fetch products
+    const fetchProducts = async () => {
+      if (!tenant?.id) {
+        setProductsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `/api/products/tenant?tenantType=${tenantType}&tenantId=${tenant.id}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.items) {
+          setProducts(data.items);
+        } else {
+          setProducts([]);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setProducts([]);
+      } finally {
+        setProductsLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, [tenant?.id, tenantType]);
 
   useEffect(() => {
@@ -172,15 +205,23 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
               aria-label={`اذهب إلى العرض ${index + 1}`}
               aria-selected={index === currentIndex}
               role="tab"
-              className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                index === currentIndex
-                  ? "bg-primary w-8"
-                  : "bg-gray-300 hover:bg-gray-400 w-2"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50 ${index === currentIndex
+                ? "bg-primary w-8"
+                : "bg-gray-300 hover:bg-gray-400 w-2"
+                }`}
             />
           ))}
         </div>
       )}
+
+      {/* Products Section */}
+      <div className="mt-12">
+        <DirectoryProductsSection
+          products={products}
+          loading={productsLoading}
+          tenant={tenant}
+        />
+      </div>
     </div>
   );
 }
@@ -270,11 +311,10 @@ function DirectoryOfferCard({ offer, tenant }) {
         <div className="space-y-3">
           {/* Title */}
           <h4
-            className={`text-2xl font-bold leading-tight ${
-              hasBackgroundImage
-                ? "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
-                : "text-gray-900"
-            }`}
+            className={`text-2xl font-bold leading-tight ${hasBackgroundImage
+              ? "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+              : "text-gray-900"
+              }`}
           >
             {offer.title}
           </h4>
@@ -282,11 +322,10 @@ function DirectoryOfferCard({ offer, tenant }) {
           {/* Description */}
           {offer.description && (
             <p
-              className={`text-base leading-relaxed line-clamp-2 ${
-                hasBackgroundImage
-                  ? "text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
-                  : "text-gray-600"
-              }`}
+              className={`text-base leading-relaxed line-clamp-2 ${hasBackgroundImage
+                ? "text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+                : "text-gray-600"
+                }`}
             >
               {Array.isArray(offer.description)
                 ? offer.description[0]?.children?.[0]?.text || ""
@@ -301,11 +340,10 @@ function DirectoryOfferCard({ offer, tenant }) {
           {/* Enhanced Date Info */}
           {!isLastDay() && offer.endDate && (
             <div
-              className={`w-fit flex items-center justify-center gap-2 px-4 py-3 rounded-xl backdrop-blur-sm transition-all duration-300 ${
-                hasBackgroundImage
-                  ? "bg-white/25 text-white border border-white/40 hover:bg-white/30"
-                  : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800 border border-blue-200"
-              }`}
+              className={`w-fit flex items-center justify-center gap-2 px-4 py-3 rounded-xl backdrop-blur-sm transition-all duration-300 ${hasBackgroundImage
+                ? "bg-white/25 text-white border border-white/40 hover:bg-white/30"
+                : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800 border border-blue-200"
+                }`}
             >
               <Clock className="w-5 h-5" />
               <div className="text-center">
@@ -328,6 +366,158 @@ function DirectoryOfferCard({ offer, tenant }) {
 
       {/* Animated border gradient */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+    </div>
+  );
+}
+
+function DirectoryProductsSection({ products, loading, tenant }) {
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between animate-pulse">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-gray-200 rounded"></div>
+            <div className="h-8 w-32 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, index) => (
+            <div key={index} className="bg-gray-100 rounded-xl h-80 animate-pulse">
+              <div className="h-48 bg-gray-200 rounded-t-xl"></div>
+              <div className="p-4 space-y-3">
+                <div className="h-6 bg-gray-200 rounded"></div>
+                <div className="flex justify-between">
+                  <div className="h-5 w-20 bg-gray-200 rounded"></div>
+                  <div className="h-5 w-16 bg-gray-200 rounded"></div>
+                </div>
+                <div className="h-4 bg-gray-200 rounded"></div>
+                <div className="h-4 w-3/4 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!products.length) {
+    return (
+      <div className="text-center py-12 px-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300">
+        <div className="h-16 w-16 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto mb-4">
+          <Package className="h-8 w-8 text-gray-400" />
+        </div>
+        <h4 className="text-lg font-semibold text-gray-700 mb-2">
+          لا توجد منتجات حالياً
+        </h4>
+        <p className="text-gray-500 text-sm max-w-sm mx-auto">
+          تابع معنا لاكتشاف أحدث المنتجات والخدمات المتاحة
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Package className="w-6 h-6 text-primary" />
+          <h3 className="text-2xl font-bold text-gray-900">منتجاتنا</h3>
+        </div>
+        <Badge variant="secondary" className="text-sm">
+          {products.length} منتج
+        </Badge>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {products.map((product) => (
+          <ProductCard key={product._id} product={product} tenant={tenant} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ProductCard({ product, tenant }) {
+  const imageUrl = product.image?.asset?.url
+    ? urlFor(product.image).width(400).height(300).url()
+    : null;
+
+  const formatPrice = (price, currency = "SAR") => {
+    if (!price || price === 0) return "السعر عند الطلب";
+    return `${price.toLocaleString("ar-SA")} ${currency}`;
+  };
+
+  const formatQuantity = (quantity, weightUnit = "kg") => {
+    if (!quantity || quantity === 0) return "الكمية عند الطلب";
+    return `${quantity.toLocaleString("ar-SA")} ${weightUnit}`;
+  };
+
+  const getDescription = (description) => {
+    if (!description) return "";
+    if (Array.isArray(description)) {
+      return description[0]?.children?.[0]?.text || "";
+    }
+    return typeof description === "string" ? description : "";
+  };
+
+  return (
+    <div className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+      {/* Product Image */}
+      <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+        {imageUrl ? (
+          <ImageOptimized
+            src={imageUrl}
+            alt={`${product.title} - منتج من ${tenant?.name || "الشركة"}`}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+            <Package className="w-16 h-16 text-gray-400" />
+          </div>
+        )}
+
+        {/* Overlay on hover */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+
+        {/* Shopping cart icon on hover */}
+        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
+            <ShoppingCart className="w-5 h-5 text-primary" />
+          </div>
+        </div>
+      </div>
+
+      {/* Product Info */}
+      <div className="p-4 space-y-3">
+        {/* Title */}
+        <h4 className="font-bold text-lg text-gray-900 line-clamp-2 group-hover:text-primary transition-colors duration-200">
+          {product.title}
+        </h4>
+
+        {/* Price and Quantity */}
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center gap-1">
+            <span className="font-semibold text-primary">
+              {formatPrice(product.price, product.currency)}
+            </span>
+          </div>
+          <div className="text-gray-600">
+            {formatQuantity(product.quantity, product.weightUnit)}
+          </div>
+        </div>
+
+        {/* Description */}
+        {getDescription(product.description) && (
+          <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
+            {getDescription(product.description)}
+          </p>
+        )}
+
+        {/* Bottom border accent */}
+        <div className="h-1 bg-gradient-to-r from-primary/20 via-primary to-primary/20 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+      </div>
     </div>
   );
 }

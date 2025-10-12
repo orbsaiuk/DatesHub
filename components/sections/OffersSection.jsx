@@ -74,7 +74,7 @@ export default function OffersSection({ type = "company" }) {
     <section className="py-12 sm:py-16 bg-gray-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="mb-8 flex justify-between items-center">
+        <div className="mb-6 sm:mb-10 flex justify-between items-center">
           <h2 className="text-xl sm:text-4xl font-semibold tracking-tight">
             عروض حصرية
           </h2>

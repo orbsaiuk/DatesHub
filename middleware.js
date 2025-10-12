@@ -22,14 +22,17 @@ const isProtectedRoute = createRouteMatcher([
 const isBusinessRoute = createRouteMatcher(["/business(.*)"]);
 const isBecomeRoute = createRouteMatcher(["/become(.*)"]);
 const isMessagesRoute = createRouteMatcher(["/messages(.*)"]);
+const isUserProfileRoute = createRouteMatcher(["/user-profile(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId, sessionClaims } = await auth();
 
   // Allow public endpoints without authentication
-  if (req.nextUrl.pathname.startsWith("/api/offers/public") ||
+  if (
+    req.nextUrl.pathname.startsWith("/api/offers/public") ||
     req.nextUrl.pathname.startsWith("/api/offers/tenant") ||
-    req.nextUrl.pathname.startsWith("/api/promotional-banners/public")) {
+    req.nextUrl.pathname.startsWith("/api/promotional-banners/public")
+  ) {
     return NextResponse.next();
   }
 
@@ -113,6 +116,17 @@ export default clerkMiddleware(async (auth, req) => {
 
     if (userRole === "company" || userRole === "supplier") {
       return notFound();
+    }
+  }
+
+  // Prevent authenticated users from accessing the user profile page
+  if (isUserProfileRoute(req)) {
+    if (userId) {
+      return NextResponse.redirect(new URL("/user-profile", req.url));
+    } else {
+      const signInUrl = new URL("/sign-in", req.url);
+      signInUrl.searchParams.set("redirect_url", req.url);
+      return NextResponse.redirect(signInUrl);
     }
   }
 });

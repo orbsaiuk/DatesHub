@@ -25,7 +25,7 @@ export default function HeaderClient() {
   const pathname = usePathname();
   return (
     <header className="w-full border-b bg-secondary/80 backdrop-blur-md sticky top-0 z-50">
-      <div className="mx-auto container px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="mx-auto container px-4 sm:px-0 h-16 flex items-center justify-between">
         <Link
           href="/"
           className="font-semibold text-base sm:text-lg flex items-center gap-2"
@@ -53,28 +53,36 @@ export default function HeaderClient() {
           >
             {directoryLabel}
           </Link>
-          <SignedIn>
-            <Link href="/bookmarks">
-              <Bookmark className="size-5" />
-            </Link>
-            {!isBusiness && <InboxDropdown />}
-          </SignedIn>
         </nav>
 
         <div className="hidden md:flex items-center gap-6">
           {isLoaded && isBusiness ? (
             <Link href={dashboardHref}>
-              <Button size="sm" className="cursor-pointer">
+              <Button
+                size="sm"
+                className="cursor-pointer bg-button-1 hover:bg-button-1-hover text-white"
+              >
                 لوحة التحكم
               </Button>
             </Link>
           ) : (
             <Link href="/become">
-              <Button size="sm" className="cursor-pointer">
+              <Button
+                size="sm"
+                className="cursor-pointer bg-button-1 hover:bg-button-1-hover text-white"
+              >
                 انضم كشركة
               </Button>
             </Link>
           )}
+          <SignedIn>
+            <Button variant="ghost" size="icon" className="cursor-pointer">
+              <Link href="/bookmarks">
+                <Bookmark className="size-5" />
+              </Link>
+            </Button>
+            {!isBusiness && <InboxDropdown />}
+          </SignedIn>
           <HeaderAuthButtons />
         </div>
         <div className="md:hidden">

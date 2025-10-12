@@ -4,8 +4,6 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserPlus } from "lucide-react";
-import { SignedOut, SignedIn } from "@clerk/nextjs";
 import { Search } from "lucide-react";
 
 export default function HeroSearch() {
@@ -21,12 +19,8 @@ export default function HeroSearch() {
     router.push(`/companies${qs ? `?${qs}` : ""}`);
   }, [query, router]);
 
-  const handleLogin = useCallback(() => {
-    router.push("/sign-in");
-  }, [router]);
-
   return (
-    <div className="mt-10 w-full max-w-2xl mx-auto">
+    <div className="mt-10 w-full max-w-2xl">
       <div className="flex items-center gap-2 bg-white rounded-full p-2 shadow-sm ring-1 ring-black/5">
         <div className="relative flex-1 w-full">
           <label htmlFor="hero-search" className="sr-only">
@@ -48,28 +42,15 @@ export default function HeroSearch() {
           />
         </div>
 
-        <SignedOut>
-          <Button
-            size="lg"
-            aria-label="تسجيل الدخول"
-            className="h-8 sm:h-11 w-fit sm:w-auto rounded-full px-2 sm:px-6 cursor-pointer"
-            onClick={handleLogin}
-          >
-            <UserPlus className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-            <span>تسجيل الدخول</span>
-          </Button>
-        </SignedOut>
-        <SignedIn>
-          <Button
-            size="lg"
-            aria-label="بحث"
-            className="h-8 sm:h-11 w-fit sm:w-auto rounded-full px-2 sm:px-6 cursor-pointer"
-            onClick={handleGo}
-          >
-            <Search className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-            <span>بحث</span>
-          </Button>
-        </SignedIn>
+        <Button
+          size="lg"
+          aria-label="بحث"
+          className="h-8 sm:h-11 w-fit sm:w-auto rounded-full px-2 sm:px-6 cursor-pointer bg-button-1 hover:bg-button-1-hover text-white"
+          onClick={handleGo}
+        >
+          <Search className="w-4 h-4 sm:w-5 sm:h-5 ml-0 sm:ml-2" />
+          <span className="hidden sm:block">بحث</span>
+        </Button>
       </div>
     </div>
   );

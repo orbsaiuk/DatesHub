@@ -1,5 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Almarai } from "next/font/google";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import { SanityLive } from "@/sanity/lib/live";
@@ -9,14 +9,12 @@ import StructuredData, {
 } from "@/components/StructuredData";
 import { BreadcrumbProvider } from "@/contexts/BreadcrumbContext";
 import { arSA } from "@clerk/localizations";
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import AosAnimate from "@/components/AosAnimate";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const almarai = Almarai({
+  subsets: ["arabic"],
+  weight: ["300", "400", "700", "800"],
+  variable: "--font-almarai",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -175,11 +173,10 @@ export default function RootLayout({ children }) {
           <link rel="preconnect" href="https://cdn.sanity.io" />
           <link rel="dns-prefetch" href="https://images.unsplash.com" />
         </head>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+        <body className={` ${almarai.variable} antialiased`}>
           <BreadcrumbProvider>{children}</BreadcrumbProvider>
           <SanityLive />
+          <AosAnimate />
           <div id="clerk-captcha" data-cl-size="flexible" />
           <Toaster richColors position="top-center" />
         </body>

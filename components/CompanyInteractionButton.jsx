@@ -11,7 +11,6 @@ export default function CompanyInteractionButton({
   companyTenantId,
   companyName = "Company",
   className = "",
-  variant = "default",
   size = "sm",
   initialStatus = null, // Server-fetched status to avoid client-side delay
 }) {
@@ -68,7 +67,6 @@ export default function CompanyInteractionButton({
       <MessageCompanyButton
         companyTenantId={companyTenantId}
         className={className}
-        variant={variant}
         size={size}
       />
     );
@@ -91,7 +89,6 @@ export default function CompanyInteractionButton({
       companyTenantId={companyTenantId}
       companyName={companyName}
       className={className}
-      variant={variant}
       size={size}
       onRequestSubmitted={() => {
         setHasPendingRequest(true);

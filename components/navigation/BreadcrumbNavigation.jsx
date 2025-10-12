@@ -10,6 +10,7 @@ import {
   UserPlus,
   MessageSquare,
   CheckCircle2,
+  User,
 } from "lucide-react";
 import {
   Breadcrumb,
@@ -31,6 +32,7 @@ const routeConfig = {
   become: { label: "انضم إلينا", icon: UserPlus },
   success: { label: "تم الإرسال", icon: CheckCircle2 },
   messages: { label: "الرسائل", icon: MessageSquare },
+  "user-profile": { label: "الملف الشخصي", icon: User },
 };
 
 // Function to get company name from slug/id (enhanced with API call)
