@@ -3,7 +3,10 @@ import { writeClient } from "@/sanity/lib/serverClient";
 import { USER_BY_ID_OR_CLERKID_QUERY } from "@/sanity/queries/user";
 import { uuid } from "@sanity/uuid";
 import { safeUpdateClerkRole } from "@/services/clerk";
-import { sendApprovalEmail, sendRejectionEmail } from "@/services/email";
+import {
+  sendOrderRequestApprovalEmail,
+  sendOrderRequestRejectionEmail,
+} from "@/services/email";
 import {
   createCompanyDocument,
   createSupplierDocument,
@@ -29,7 +32,7 @@ export async function POST(req) {
     // Handle rejection emails
     if (doc.status === "rejected") {
       try {
-        await sendRejectionEmail(doc);
+        await sendOrderRequestRejectionEmail(doc);
       } catch (emailError) {
         // Silent fail - email is not critical
       }
@@ -141,7 +144,7 @@ export async function POST(req) {
 
     // Send approval email notification
     try {
-      await sendApprovalEmail(doc);
+      await sendOrderRequestApprovalEmail(doc);
     } catch (emailError) {
       // Don't fail the webhook if email fails
     }
