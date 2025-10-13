@@ -51,7 +51,14 @@ export async function POST(req) {
     const email = data.email_addresses?.[0]?.email_address || "";
     const firstName = data.first_name || "";
     const lastName = data.last_name || "";
-    const name = `${firstName} ${lastName}`.trim();
+    const username = data.username || "";
+
+    // Use username if first/last name are not available (manual signup case)
+    let name = `${firstName} ${lastName}`.trim();
+    if (!name && username) {
+      name = username;
+    }
+
     const imageUrl = data.image_url || "";
 
     const publicRole = data.public_metadata?.role;
