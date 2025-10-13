@@ -45,6 +45,7 @@ export default defineType({
       options: { hotspot: true },
       readOnly: true,
       description: "Optional. A default logo will be used if not provided.",
+      validation: (Rule) => Rule.optional(),
     }),
     defineField({
       name: "description",
@@ -69,6 +70,23 @@ export default defineType({
       name: "registrationNumber",
       title: "Registration Number",
       type: "number",
+      readOnly: true,
+    }),
+    defineField({
+      name: "supplierType",
+      title: "Supplier Type",
+      type: "string",
+      options: {
+        list: [
+          { title: "مصنع تمور", value: "dates-factory" },
+          { title: "مصنع تعبئة", value: "packaging-factory" },
+          { title: "مصنع تغليف", value: "wrapping-factory" },
+          { title: "مزرعة", value: "farm" },
+          { title: "تاجر جملة", value: "wholesaler" },
+          { title: "مصدر", value: "exporter" },
+        ],
+        layout: "radio",
+      },
       readOnly: true,
     }),
     defineField({

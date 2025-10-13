@@ -62,6 +62,7 @@ export function useTenantRequestForm() {
         foundingYear: values.foundingYear || null,
         registrationNumber: values.registrationNumber || null,
         companyType: values.companyType || null,
+        supplierType: values.supplierType || null,
         businessLicense: values.businessLicense || null,
         productCategories: values.productCategories || [],
         categories,
@@ -76,8 +77,8 @@ export function useTenantRequestForm() {
           zipCode: l.zipCode,
           geo:
             l.geo &&
-            typeof l.geo.lat === "number" &&
-            typeof l.geo.lng === "number"
+              typeof l.geo.lat === "number" &&
+              typeof l.geo.lng === "number"
               ? { lat: l.geo.lat, lng: l.geo.lng }
               : undefined,
         })),

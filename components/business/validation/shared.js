@@ -160,21 +160,41 @@ export const entityTypeEnum = z.enum(["company", "supplier"], {
 
 export const companyTypeEnum = z.enum(
   [
-    "full-event-planner",
-    "kids-birthday",
-    "wedding",
-    "social-gathering",
-    "corporate-event",
+    "online-store",
+    "dates-shop",
+    "distributor",
   ],
   {
-    required_error: "نوع الفعالية مطلوب",
+    required_error: "نوع الشركة مطلوب",
+  }
+);
+
+export const supplierTypeEnum = z.enum(
+  [
+    "dates-factory",
+    "packaging-factory",
+    "wrapping-factory",
+    "farm",
+    "wholesaler",
+    "exporter",
+  ],
+  {
+    required_error: "نوع المورد مطلوب",
   }
 );
 
 export const validateCompanyType = (value) => {
   const errors = {};
   if (!value) {
-    errors.companyType = "نوع الفعالية مطلوب";
+    errors.companyType = "نوع الشركة مطلوب";
+  }
+  return errors;
+};
+
+export const validateSupplierType = (value) => {
+  const errors = {};
+  if (!value) {
+    errors.supplierType = "نوع المورد مطلوب";
   }
   return errors;
 };

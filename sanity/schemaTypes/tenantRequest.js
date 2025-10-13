@@ -107,11 +107,30 @@ export default defineType({
       type: "string",
       options: {
         list: [
-          { title: "Full Event Planner", value: "full-event-planner" },
-          { title: "Specialist", value: "specialist" },
+          { title: "متجر الكتروني", value: "online-store" },
+          { title: "محل تمور", value: "dates-shop" },
+          { title: "موزع", value: "distributor" },
         ],
       },
       readOnly: true,
+      hidden: ({ document }) => document?.tenantType === "supplier",
+    }),
+    defineField({
+      name: "supplierType",
+      title: "Supplier Type",
+      type: "string",
+      options: {
+        list: [
+          { title: "مصنع تمور", value: "dates-factory" },
+          { title: "مصنع تعبئة", value: "packaging-factory" },
+          { title: "مصنع تغليف", value: "wrapping-factory" },
+          { title: "مزرعة", value: "farm" },
+          { title: "تاجر جملة", value: "wholesaler" },
+          { title: "مصدر", value: "exporter" },
+        ],
+      },
+      readOnly: true,
+      hidden: ({ document }) => document?.tenantType === "company",
     }),
     defineField({
       name: "openingHours",

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import {
   BookmarkCheck,
@@ -16,6 +17,7 @@ import { SignedIn } from "@clerk/nextjs";
 import CompanyInteractionButton from "@/components/CompanyInteractionButton";
 import { getFormattedWorkingHours } from "@/lib/utils/workingHours";
 import { getDefaultLogoUrl } from "@/lib/utils/defaultLogo";
+import { getTenantTypeLabel } from "@/lib/utils/tenantType";
 
 function StarRating({ rating = 0 }) {
   const stars = Array.from({ length: 5 });
@@ -120,7 +122,20 @@ export default function DirectoryTenantCard({
 
             {/* Name and reviews */}
             <div className="flex flex-col gap-2 flex-1">
-              <h2 className="text-lg sm:text-xl font-semibold">{name}</h2>
+              <div className="flex items-start gap-2 flex-col sm:flex-wrap">
+                <h2 className="text-lg sm:text-xl font-semibold">{name}</h2>
+                {getTenantTypeLabel(
+                  tenant.tenantType || "company",
+                  tenant.companyType || tenant.supplierType
+                ) && (
+                    <Badge variant="secondary" className="text-xs">
+                      {getTenantTypeLabel(
+                        tenant.tenantType || "company",
+                        tenant.companyType || tenant.supplierType
+                      )}
+                    </Badge>
+                  )}
+              </div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                 <StarRating rating={rating} />
                 <span className="text-sm text-muted-foreground">

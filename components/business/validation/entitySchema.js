@@ -14,6 +14,7 @@ import {
   openingHoursArray,
   entityTypeEnum,
   companyTypeEnum,
+  supplierTypeEnum,
 } from "./shared";
 
 // Base schema shared by both entity types
@@ -47,6 +48,7 @@ const supplierSchema = baseEntitySchema
   .extend({
     entityType: z.literal("supplier"),
     totalEmployees: optionalString,
+    supplierType: supplierTypeEnum,
   })
   .superRefine(logoValidation);
 
@@ -106,6 +108,7 @@ export const getInitialValues = (entityType = "company") => {
     return {
       ...baseInitial,
       totalEmployees: "",
+      supplierType: "",
     };
   }
 };

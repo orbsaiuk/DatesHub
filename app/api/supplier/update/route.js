@@ -86,6 +86,7 @@ export async function PATCH(request) {
       website: rawUpdate.website,
       description: toPortableText(rawUpdate.description),
       logo: rawUpdate.logo,
+      supplierType: rawUpdate.supplierType,
       categories: Array.isArray(rawUpdate.categories)
         ? rawUpdate.categories
         : undefined,

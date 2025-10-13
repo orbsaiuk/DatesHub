@@ -182,6 +182,10 @@ export default async function DirectoryDetailPage({
     website: data.website || "",
     extraServices: data?.extraServices || [],
     geo: primaryLocation?.geo || null,
+    type: type,
+    tenantType: data.tenantType || type,
+    companyType: data.companyType || null,
+    supplierType: data.supplierType || null,
   };
 
   // Fetch user's bookmark status and interaction status on the server to avoid client-side delay

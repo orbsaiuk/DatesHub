@@ -21,6 +21,8 @@ export default function StepBasicInfo({
   const name = watch("name")?.trim();
   const description = watch("description")?.trim();
   const totalEmployees = watch("totalEmployees");
+  const companyType = watch("companyType");
+  const supplierType = watch("supplierType");
   const foundingYear = watch("foundingYear")?.trim();
   const registrationNumber = watch("registrationNumber")?.trim();
 
@@ -29,6 +31,8 @@ export default function StepBasicInfo({
     errors.logo ||
     errors.description ||
     (entityType === "company" && errors.totalEmployees) ||
+    (entityType === "company" && errors.companyType) ||
+    (entityType === "supplier" && errors.supplierType) ||
     errors.foundingYear ||
     errors.registrationNumber ||
     errors.website
@@ -38,6 +42,8 @@ export default function StepBasicInfo({
     name &&
     description &&
     (entityType === "company" ? totalEmployees : true) &&
+    (entityType === "company" ? companyType : true) &&
+    (entityType === "supplier" ? supplierType : true) &&
     foundingYear &&
     registrationNumber &&
     !hasFieldErrors

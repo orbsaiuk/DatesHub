@@ -25,27 +25,29 @@ export default async function DirectoryPage({
 }) {
   const title = type === "suppliers" ? "الموردين" : "الشركات";
   const basePath = type === "suppliers" ? "/suppliers" : "/companies";
+  const entityType = type === "suppliers" ? "supplier" : "company";
 
   const { loc, spec, ctype, sort, q } = (await searchParams) || {};
   const hasFilters = Boolean(loc || spec || ctype || sort || q);
   const { query, params } = hasFilters
     ? type === "suppliers"
       ? buildSuppliersQuery({
-          location: loc || undefined,
-          specialization: spec || undefined,
-          search: q || undefined,
-        })
+        location: loc || undefined,
+        specialization: spec || undefined,
+        supplierType: ctype && ctype !== "all" ? ctype : undefined,
+        search: q || undefined,
+      })
       : buildCompaniesQuery({
-          location: loc || undefined,
-          specialization: spec || undefined,
-          companyType: ctype && ctype !== "all" ? ctype : undefined,
-          search: q || undefined,
-        })
+        location: loc || undefined,
+        specialization: spec || undefined,
+        companyType: ctype && ctype !== "all" ? ctype : undefined,
+        search: q || undefined,
+      })
     : {
-        query:
-          type === "suppliers" ? SUPPLIERS_LIST_QUERY : COMPANIES_LIST_QUERY,
-        params: {},
-      };
+      query:
+        type === "suppliers" ? SUPPLIERS_LIST_QUERY : COMPANIES_LIST_QUERY,
+      params: {},
+    };
 
   const result = await writeClient.fetch(query, params);
   const tenants = Array.isArray(result) ? result : (result?.data ?? []);
@@ -110,6 +112,7 @@ export default async function DirectoryPage({
           }}
           count={tenants.length}
           cities={cities}
+          entityType={entityType}
         />
         <DirectoryList
           items={tenants}

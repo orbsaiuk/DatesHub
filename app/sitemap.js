@@ -55,8 +55,8 @@ export default async function sitemap() {
     }
   }
 
-  // Event type pages
-  const companyTypes = ["full-event-planner", "specialist"];
+  // Company type pages
+  const companyTypes = ["online-store", "dates-shop", "distributor"];
   for (const type of companyTypes) {
     urls.push({
       url: `${siteUrl}/companies?ctype=${type}`,

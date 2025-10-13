@@ -46,6 +46,7 @@ export default defineType({
       options: { hotspot: true },
       readOnly: true,
       description: "Optional. A default logo will be used if not provided.",
+      validation: (Rule) => Rule.optional(),
     }),
     defineField({
       name: "description",
@@ -103,16 +104,14 @@ export default defineType({
       ],
     }),
     defineField({
-      name: "eventType",
-      title: "Event Type",
+      name: "companyType",
+      title: "Company Type",
       type: "string",
       options: {
         list: [
-          { title: "Full Event Planner", value: "full-event-planner" },
-          { title: "Kids Birthday", value: "kids-birthday" },
-          { title: "Wedding", value: "wedding" },
-          { title: "Social Gathering", value: "social-gathering" },
-          { title: "Corporate Event", value: "corporate-event" },
+          { title: "متجر الكتروني", value: "online-store" },
+          { title: "محل تمور", value: "dates-shop" },
+          { title: "موزع", value: "distributor" },
         ],
         layout: "radio",
       },

@@ -28,7 +28,9 @@ export const SUPPLIER_CARD_PROJECTION = `{
   ),
   openingHours,
   "description": pt::text(description),
-  extraServices
+  extraServices,
+  tenantType,
+  supplierType
 }`;
 
 export const SUPPLIERS_LIST_QUERY = `
@@ -53,6 +55,7 @@ array::unique(
 export function buildSuppliersQuery({
   location,
   specialization, // category slug string
+  supplierType, // 'dates-factory' | 'packaging-factory' | 'wrapping-factory' | 'farm' | 'wholesaler' | 'exporter'
   search, // text matches name or description
   tenantType, // optional tenant scoping
   tenantId, // optional tenant scoping
@@ -79,6 +82,11 @@ export function buildSuppliersQuery({
   if (specialization) {
     filters.push("count(categories[@->slug.current == $spec]) > 0");
     params.spec = `${specialization}`;
+  }
+
+  if (supplierType) {
+    filters.push("supplierType == $stype");
+    params.stype = `${supplierType}`;
   }
 
   if (search) {

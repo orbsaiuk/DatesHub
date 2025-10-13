@@ -52,6 +52,8 @@ export default function BusinessBasicInfo({
         totalEmployees={form.totalEmployees}
         foundingYear={form.foundingYear}
         registrationNumber={form.registrationNumber}
+        companyType={form.companyType}
+        supplierType={form.supplierType}
         entityType={entityType}
         description={form.description}
         onNameChange={(value) => updateField("name", value)}
@@ -63,6 +65,8 @@ export default function BusinessBasicInfo({
         onRegistrationNumberChange={(value) =>
           updateField("registrationNumber", value)
         }
+        onCompanyTypeChange={(value) => updateField("companyType", value)}
+        onSupplierTypeChange={(value) => updateField("supplierType", value)}
         onDescriptionChange={(value) => updateField("description", value)}
         errors={errors}
         rhfMode={false}

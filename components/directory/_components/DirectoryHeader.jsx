@@ -13,6 +13,7 @@ export default function DirectoryHeader({
   initialFilters,
   count = 0,
   cities = [],
+  entityType = "company", // "company" or "supplier"
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -77,6 +78,7 @@ export default function DirectoryHeader({
           categories={categories}
           initialFilters={initialFilters}
           cities={cities}
+          entityType={entityType}
         />
       </div>
     </section>

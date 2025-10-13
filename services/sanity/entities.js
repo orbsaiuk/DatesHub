@@ -36,13 +36,13 @@ export async function createCompanyDocument(doc, tenantId) {
     logo: doc.logo || null,
     description: doc.description
       ? [
-          {
-            _key: uuid(),
-            _type: "block",
-            children: [{ _type: "span", _key: uuid(), text: doc.description }],
-            markDefs: [],
-          },
-        ]
+        {
+          _key: uuid(),
+          _type: "block",
+          children: [{ _type: "span", _key: uuid(), text: doc.description }],
+          markDefs: [],
+        },
+      ]
       : [],
     website: doc.website || null,
     totalEmployees: doc.totalEmployees || null,
@@ -60,14 +60,14 @@ export async function createCompanyDocument(doc, tenantId) {
     extraServices: doc.extraServices,
     locations: Array.isArray(doc.locations)
       ? doc.locations.map((l) => ({
-          _key: l?._key || uuid(),
-          address: l?.address || null,
-          city: l?.city || null,
-          region: l?.region || null,
-          country: l?.country || null,
-          zipCode: l?.zipCode || null,
-          geo: l?.geo || undefined,
-        }))
+        _key: l?._key || uuid(),
+        address: l?.address || null,
+        city: l?.city || null,
+        region: l?.region || null,
+        country: l?.country || null,
+        zipCode: l?.zipCode || null,
+        geo: l?.geo || undefined,
+      }))
       : [],
     openingHours: doc.openingHours,
   };
@@ -99,13 +99,13 @@ export async function createSupplierDocument(doc, tenantId) {
     logo: doc.logo || null,
     description: doc.description
       ? [
-          {
-            _key: uuid(),
-            _type: "block",
-            children: [{ _type: "span", _key: uuid(), text: doc.description }],
-            markDefs: [],
-          },
-        ]
+        {
+          _key: uuid(),
+          _type: "block",
+          children: [{ _type: "span", _key: uuid(), text: doc.description }],
+          markDefs: [],
+        },
+      ]
       : [],
     website: doc.website || null,
     foundingYear: doc.foundingYear ? Number(doc.foundingYear) : null,
@@ -115,19 +115,20 @@ export async function createSupplierDocument(doc, tenantId) {
         : doc.registrationNumber
           ? Number(doc.registrationNumber)
           : null,
+    supplierType: doc.supplierType || null,
     contact: doc.contact || null,
     categories: categoryRefs.map((r) => ({ ...r, _key: uuid() })),
     extraServices: doc.extraServices,
     locations: Array.isArray(doc.locations)
       ? doc.locations.map((l) => ({
-          _key: l?._key || uuid(),
-          address: l?.address || null,
-          city: l?.city || null,
-          region: l?.region || null,
-          country: l?.country || null,
-          zipCode: l?.zipCode || null,
-          geo: l?.geo || undefined,
-        }))
+        _key: l?._key || uuid(),
+        address: l?.address || null,
+        city: l?.city || null,
+        region: l?.region || null,
+        country: l?.country || null,
+        zipCode: l?.zipCode || null,
+        geo: l?.geo || undefined,
+      }))
       : [],
     openingHours: doc.openingHours,
   };

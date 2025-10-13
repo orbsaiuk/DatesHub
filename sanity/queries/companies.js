@@ -28,7 +28,9 @@ export const COMPANY_CARD_PROJECTION = `{
   ),
   openingHours,
   "description": pt::text(description),
-  extraServices
+  extraServices,
+  tenantType,
+  companyType
 }`;
 
 export const COMPANIES_LIST_QUERY = `
@@ -90,7 +92,7 @@ export const COMPANY_DETAIL_QUERY = `
 export function buildCompaniesQuery({
   location,
   specialization, // category slug string
-  companyType, // 'full-event-planner' | 'specialist'
+  companyType, // 'online-store' | 'dates-shop' | 'distributor'
   search, // text matches name or description
   tenantType, // optional tenant scoping
   tenantId, // optional tenant scoping

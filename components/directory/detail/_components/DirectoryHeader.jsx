@@ -8,6 +8,7 @@ import {
   Clock3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import StarRating from "./StarRating";
 import { CompanyLogo } from "@/components/ImageOptimized";
@@ -16,6 +17,7 @@ import { toast } from "sonner";
 import { SignedIn } from "@clerk/nextjs";
 import CompanyInteractionButton from "@/components/CompanyInteractionButton";
 import { getFormattedWorkingHours } from "@/lib/utils/workingHours";
+import { getTenantTypeLabel } from "@/lib/utils/tenantType";
 
 export default function DirectoryHeader({
   tenant,
@@ -37,7 +39,7 @@ export default function DirectoryHeader({
         if (sessionStorage.getItem(storageKey)) return;
         sessionStorage.setItem(storageKey, "1");
       }
-    } catch {}
+    } catch { }
 
     if (hasIncrementedRef.current) return;
     hasIncrementedRef.current = true;
@@ -47,7 +49,7 @@ export default function DirectoryHeader({
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
       body: JSON.stringify({ id: tenant.id }),
-    }).catch(() => {});
+    }).catch(() => { });
   }, [tenant?.id]);
 
   async function toggleBookmark() {
@@ -94,6 +96,17 @@ export default function DirectoryHeader({
             <h1 className="text-xl sm:text-2xl font-semibold truncate">
               {tenant.name}
             </h1>
+            {getTenantTypeLabel(
+              tenant.tenantType || "company",
+              tenant.companyType || tenant.supplierType
+            ) && (
+                <Badge variant="secondary" className="text-xs">
+                  {getTenantTypeLabel(
+                    tenant.tenantType || "company",
+                    tenant.companyType || tenant.supplierType
+                  )}
+                </Badge>
+              )}
           </div>
 
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -110,7 +123,7 @@ export default function DirectoryHeader({
             <span className="text-muted-foreground">
               {tenant.location}
               {Array.isArray(tenant.locationList) &&
-              tenant.locationList.length > 1 ? (
+                tenant.locationList.length > 1 ? (
                 <>
                   {" "}
                   <span
@@ -126,7 +139,7 @@ export default function DirectoryHeader({
 
           {/* Working Hours */}
           {Array.isArray(tenant.openingHours) &&
-          tenant.openingHours.length > 0 ? (
+            tenant.openingHours.length > 0 ? (
             <div className="mt-3 flex items-start gap-2 text-xs sm:text-sm">
               <Clock3 className="mt-0.5 size-4 text-muted-foreground" />
               <div className="flex flex-col gap-1">
@@ -151,7 +164,7 @@ export default function DirectoryHeader({
             </div>
           ) : null}
           {Array.isArray(tenant.extraServices) &&
-          tenant.extraServices.length > 0 ? (
+            tenant.extraServices.length > 0 ? (
             <div className="mt-2 flex flex-wrap gap-2">
               {tenant.extraServices.slice(0, 8).map((t) => (
                 <span

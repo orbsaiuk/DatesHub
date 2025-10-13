@@ -24,6 +24,7 @@ export default function DirectoryFilters({
   categories = [],
   initialFilters,
   cities = [],
+  entityType = "company", // "company" or "supplier"
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -37,14 +38,32 @@ export default function DirectoryFilters({
   const [isApplying, setIsApplying] = useState(false);
   const [dirty, setDirty] = useState(false);
 
+  // Dynamic options based on entity type
+  const typeOptions = entityType === "company"
+    ? [
+      { label: "متجر الكتروني", value: "online-store" },
+      { label: "محل تمور", value: "dates-shop" },
+      { label: "موزع", value: "distributor" },
+    ]
+    : [
+      { label: "مصنع تمور", value: "dates-factory" },
+      { label: "مصنع تعبئة", value: "packaging-factory" },
+      { label: "مصنع تغليف", value: "wrapping-factory" },
+      { label: "مزرعة", value: "farm" },
+      { label: "تاجر جملة", value: "wholesaler" },
+      { label: "مصدر", value: "exporter" },
+    ];
+
+  const typeLabel = entityType === "company" ? "نوع الشركة:" : "نوع المورد:";
+
   const hasActiveFilters = useMemo(() => {
     const locParam = searchParams?.get("loc");
     const specParam = searchParams?.get("spec");
     const ctypeParam = searchParams?.get("ctype");
     return Boolean(
       (locParam && locParam.trim()) ||
-        (specParam && specParam.trim()) ||
-        (ctypeParam && ctypeParam !== "all")
+      (specParam && specParam.trim()) ||
+      (ctypeParam && ctypeParam !== "all")
     );
   }, [searchParams]);
 
@@ -186,14 +205,12 @@ export default function DirectoryFilters({
                       >
                         <span
                           aria-hidden
-                          className={`inline-flex size-4 items-center justify-center rounded-full border ${
-                            isSelected ? "border-primary" : "border-input"
-                          }`}
+                          className={`inline-flex size-4 items-center justify-center rounded-full border ${isSelected ? "border-primary" : "border-input"
+                            }`}
                         >
                           <span
-                            className={`block size-2 rounded-full ${
-                              isSelected ? "bg-primary" : "bg-transparent"
-                            }`}
+                            className={`block size-2 rounded-full ${isSelected ? "bg-primary" : "bg-transparent"
+                              }`}
                           />
                         </span>
                         <Label className="cursor-pointer text-sm">
@@ -209,7 +226,7 @@ export default function DirectoryFilters({
         </PopoverContent>
       </Popover>
 
-      {/* Event Type */}
+      {/* Entity Type (Company Type or Supplier Type) */}
       <Select
         value={tenantType}
         onValueChange={(v) => {
@@ -220,17 +237,17 @@ export default function DirectoryFilters({
       >
         <SelectTrigger className="h-10 w-full bg-gray-100 justify-between">
           <div className="flex items-center gap-1">
-            <span className="text-muted-foreground">نوع الفعالية:</span>
+            <span className="text-muted-foreground">{typeLabel}</span>
             <SelectValue placeholder="الكل" />
           </div>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">الكل</SelectItem>
-          <SelectItem value="full-event-planner">منسق فعاليات كامل</SelectItem>
-          <SelectItem value="kids-birthday">أعياد ميلاد الأطفال</SelectItem>
-          <SelectItem value="wedding">حفلات الزفاف</SelectItem>
-          <SelectItem value="social-gathering">التجمعات الاجتماعية</SelectItem>
-          <SelectItem value="corporate-event">الفعاليات المؤسسية</SelectItem>
+          {typeOptions.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 

@@ -15,6 +15,7 @@ export const TENANT_REQUEST_BY_ID_QUERY = `
   registrationNumber,
   companiesHouseUrl,
   companyType,
+  supplierType,
   categories,
   extraServices,
   socialLinks,

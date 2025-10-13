@@ -18,8 +18,7 @@ export default function ImageOptimized({
   ...props
 }) {
   // Generate optimized alt text if not provided
-  const optimizedAlt =
-    alt || generateAltText(sanityImage, tenantName, context);
+  const optimizedAlt = alt || generateAltText(sanityImage, tenantName, context);
 
   // Determine loading strategy - priority overrides loading prop
   const loadingStrategy = priority ? undefined : loading || "lazy";

@@ -3,6 +3,13 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const employeeOptions = [
   { value: "1-5", label: "1-5" },
@@ -16,11 +23,18 @@ const employeeOptions = [
 ];
 
 const companyTypeOptions = [
-  { label: "منظم فعاليات شامل", value: "full-event-planner" },
-  { label: "عيد ميلاد أطفال", value: "kids-birthday" },
-  { label: "زفاف", value: "wedding" },
-  { label: "تجمع اجتماعي", value: "social-gathering" },
-  { label: "فعالية مؤسسية", value: "corporate-event" },
+  { label: "متجر الكتروني", value: "online-store" },
+  { label: "محل تمور", value: "dates-shop" },
+  { label: "موزع", value: "distributor" },
+];
+
+const supplierTypeOptions = [
+  { label: "مصنع تمور", value: "dates-factory" },
+  { label: "مصنع تعبئة", value: "packaging-factory" },
+  { label: "مصنع تغليف", value: "wrapping-factory" },
+  { label: "مزرعة", value: "farm" },
+  { label: "تاجر جملة", value: "wholesaler" },
+  { label: "مصدر", value: "exporter" },
 ];
 
 export default function BusinessBasicInfoForm({
@@ -31,6 +45,7 @@ export default function BusinessBasicInfoForm({
   foundingYear,
   registrationNumber,
   companyType,
+  supplierType,
   description,
 
   // Change handlers
@@ -40,6 +55,7 @@ export default function BusinessBasicInfoForm({
   onFoundingYearChange,
   onRegistrationNumberChange,
   onCompanyTypeChange,
+  onSupplierTypeChange,
   onDescriptionChange,
 
   // Validation errors
@@ -99,9 +115,8 @@ export default function BusinessBasicInfoForm({
           handleFieldChange(id, newValue, onChange);
         }}
         placeholder={placeholder}
-        className={`mt-1 appearance-none ${
-          error ? "border-destructive focus-visible:ring-destructive" : ""
-        }`}
+        className={`mt-1 appearance-none ${error ? "border-destructive focus-visible:ring-destructive" : ""
+          }`}
       />
     );
   };
@@ -126,21 +141,25 @@ export default function BusinessBasicInfoForm({
     }
 
     return (
-      <select
-        id={id}
-        value={value || ""}
-        onChange={(e) => onChange?.(e.target.value)}
-        className={`mt-1 block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
-          error ? "border-destructive" : ""
-        }`}
+      <Select
+        value={value || undefined}
+        onValueChange={(val) => onChange?.(val)}
+        dir="rtl"
       >
-        <option value="">اختر</option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger
+          id={id}
+          className={`mt-1 ${error ? "border-destructive" : ""}`}
+        >
+          <SelectValue placeholder="اختر" />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     );
   };
 
@@ -269,6 +288,26 @@ export default function BusinessBasicInfoForm({
           {errors.companyType && (
             <p className="text-xs text-red-600 mt-1">
               {errors.companyType?.message || errors.companyType}
+            </p>
+          )}
+        </div>
+      )}
+
+      {entityType === "supplier" && (
+        <div>
+          <Label className="text-sm" htmlFor="supplierType">
+            نوع المورد {requiredMark}
+          </Label>
+          {renderSelect(
+            "supplierType",
+            supplierType,
+            onSupplierTypeChange,
+            supplierTypeOptions,
+            errors.supplierType
+          )}
+          {errors.supplierType && (
+            <p className="text-xs text-red-600 mt-1">
+              {errors.supplierType?.message || errors.supplierType}
             </p>
           )}
         </div>

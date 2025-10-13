@@ -14,6 +14,7 @@ export const SUPPLIER_BY_TENANT_QUERY = `
   extraServices,
   foundingYear,
   registrationNumber,
+  supplierType,
   "descriptionText": pt::text(description),
   "locationString": coalesce(
     select(
@@ -48,6 +49,7 @@ export const SUPPLIER_BY_ID_OR_SLUG_QUERY = `
 *[_type == "supplier" && (tenantId == $id || slug.current == $id)][0]{
   _id,
   tenantId,
+  tenantType,
   name,
   slug,
   rating,
@@ -60,6 +62,7 @@ export const SUPPLIER_BY_ID_OR_SLUG_QUERY = `
   "descriptionText": pt::text(description),
   foundingYear,
   registrationNumber,
+  supplierType,
   contact,
   locations,
   categories,
@@ -93,6 +96,7 @@ export const SUPPLIER_DASHBOARD_QUERY = `
   "descriptionText": pt::text(description),
   categories,
   extraServices,
+  supplierType,
   locations,
   contact,
   openingHours,
@@ -125,6 +129,7 @@ export const SUPPLIER_EDIT_QUERY = `
   "descriptionText": pt::text(description),
   foundingYear,
   registrationNumber,
+  supplierType,
   contact,
   locations,
   categories,

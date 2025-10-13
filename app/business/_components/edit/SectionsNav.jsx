@@ -24,7 +24,7 @@ export default function SectionsNav({
         const nameFilled =
           !!formData?.name && String(formData.name).trim().length > 0;
         const typeFilled =
-          entityType === "company" ? !!formData?.companyType : true;
+          entityType === "company" ? !!formData?.companyType : !!formData?.supplierType;
         const logoFilled = !!formData?.logo;
         const descriptionFilled = !!(
           formData?.description && String(formData.description).trim()
@@ -120,8 +120,8 @@ export default function SectionsNav({
                   onSectionChange?.(s.id);
                 }}
                 className={`w-full text-left px-3 py-2.5 rounded-md flex items-center justify-between transition-colors ${active === s.id
-                    ? "bg-muted text-foreground"
-                    : "text-muted-foreground hover:bg-muted/60"
+                  ? "bg-muted text-foreground"
+                  : "text-muted-foreground hover:bg-muted/60"
                   }`}
                 aria-current={active === s.id ? "page" : undefined}
               >

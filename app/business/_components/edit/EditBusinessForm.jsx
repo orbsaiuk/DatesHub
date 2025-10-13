@@ -42,7 +42,9 @@ export default function EditBusinessForm({
         companyType: initialBusiness?.companyType || "",
         totalEmployees: initialBusiness?.totalEmployees || "",
       }
-      : {}),
+      : {
+        supplierType: initialBusiness?.supplierType || "",
+      }),
     contact: initialBusiness?.contact || {},
 
   }));
@@ -97,7 +99,9 @@ export default function EditBusinessForm({
           companyType: initialBusiness?.companyType || "",
           totalEmployees: initialBusiness?.totalEmployees || "",
         }
-        : {}),
+        : {
+          supplierType: initialBusiness?.supplierType || "",
+        }),
       contact: initialBusiness?.contact || {},
 
     };
@@ -222,7 +226,9 @@ export default function EditBusinessForm({
             companyType: form.companyType,
             totalEmployees: form.totalEmployees,
           }
-          : {}),
+          : {
+            supplierType: form.supplierType,
+          }),
       };
 
       const endpoint = `/api/${entityType}/update`;
@@ -333,6 +339,8 @@ export default function EditBusinessForm({
         const logoOk = !!form.logo;
         const companyTypeOk =
           entityType === "company" ? !!form.companyType : true;
+        const supplierTypeOk =
+          entityType === "supplier" ? !!form.supplierType : true;
         const totalEmployeesOk =
           entityType === "company" ? !!form.totalEmployees : true;
         const foundingYearOk = !!form.foundingYear;
@@ -342,6 +350,7 @@ export default function EditBusinessForm({
           !foundingYearOk ||
           !registrationNumberOk ||
           !companyTypeOk ||
+          !supplierTypeOk ||
           !totalEmployeesOk ||
           !logoOk ||
           !descriptionOk

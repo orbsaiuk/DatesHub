@@ -40,7 +40,7 @@ async function parseMultipartAndUploadLogo(request) {
   if (typeof dataStr === "string") {
     try {
       data = JSON.parse(dataStr);
-    } catch {}
+    } catch { }
   }
 
   let logoImageRef = null;
@@ -104,6 +104,7 @@ export async function POST(request) {
       foundingYear,
       registrationNumber,
       companyType,
+      supplierType,
       categories,
       extraServices,
       socialLinks,
@@ -137,6 +138,7 @@ export async function POST(request) {
             ? Number(registrationNumber)
             : null,
       companyType: companyType || null,
+      supplierType: supplierType || null,
       categories: categories,
       extraServices: extraServices,
       socialLinks: Array.isArray(socialLinks)
@@ -145,19 +147,19 @@ export async function POST(request) {
       contact: contact || null,
       locations: Array.isArray(locations)
         ? locations.map((l) => ({
-            _key: l?._key || uuid(),
-            country: l?.country || null,
-            city: l?.city || null,
-            address: l?.address || null,
-            region: l?.region || null,
-            zipCode: l?.zipCode || null,
-            geo:
-              l?.geo &&
+          _key: l?._key || uuid(),
+          country: l?.country || null,
+          city: l?.city || null,
+          address: l?.address || null,
+          region: l?.region || null,
+          zipCode: l?.zipCode || null,
+          geo:
+            l?.geo &&
               typeof l.geo.lat === "number" &&
               typeof l.geo.lng === "number"
-                ? { _type: "geopoint", lat: l.geo.lat, lng: l.geo.lng }
-                : undefined,
-          }))
+              ? { _type: "geopoint", lat: l.geo.lat, lng: l.geo.lng }
+              : undefined,
+        }))
         : [],
       openingHours: openingHours,
     };

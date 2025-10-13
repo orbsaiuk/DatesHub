@@ -57,6 +57,7 @@ export const COMPANY_BY_ID_OR_SLUG_QUERY = `
 *[_type == "company" && (tenantId == $id || slug.current == $id)][0]{
   _id,
   tenantId,
+  tenantType,
   name,
   slug,
   rating,

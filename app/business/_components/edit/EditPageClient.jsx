@@ -32,7 +32,9 @@ export default function EditPageClient({ initialEntity, entityType }) {
         companyType: initial?.companyType || "",
         totalEmployees: initial?.totalEmployees || "",
       }
-      : {}),
+      : {
+        supplierType: initial?.supplierType || "",
+      }),
   });
 
   const [errors, setErrors] = useState({});
@@ -58,6 +60,8 @@ export default function EditPageClient({ initialEntity, entityType }) {
       );
       const companyTypeOk =
         entityType === "company" ? !!formData.companyType : true;
+      const supplierTypeOk =
+        entityType === "supplier" ? !!formData.supplierType : true;
       const totalEmployeesOk =
         entityType === "company" ? !!formData.totalEmployees : true;
       const foundingYearOk = !!formData.foundingYear;
@@ -67,6 +71,7 @@ export default function EditPageClient({ initialEntity, entityType }) {
         !foundingYearOk ||
         !registrationNumberOk ||
         !companyTypeOk ||
+        !supplierTypeOk ||
         !totalEmployeesOk ||
         !descriptionOk
       ) {
