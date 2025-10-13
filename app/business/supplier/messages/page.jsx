@@ -6,7 +6,8 @@ import BusinessMessagesPageClient from "./BusinessMessagesPageClient";
 
 export const metadata = {
   title: "الرسائل",
-  description: "تواصل مع الشركات الشريكة",
+  description: "تواصل مع الشركات الشريكة، إدارة المحادثات والطلبات",
+  robots: { index: false, follow: false },
 };
 
 export default async function SupplierMessagesPage() {

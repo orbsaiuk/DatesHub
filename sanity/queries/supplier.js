@@ -98,7 +98,8 @@ export const SUPPLIER_DASHBOARD_QUERY = `
   openingHours,
   "totalViews": coalesce(totalViews, 0),
   "viewsRecent": views | order(createdAt desc)[0...1000]{ createdAt },
-  "messagesCount": 0,
+  "conversationsCount": count(*[_type == "conversation" && (participant1._ref == ^._id || participant2._ref == ^._id)]),
+  "conversationsRecent": *[_type == "conversation" && (participant1._ref == ^._id || participant2._ref == ^._id)] | order(createdAt desc)[0...1000]{ createdAt },
 }`;
 
 export const USER_SUPPLIER_MEMBERSHIPS_QUERY = `

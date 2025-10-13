@@ -7,6 +7,13 @@ import QuickStats from "../../_components/dashboard/QuickStats";
 import ProfileHealth from "../../_components/dashboard/ProfileHealth";
 import ActivityReport from "../../_components/dashboard/ActivityReport";
 
+export const metadata = {
+  title: "لوحة التحكم",
+  description:
+    "لوحة التحكم المورد - إدارة ملفك الشخصي، المنتجات، العروض، والرسائل..الخ",
+  robots: { index: false, follow: false },
+};
+
 export default async function SupplierDashboardPage() {
   const { userId } = await auth();
   const membership = await getUserSupplier(userId);

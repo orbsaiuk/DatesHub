@@ -3,6 +3,12 @@ import { getUserCompany, getCompanyEditData } from "@/services/sanity/entities";
 import { redirect } from "next/navigation";
 import EditPageClient from "../../_components/edit/EditPageClient";
 
+export const metadata = {
+  title: "تحرير معلومات الشركة",
+  description: "تحديث وإدارة معلومات الشركة، الخدمات، المواقع، ووسائل التواصل",
+  robots: { index: false, follow: false },
+};
+
 export default async function CompanyEditPage() {
   const { userId } = await auth();
   const membership = await getUserCompany(userId);

@@ -30,16 +30,20 @@ const getNavItems = (userRole) => [
   { href: `/business/${userRole}/edit`, label: "تعديل الملف", icon: User },
   { href: `/business/${userRole}/calendar`, label: "الحجوزات", icon: Calendar },
   { href: `/business/${userRole}/offers`, label: "العروض", icon: Gift },
-  { href: `/business/${userRole}/products`, label: "المنتجات", icon: ShoppingBag },
+  {
+    href: `/business/${userRole}/products`,
+    label: "المنتجات",
+    icon: ShoppingBag,
+  },
   ...(userRole === "supplier"
     ? []
     : [
-      {
-        href: `/business/${userRole}/reviews`,
-        label: "التقييمات",
-        icon: Star,
-      },
-    ]),
+        {
+          href: `/business/${userRole}/reviews`,
+          label: "التقييمات",
+          icon: Star,
+        },
+      ]),
   {
     href: `/business/${userRole}/messages`,
     label: "الرسائل",
@@ -61,57 +65,53 @@ const SidebarItem = memo(function SidebarItem({
   const isActive = pathname === href || pathname?.startsWith(href + "/");
 
   return (
-    <div className="relative group">
+    <div className="relative group" aria-label={label} title={label}>
       <Link
         href={href}
         onClick={onClick}
-        className={`relative group flex items-center ${isCollapsed
-          ? "justify-center w-12"
-          : "justify-start px-4 w-full gap-2"
-          } py-3 rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${isActive
-            ? "bg-primary text-primary-foreground shadow-md ring-1 ring-primary/40"
-            : `text-muted-foreground hover:text-foreground hover:bg-accent/50 ${isCollapsed ? "" : "hover:translate-x-1"
-            }`
-          }`}
+        className={`relative group flex items-center ${
+          isCollapsed
+            ? "justify-center w-12"
+            : "justify-start px-4 w-full gap-2"
+        } py-3 rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
+          isActive
+            ? "bg-nav-link text-nav-link-foreground shadow-md ring-1 ring-nav-link/40"
+            : `text-muted-foreground hover:text-foreground hover:bg-accent/50 ${
+                isCollapsed ? "" : "hover:translate-x-1"
+              }`
+        }`}
       >
         <Icon
-          className={`h-5 w-5 transition-all ${isActive
-            ? "text-primary-foreground drop-shadow"
-            : "text-muted-foreground group-hover:text-foreground"
-            } ${isActive ? "scale-[1.03]" : ""}`}
+          className={`h-5 w-5 transition-all ${
+            isActive
+              ? "text-nav-link-foreground drop-shadow"
+              : "text-muted-foreground group-hover:text-foreground"
+          } ${isActive ? "scale-[1.03]" : ""}`}
         />
         <span
-          className={`truncate transition-all duration-200 ${isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100 w-auto"
-            } ${isActive ? "font-semibold" : ""}`}
+          className={`truncate transition-all duration-200 ${
+            isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100 w-auto"
+          } ${isActive ? "font-semibold" : ""}`}
         >
           {label}
         </span>
         {badge && !isCollapsed && (
           <span
-            className={`ms-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-semibold ${isActive ? "bg-white text-primary" : "bg-primary text-white"
-              }`}
+            className={`ms-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-semibold ${
+              isActive ? "bg-white text-nav-link" : "bg-nav-link text-white"
+            }`}
           >
             {badge > 99 ? "99+" : badge}
           </span>
         )}
       </Link>
-
-      {/* Tooltip for collapsed state */}
-      {isCollapsed && (
-        <div
-          className={`absolute right-full me-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-150 pointer-events-none z-50 whitespace-nowrap ${isActive ? "font-semibold" : ""
-            }`}
-        >
-          {label}
-        </div>
-      )}
     </div>
   );
 });
 
 export default function Sidebar({ userRole, entity, children }) {
   const navItems = getNavItems(userRole);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -192,20 +192,23 @@ export default function Sidebar({ userRole, entity, children }) {
       <div className="w-full bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 flex">
         {/* Desktop Sidebar - Part of Header */}
         <aside
-          className={`hidden md:block transition-all duration-300 overflow-hidden border-l border-border ${isSidebarCollapsed ? "w-16" : "w-64"
-            }`}
+          className={`hidden md:block transition-all duration-300 overflow-hidden border-l border-border ${
+            isSidebarCollapsed ? "w-16" : "w-64"
+          }`}
         >
           <div className="h-16 flex items-center bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/90">
             {/* Sidebar Header Content */}
             <div
-              className={`h-16 w-full flex items-center bg-secondary  ${isSidebarCollapsed
-                ? "justify-center px-2"
-                : "justify-between px-4"
-                }`}
+              className={`h-16 w-full flex items-center bg-secondary  ${
+                isSidebarCollapsed
+                  ? "justify-center px-2"
+                  : "justify-between px-4"
+              }`}
             >
               <div
-                className={`flex items-center gap-3 ${isSidebarCollapsed ? "hidden" : "flex"
-                  }`}
+                className={`flex items-center gap-3 ${
+                  isSidebarCollapsed ? "hidden" : "flex"
+                }`}
               >
                 <CompanyLogo
                   tenant={displayEntity}
@@ -255,16 +258,13 @@ export default function Sidebar({ userRole, entity, children }) {
 
           {/* Right side - User actions */}
           <div className="flex items-center gap-4">
-            {isBusiness ? (
+            {isBusiness && (
               <Link href="/">
-                <Button size="sm" className="cursor-pointer">
+                <Button
+                  size="sm"
+                  className="cursor-pointer bg-nav-link hover:bg-nav-link/80"
+                >
                   الرئيسية
-                </Button>
-              </Link>
-            ) : (
-              <Link href="/become">
-                <Button size="sm" className="cursor-pointer">
-                  انضم كشركة
                 </Button>
               </Link>
             )}
@@ -282,14 +282,16 @@ export default function Sidebar({ userRole, entity, children }) {
       <div className="flex min-h-[calc(100vh-4rem)]">
         {/* Desktop Sidebar Navigation - Below header but aligned with sidebar */}
         <aside
-          className={`hidden md:block transition-all duration-300 overflow-hidden border-l sticky top-16 self-start h-[calc(100vh-4rem)] ${isSidebarCollapsed ? "w-16" : "w-64"
-            }`}
+          className={`hidden md:block transition-all duration-300 overflow-hidden border-l sticky top-16 self-start h-[calc(100vh-4rem)] ${
+            isSidebarCollapsed ? "w-16" : "w-64"
+          }`}
         >
-          <div className="h-full bg-card backdrop-blur supports-[backdrop-filter]:bg-card/95 shadow-lg flex flex-col overflow-x-hidden min-w-0">
+          <div className="h-full bg-secondary backdrop-blur supports-[backdrop-filter]:bg-secondary/95 shadow-lg flex flex-col overflow-x-hidden min-w-0">
             {/* Navigation */}
             <nav
-              className={`flex-1 ${isSidebarCollapsed ? "p-2" : "p-3"
-                } space-y-1 overflow-y-auto overflow-x-hidden`}
+              className={`flex-1 ${
+                isSidebarCollapsed ? "p-2" : "p-3"
+              } space-y-1 overflow-y-auto overflow-x-hidden`}
             >
               {navItems.map((item) => (
                 <SidebarItem
@@ -307,17 +309,6 @@ export default function Sidebar({ userRole, entity, children }) {
                 />
               ))}
             </nav>
-
-            {/* Footer */}
-            <div
-              className={`p-4 border-t border-border/40 flex-shrink-0 transition-all duration-300 ${isSidebarCollapsed ? "opacity-0" : "opacity-100"
-                }`}
-            >
-              <div className="text-xs text-muted-foreground text-center">
-                © 2025{" "}
-                {entity?.name || (userRole === "supplier" ? "مورد" : "شركة")}
-              </div>
-            </div>
           </div>
         </aside>
 
@@ -367,18 +358,6 @@ export default function Sidebar({ userRole, entity, children }) {
                 />
               ))}
             </nav>
-
-            {/* Footer */}
-            <div className="absolute bottom-0 right-0 left-0 p-4 border-t">
-              <div className="flex items-center gap-4">
-                <SignedOut>
-                  <SignInButton />
-                </SignedOut>
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
-              </div>
-            </div>
           </div>
         </div>
       )}

@@ -5,8 +5,8 @@ import { getAuthenticatedUser } from "@/lib/auth/authorization";
 
 export const metadata = {
   robots: { index: false, follow: false },
-  title: "الأعمال",
-  description: "لوحة تحكم الأعمال والإدارة.",
+  title: "لوحة التحكم",
+  description: "لوحة التحكم والإدارة.",
 };
 
 export const dynamic = "force-dynamic";

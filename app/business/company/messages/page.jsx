@@ -6,7 +6,8 @@ import BusinessMessagesPageClient from "./BusinessMessagesPageClient";
 
 export const metadata = {
   title: "الرسائل",
-  description: "تواصل مع عملائك والعملاء المحتملين",
+  description: "تواصل مع عملائك والعملاء المحتملين، إدارة المحادثات والطلبات",
+  robots: { index: false, follow: false },
 };
 
 export default async function CompanyMessagesPage() {
@@ -27,7 +28,7 @@ export default async function CompanyMessagesPage() {
           <div className="mb-6 sm:mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold mb-2">الرسائل</h1>
             <p className="text-sm sm:text-base text-muted-foreground">
-            تواصل مع عملائك
+              تواصل مع عملائك
             </p>
           </div>
 

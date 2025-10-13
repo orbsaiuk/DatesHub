@@ -9,6 +9,13 @@ import ReviewsHeader from "./_components/ReviewsHeader";
 import RatingBreakdown from "./_components/RatingBreakdown";
 import ReviewsList from "./_components/ReviewsList";
 
+export const metadata = {
+  title: "التقييمات والمراجعات - الشركة",
+  description:
+    "عرض تقييمات العملاء، إدارة المراجعات، والرد على تعليقات العملاء",
+  robots: { index: false, follow: false },
+};
+
 async function getUserCompany(userId) {
   const user = await writeClient.fetch(USER_COMPANY_MEMBERSHIPS_QUERY, {
     userId,

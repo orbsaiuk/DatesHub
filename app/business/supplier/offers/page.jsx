@@ -4,6 +4,13 @@ import { getUserSupplier } from "@/services/sanity/entities";
 import { getSupplierOffers } from "@/services/sanity/offers";
 import OffersPage from "@/app/business/_components/offers/OffersPage";
 
+export const metadata = {
+  title: "إدارة العروض",
+  description:
+    "إدارة عروض المورد، إضافة عروض جديدة، تعديل العروض الموجودة، وحذف العروض",
+  robots: { index: false, follow: false },
+};
+
 export default async function SupplierOffersPage() {
   const { userId } = await auth();
   if (!userId) {

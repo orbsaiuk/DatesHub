@@ -120,7 +120,8 @@ export const COMPANY_DASHBOARD_QUERY = `
   "totalViews": coalesce(totalViews, 0), 
   "reviewsCount": count(*[_type=="review" && company._ref == ^._id]),
   "viewsRecent": views | order(createdAt desc)[0...1000]{ createdAt },
-  "messagesCount": 0,
+  "conversationsCount": count(*[_type == "conversation" && (participant1._ref == ^._id || participant2._ref == ^._id)]),
+  "conversationsRecent": *[_type == "conversation" && (participant1._ref == ^._id || participant2._ref == ^._id)] | order(createdAt desc)[0...1000]{ createdAt },
   "recentReviews": *[_type=="review" && company._ref == ^._id] | order(createdAt desc)[0...3]{
     _id, title, rating, content, authorName, createdAt
   },

@@ -5,7 +5,7 @@ export default function QuickStats({ entity, entityType }) {
   const rating = Number(entity?.rating || 0);
   const ratingCount = Number(entity?.ratingCount || 0);
   const totalViews = Number(entity?.totalViews || 0);
-  const messagesCount = Number(entity?.messagesCount || 0);
+  const conversationsCount = Number(entity?.conversationsCount || 0);
 
   const stats = [
     {
@@ -32,8 +32,8 @@ export default function QuickStats({ entity, entityType }) {
         },
       ]),
     {
-      title: "الرسائل",
-      value: formatArabicNumber(messagesCount),
+      title: "المحادثات",
+      value: formatArabicNumber(conversationsCount),
       icon: "💬",
       gradientFrom: "orange-50",
       gradientTo: "orange-100",

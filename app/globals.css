@@ -28,6 +28,8 @@
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
+  --color-nav-link: var(--nav-link);
+  --color-nav-link-foreground: var(--nav-link-foreground);
   --color-section-title: var(--section-title);
   --color-button-1: var(--button-1);
   --color-button-1-hover: var(--button-1-hover);

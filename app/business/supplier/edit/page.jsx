@@ -6,6 +6,12 @@ import {
 import { redirect } from "next/navigation";
 import EditPageClient from "../../_components/edit/EditPageClient";
 
+export const metadata = {
+  title: "تحرير معلومات المورد",
+  description: "تحديث وإدارة معلومات المورد، الخدمات، المواقع، ووسائل التواصل",
+  robots: { index: false, follow: false },
+};
+
 export default async function SupplierEditPage() {
   const { userId } = await auth();
   const membership = await getUserSupplier(userId);

@@ -7,6 +7,13 @@ import {
 } from "@/services/sanity/subscriptions";
 import PackagesPage from "@/app/business/_components/packages/PackagesPage";
 
+export const metadata = {
+  title: "الباقات والاشتراكات",
+  description:
+    "إدارة باقة الاشتراك، ترقية الباقة، عرض الميزات المتاحة، والفواتير",
+  robots: { index: false, follow: false },
+};
+
 export default async function SupplierPackagesPage() {
   const { userId } = await auth();
   if (!userId) {

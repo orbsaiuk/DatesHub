@@ -1,6 +1,12 @@
 "use client";
 
-import { SignedIn, SignedOut, UserButton, SignInButton, useUser } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  UserButton,
+  SignInButton,
+  useUser,
+} from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { User } from "lucide-react";
@@ -15,7 +21,7 @@ export default function HeaderAuthButtons() {
         <SignInButton mode="modal">
           <Button
             size="sm"
-            className="bg-transparent text-black hover:bg-accent hover:text-primary cursor-pointer"
+            className="bg-transparent text-black hover:text-white hover:bg-button-1-hover cursor-pointer"
           >
             تسجيل الدخول
           </Button>
