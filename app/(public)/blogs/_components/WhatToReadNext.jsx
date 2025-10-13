@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
+import { getDefaultLogoUrl } from "@/lib/utils/defaultLogo";
 
 export default function WhatToReadNext({ blogs }) {
   if (!blogs || blogs.length === 0) {
@@ -55,36 +56,34 @@ export default function WhatToReadNext({ blogs }) {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-1 sm:space-y-0 text-xs sm:text-sm text-gray-500 pt-2">
                       {blog.author && (
                         <div className="flex items-center space-x-2">
-                          {blog.author.company?.logo?.asset?.url && (
-                            <div className="relative w-4 h-4 rounded-full overflow-hidden flex-shrink-0">
-                              <Image
-                                src={urlFor(blog.author.company.logo)
-                                  .width(16)
-                                  .height(16)
-                                  .url()}
-                                alt={
-                                  blog.author.company?.name || "Company logo"
-                                }
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
-                          )}
-                          {blog.author.supplier?.logo?.asset?.url && (
-                            <div className="relative w-4 h-4 rounded-full overflow-hidden flex-shrink-0">
-                              <Image
-                                src={urlFor(blog.author.supplier.logo)
-                                  .width(16)
-                                  .height(16)
-                                  .url()}
-                                alt={
-                                  blog.author.supplier?.name || "Supplier logo"
-                                }
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
-                          )}
+                          <div className="relative w-4 h-4 rounded-full overflow-hidden flex-shrink-0">
+                            <Image
+                              src={
+                                blog.author.company?.logo?.asset?.url
+                                  ? urlFor(blog.author.company.logo)
+                                      .width(16)
+                                      .height(16)
+                                      .url()
+                                  : blog.author.supplier?.logo?.asset?.url
+                                    ? urlFor(blog.author.supplier.logo)
+                                        .width(16)
+                                        .height(16)
+                                        .url()
+                                    : getDefaultLogoUrl(
+                                        blog.author.company?.name ||
+                                          blog.author.supplier?.name ||
+                                          "Author"
+                                      )
+                              }
+                              alt={
+                                blog.author.company?.name ||
+                                blog.author.supplier?.name ||
+                                "Author logo"
+                              }
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
                           <span className="truncate">
                             {blog.author.company?.name ||
                               blog.author.supplier?.name}

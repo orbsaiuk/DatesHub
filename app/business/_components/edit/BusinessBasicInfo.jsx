@@ -24,13 +24,13 @@ export default function BusinessBasicInfo({
       try {
         createdUrl = URL.createObjectURL(form.logo);
         setLogoPreviewUrl(createdUrl);
-      } catch {}
+      } catch { }
     } else {
       // Not a File (probably a Sanity image ref) → clear local preview
       if (logoPreviewUrl) {
         try {
           URL.revokeObjectURL(logoPreviewUrl);
-        } catch {}
+        } catch { }
       }
       setLogoPreviewUrl(null);
     }
@@ -38,7 +38,7 @@ export default function BusinessBasicInfo({
       if (createdUrl) {
         try {
           URL.revokeObjectURL(createdUrl);
-        } catch {}
+        } catch { }
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,11 +119,11 @@ export default function BusinessBasicInfo({
               <div className="flex-1 space-y-2 sm:space-y-3 w-full">
                 <div>
                   <label className="text-sm sm:text-base font-medium">
-                    تحميل الشعار <span className="text-red-600">*</span>
+                    تحميل الشعار <span className="text-muted-foreground text-xs">(اختياري)</span>
                   </label>
                   <p className="text-xs sm:text-sm text-muted-foreground">
                     JPG، PNG أو SVG. الحد الأقصى للحجم 2 ميجابايت. موصى به
-                    200x200 بكسل.
+                    200x200 بكسل. سيتم استخدام شعار افتراضي إذا لم يتم رفع شعار.
                   </p>
                 </div>
 
@@ -173,7 +173,7 @@ export default function BusinessBasicInfo({
                         if (logoPreviewUrl) {
                           try {
                             URL.revokeObjectURL(logoPreviewUrl);
-                          } catch {}
+                          } catch { }
                           setLogoPreviewUrl(null);
                         }
                         updateField("logo", null);

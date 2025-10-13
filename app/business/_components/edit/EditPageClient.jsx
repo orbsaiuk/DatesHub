@@ -56,7 +56,6 @@ export default function EditPageClient({ initialEntity, entityType }) {
       const descriptionOk = !!(
         formData.description && String(formData.description).trim()
       );
-      const logoOk = !!formData.logo;
       const companyTypeOk =
         entityType === "company" ? !!formData.companyType : true;
       const totalEmployeesOk =
@@ -69,7 +68,6 @@ export default function EditPageClient({ initialEntity, entityType }) {
         !registrationNumberOk ||
         !companyTypeOk ||
         !totalEmployeesOk ||
-        !logoOk ||
         !descriptionOk
       ) {
         toast.error(

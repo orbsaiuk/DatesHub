@@ -19,6 +19,7 @@ import { Star, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import ImageOptimized from "../ImageOptimized";
+import { getDefaultLogoUrl } from "@/lib/utils/defaultLogo";
 
 export default function FeaturedTenants({
   type = "companies",
@@ -54,23 +55,23 @@ export default function FeaturedTenants({
     <Card className="h-full transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-md">
       <CardContent className="pt-6">
         <div className="rounded-lg bg-muted/50 border flex items-center justify-center overflow-hidden">
-          {item.logo?.asset && (
-            <ImageOptimized
-              sanityImage={item.logo?.asset ? item.logo : null}
-              src={
-                !item.logo?.asset && typeof item.logo === "string"
-                  ? item.logo
+          <ImageOptimized
+            sanityImage={item.logo?.asset ? item.logo : null}
+            src={
+              !item.logo?.asset && typeof item.logo === "string"
+                ? item.logo
+                : !item.logo?.asset
+                  ? getDefaultLogoUrl(item.name)
                   : undefined
-              }
-              alt={`${item.name} logo`}
-              width={200}
-              height={200}
-              className="object-cover "
-              tenantName={item.name}
-              context="logo"
-              priority
-            />
-          )}
+            }
+            alt={`${item.name} logo`}
+            width={230}
+            height={230}
+            className={` ${item.logo?.asset ? "object-contain" : "object-cover w-full"}`}
+            tenantName={item.name}
+            context="logo"
+            priority
+          />
         </div>
       </CardContent>
       <CardHeader className="space-y-2">
