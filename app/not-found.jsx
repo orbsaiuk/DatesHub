@@ -45,12 +45,11 @@ export default function NotFound() {
               العودة إلى الرئيسية
             </Button>
           </Link>
-
           <Button
             variant="outline"
             size="lg"
             onClick={() => window.history.back()}
-            className="w-full sm:w-auto cursor-pointer"
+            className="w-fit sm:w-auto cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             العودة

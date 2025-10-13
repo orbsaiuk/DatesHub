@@ -25,27 +25,29 @@ export default function FeaturedTenants({
   items = [],
   totalItems = null,
 }) {
-
   // Mobile carousel state
-  const [embla, setEmbla] = useState(null);
+  const [api, setApi] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [slideCount, setSlideCount] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState([]);
 
   // Mobile carousel effects
   useEffect(() => {
-    if (!embla) return;
-    const onSelect = () => {
-      setSelectedIndex(embla.selectedScrollSnap());
-      setSlideCount(embla.scrollSnapList().length);
-    };
-    onSelect();
-    embla.on("select", onSelect);
-    embla.on("reInit", onSelect);
+    if (!api) return;
+
+    setScrollSnaps(api.scrollSnapList());
+    setSelectedIndex(api.selectedScrollSnap());
+
+    const onSelect = () => setSelectedIndex(api.selectedScrollSnap());
+    api.on("select", onSelect);
+    api.on("reInit", () => {
+      setScrollSnaps(api.scrollSnapList());
+      onSelect();
+    });
+
     return () => {
-      embla.off("select", onSelect);
-      embla.off("reInit", onSelect);
+      api.off("select", onSelect);
     };
-  }, [embla]);
+  }, [api]);
 
   // Render tenant card
   const renderTenantCard = (item) => (
@@ -112,7 +114,7 @@ export default function FeaturedTenants({
           size="sm"
         >
           <Link
-            href={`/${type === "companies" ? "company" : "supplier"}/${item.id}`}
+            href={`/${type === "companies" ? "companies" : "suppliers"}/${item.id}`}
           >
             عرض التفاصيل
           </Link>
@@ -143,7 +145,10 @@ export default function FeaturedTenants({
 
           {/* Mobile carousel */}
           <div className="sm:hidden">
-            <Carousel opts={{ align: "start", loop: true }} setApi={setEmbla}>
+            <Carousel
+              setApi={setApi}
+              opts={{ align: "start", direction: "rtl", loop: true }}
+            >
               <CarouselContent>
                 {items.map((item, index) => (
                   <CarouselItem key={item.id || `tenant-${index}`}>
@@ -160,17 +165,18 @@ export default function FeaturedTenants({
                 role="tablist"
                 aria-label="Slide pagination"
               >
-                {Array.from({ length: slideCount }).map((_, i) => (
+                {scrollSnaps.map((_, i) => (
                   <button
                     key={i}
                     type="button"
                     aria-label={`Go to slide ${i + 1}`}
                     aria-current={selectedIndex === i ? "true" : "false"}
-                    onClick={() => embla && embla.scrollTo(i)}
-                    className={`h-2.5 w-2.5 rounded-full transition-all ${selectedIndex === i
+                    onClick={() => api?.scrollTo(i)}
+                    className={`h-2.5 w-2.5 rounded-full transition-all ${
+                      selectedIndex === i
                         ? "bg-primary scale-110"
                         : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                      }`}
+                    }`}
                   />
                 ))}
               </div>

@@ -23,28 +23,24 @@ export default function StepBasicInfo({
   const totalEmployees = watch("totalEmployees");
   const foundingYear = watch("foundingYear")?.trim();
   const registrationNumber = watch("registrationNumber")?.trim();
-  const logo = watch("logo");
-  const logoSelected = watch("logoSelected");
-  const hasLogo = Boolean(logo?.asset?._ref || logoSelected);
 
   const hasFieldErrors = Boolean(
     errors.name ||
-      errors.logo ||
-      errors.description ||
-      (entityType === "company" && errors.totalEmployees) ||
-      errors.foundingYear ||
-      errors.registrationNumber ||
-      errors.website
+    errors.logo ||
+    errors.description ||
+    (entityType === "company" && errors.totalEmployees) ||
+    errors.foundingYear ||
+    errors.registrationNumber ||
+    errors.website
   );
 
   const canNext = Boolean(
-    hasLogo &&
-      name &&
-      description &&
-      (entityType === "company" ? totalEmployees : true) &&
-      foundingYear &&
-      registrationNumber &&
-      !hasFieldErrors
+    name &&
+    description &&
+    (entityType === "company" ? totalEmployees : true) &&
+    foundingYear &&
+    registrationNumber &&
+    !hasFieldErrors
   );
 
   const entityLabel = entityType === "company" ? "الشركة" : "المورد";
@@ -68,8 +64,11 @@ export default function StepBasicInfo({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="md:col-span-2">
           <Label className="text-sm">
-            رفع الشعار <span className="text-red-600">*</span>
+            رفع الشعار <span className="text-muted-foreground text-xs">(اختياري)</span>
           </Label>
+          <p className="text-xs text-muted-foreground mb-2">
+            سيتم استخدام شعار افتراضي إذا لم يتم رفع شعار
+          </p>
           <LogoUploader />
         </div>
 

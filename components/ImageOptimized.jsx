@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import { getDefaultLogoUrl } from "@/lib/utils/defaultLogo";
 
 // Optimized image component with SEO-friendly alt text generation
 export default function ImageOptimized({
@@ -100,8 +101,6 @@ export function CompanyLogo({
   className = "",
   priority = false,
 }) {
-  if (!tenant?.logo) return null;
-
   const sizeMap = {
     sm: { width: 32, height: 32, className: "w-8 h-8" },
     md: { width: 60, height: 60, className: "w-15 h-15" },
@@ -111,8 +110,8 @@ export function CompanyLogo({
 
   const { width, height, className: sizeClass } = sizeMap[size] || sizeMap.md;
 
-  // Handle both Sanity images and direct URLs
-  if (tenant.logo?.asset) {
+  // Handle Sanity images
+  if (tenant?.logo?.asset) {
     return (
       <ImageOptimized
         sanityImage={tenant.logo}
@@ -128,7 +127,7 @@ export function CompanyLogo({
   }
 
   // Handle direct URL logos
-  const logoUrl = typeof tenant.logo === "string" ? tenant.logo : null;
+  const logoUrl = typeof tenant?.logo === "string" ? tenant.logo : null;
   if (logoUrl) {
     return (
       <ImageOptimized
@@ -144,12 +143,18 @@ export function CompanyLogo({
     );
   }
 
-  // Fallback placeholder
+  // Use default logo when no logo is provided
+  const defaultLogoUrl = getDefaultLogoUrl(tenant?.name);
   return (
-    <div
-      className={`${sizeClass} bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center ${className}`}
-    >
-      <div className="w-1/2 h-1/2 rounded bg-primary/20" />
-    </div>
+    <ImageOptimized
+      src={defaultLogoUrl}
+      alt={`شعار شركة ${tenant?.name || "الشركة"}`}
+      width={width}
+      height={height}
+      className={`${sizeClass} object-cover ${className}`}
+      tenantName={tenant?.name}
+      context="logo"
+      priority={priority}
+    />
   );
 }

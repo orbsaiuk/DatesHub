@@ -5,16 +5,16 @@ export default function UserHomePageSkeleton() {
     <div className="space-y-12">
       {/* Hero Section Skeleton */}
       <section className="w-full bg-muted py-16 sm:py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl items-center text-center">
+        <div className="mx-auto container items-center text-center">
           <div className="flex flex-col items-center gap-4">
-            <Skeleton className="h-10 w-96 mx-auto mb-4" />
+            <Skeleton className="h-10 w-full sm:w-96 mx-auto mb-4" />
           </div>
         </div>
       </section>
 
       {/* Discover Section Skeleton */}
       <section className="w-full py-12 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row items-start lg:items-center gap-8 lg:gap-12">
+        <div className="mx-auto container px-4 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row items-start lg:items-center gap-8 lg:gap-12">
           {/* Left: company logos grid */}
           <div className="w-full lg:w-1/2">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -40,7 +40,7 @@ export default function UserHomePageSkeleton() {
 
       {/* Categories Section Skeleton */}
       <section className="w-full pb-12 sm:py-16">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-10 max-w-7xl">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-10 container">
           {/* Header (title + controls) */}
           <div className="flex items-center justify-between">
             <Skeleton className="h-8 w-48 sm:w-64" />
@@ -51,7 +51,7 @@ export default function UserHomePageSkeleton() {
           </div>
 
           {/* Grid / Carousel placeholder */}
-          <div className="flex flex-wrap gap-20 mt-4">
+          <div className="flex sm:flex-wrap gap-4 sm:gap-20 mt-4 overflow-hidden">
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}

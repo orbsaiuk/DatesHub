@@ -65,7 +65,10 @@ export default function Blog({
 
         {/* Mobile: Carousel */}
         <div className="block sm:hidden">
-          <Carousel setApi={setApi} opts={{ align: "start" }}>
+          <Carousel
+            setApi={setApi}
+            opts={{ align: "start", direction: "rtl", loop: true }}
+          >
             <CarouselContent>
               {visible.map((item) => (
                 <CarouselItem key={item._id}>

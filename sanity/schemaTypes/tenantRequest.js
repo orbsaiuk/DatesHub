@@ -68,7 +68,13 @@ export default defineType({
       type: "string",
       readOnly: true,
     }),
-    defineField({ name: "logo", title: "Logo", type: "image", readOnly: true }),
+    defineField({
+      name: "logo",
+      title: "Logo",
+      type: "image",
+      readOnly: true,
+      description: "Optional. A default logo will be used if not provided.",
+    }),
     defineField({
       name: "description",
       title: "Description",

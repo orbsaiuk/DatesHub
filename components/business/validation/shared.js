@@ -100,15 +100,8 @@ export const flexibleLocationSchema = z.object({
 // ============================================================================
 
 export const logoValidation = (val, ctx) => {
-  const hasFile = Boolean(val.logoFile);
-  const hasSelected = Boolean(val.logoSelected);
-  if (!hasFile && !hasSelected) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["logo"],
-      message: "الشعار مطلوب",
-    });
-  }
+  // Logo is now optional - no validation needed
+  // A default logo will be used if none is provided
 };
 
 export const createArraySchema = (

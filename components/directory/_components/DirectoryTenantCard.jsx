@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { SignedIn } from "@clerk/nextjs";
 import CompanyInteractionButton from "@/components/CompanyInteractionButton";
 import { getFormattedWorkingHours } from "@/lib/utils/workingHours";
+import { getDefaultLogoUrl } from "@/lib/utils/defaultLogo";
 
 function StarRating({ rating = 0 }) {
   const stars = Array.from({ length: 5 });
@@ -25,9 +26,8 @@ function StarRating({ rating = 0 }) {
         return (
           <Star
             key={index}
-            className={`size-4 ${
-              isFilled ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-            }`}
+            className={`size-4 ${isFilled ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+              }`}
           />
         );
       })}
@@ -98,28 +98,24 @@ export default function DirectoryTenantCard({
           <div className="flex gap-4">
             {/* Logo */}
             <div className="flex-shrink-0">
-              {tenant?.logo ? (
-                <ImageOptimized
-                  sanityImage={tenant.logo?.asset ? tenant.logo : null}
-                  src={
-                    !tenant.logo?.asset && typeof tenant.logo === "string"
-                      ? tenant.logo
+              <ImageOptimized
+                sanityImage={tenant.logo?.asset ? tenant.logo : null}
+                src={
+                  !tenant.logo?.asset && typeof tenant.logo === "string"
+                    ? tenant.logo
+                    : !tenant.logo?.asset
+                      ? getDefaultLogoUrl(tenant.name)
                       : undefined
-                  }
-                  alt={`شعار شركة ${tenant.name}`}
-                  width={120}
-                  height={120}
-                  className="rounded-lg w-20 h-20 sm:w-24 sm:h-24 object-cover"
-                  tenantName={tenant.name}
-                  context="logo"
-                  priority
-                  sizes="(max-width: 640px) 80px, 120px"
-                />
-              ) : (
-                <div className="rounded-lg w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-                  <div className="w-1/2 h-1/2 rounded bg-primary/20" />
-                </div>
-              )}
+                }
+                alt={`شعار شركة ${tenant.name}`}
+                width={120}
+                height={120}
+                className="rounded-lg w-20 h-20 sm:w-24 sm:h-24 object-cover"
+                tenantName={tenant.name}
+                context="logo"
+                priority
+                sizes="(max-width: 640px) 80px, 120px"
+              />
             </div>
 
             {/* Name and reviews */}

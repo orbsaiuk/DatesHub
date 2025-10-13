@@ -45,6 +45,7 @@ export default defineType({
       type: "image",
       options: { hotspot: true },
       readOnly: true,
+      description: "Optional. A default logo will be used if not provided.",
     }),
     defineField({
       name: "description",
