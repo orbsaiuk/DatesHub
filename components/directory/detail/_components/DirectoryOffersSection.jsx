@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { urlFor } from "@/sanity/lib/image";
-import { Clock, Tag, Sparkles, Timer } from "lucide-react";
+import { Clock, Tag, Sparkles, Timer, Package } from "lucide-react";
 import ImageOptimized from "@/components/ImageOptimized";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -90,38 +90,6 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
     };
 
     fetchOffers();
-
-    // Fetch products
-    const fetchProducts = async () => {
-      if (!tenant?.id) {
-        setProductsLoading(false);
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          `/api/products/tenant?tenantType=${tenantType}&tenantId=${tenant.id}`
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.success && data.items) {
-          setProducts(data.items);
-        } else {
-          setProducts([]);
-        }
-      } catch (error) {
-        setProducts([]);
-      } finally {
-        setProductsLoading(false);
-      }
-    };
-
-    fetchProducts();
   }, [tenant?.id, tenantType]);
 
   useEffect(() => {
@@ -171,8 +139,17 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Sparkles className="w-6 h-6 text-primary" />
-          <h3 className="text-2xl font-bold text-gray-900">عروض حصرية</h3>
+          <h3 className="text-lg sm:text-2xl font-bold text-gray-900">
+            عروض حصرية
+          </h3>
         </div>
+        <Badge variant="secondary" className="text-xs sm:text-sm">
+          {offers.length === 1
+            ? "عرض واحد"
+            : offers.length === 2
+              ? "عرضان"
+              : `${offers.length} عروض`}
+        </Badge>
       </div>
 
       <Carousel
@@ -212,15 +189,6 @@ export default function DirectoryOffersSection({ tenant, tenantType }) {
           ))}
         </div>
       )}
-
-      {/* Products Section */}
-      <div className="mt-12">
-        <DirectoryProductsSection
-          products={products}
-          loading={productsLoading}
-          tenant={tenant}
-        />
-      </div>
     </div>
   );
 }
@@ -262,7 +230,7 @@ function DirectoryOfferCard({ offer, tenant }) {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-white border-2 border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 min-h-[280px] group">
+    <div className="relative overflow-hidden rounded-2xl bg-white border-2 border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 h-[250px] sm:h-[300px] md:h-[380px] lg:h-[480px] group">
       {/* Background Image */}
       {imageUrl && (
         <div className="absolute inset-0">
@@ -270,8 +238,7 @@ function DirectoryOfferCard({ offer, tenant }) {
             src={imageUrl}
             alt={`${offer.title} - عرض من ${tenant?.name || "الشركة"}`}
             fill
-            sizes="(max-width: 768px) 100vw, 600px"
-            className="object-cover transform group-hover:scale-105 transition-transform duration-500"
+            className="object-cover transform group-hover:scale-105 transition-transform duration-500 w-full h-full"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent mix-blend-multiply"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
@@ -298,7 +265,7 @@ function DirectoryOfferCard({ offer, tenant }) {
       {/* New Offer Badge */}
       {!isLastDay() && (
         <div className="absolute top-4 left-4 z-20">
-          <Badge className="bg-primary text-white px-3 py-1.5 text-xs font-bold shadow-lg">
+          <Badge className="bg-primary text-white px-2 sm:px-3 py-1 sm:py-1.5 text-xs font-bold shadow-lg">
             <Sparkles className="w-3 h-3 mr-1 inline" />
             عرض مميز
           </Badge>
@@ -306,11 +273,11 @@ function DirectoryOfferCard({ offer, tenant }) {
       )}
 
       {/* Content */}
-      <div className="relative z-10 p-6 flex flex-col justify-between min-h-[280px]">
+      <div className="relative z-10 p-3 sm:p-6 flex flex-col text-sm sm:text-base justify-between h-[250px] sm:h-[300px] md:h-[380px] lg:h-[480px]">
         <div className="space-y-3">
           {/* Title */}
           <h4
-            className={`text-2xl font-bold leading-tight ${
+            className={`text-xl sm:text-2xl font-bold leading-tight ${
               hasBackgroundImage
                 ? "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
                 : "text-gray-900"
@@ -322,7 +289,7 @@ function DirectoryOfferCard({ offer, tenant }) {
           {/* Description */}
           {offer.description && (
             <p
-              className={`text-base leading-relaxed line-clamp-2 ${
+              className={`text-sm sm:text-base leading-relaxed line-clamp-2 ${
                 hasBackgroundImage
                   ? "text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
                   : "text-gray-600"
@@ -341,15 +308,15 @@ function DirectoryOfferCard({ offer, tenant }) {
           {/* Enhanced Date Info */}
           {!isLastDay() && offer.endDate && (
             <div
-              className={`w-fit flex items-center justify-center gap-2 px-4 py-3 rounded-xl backdrop-blur-sm transition-all duration-300 ${
+              className={`w-fit flex items-center justify-center gap-2 px-2 sm:px-4 py-1 sm:py-3 rounded-xl backdrop-blur-sm transition-all duration-300 ${
                 hasBackgroundImage
                   ? "bg-white/25 text-white border border-white/40 hover:bg-white/30"
                   : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800 border border-blue-200"
               }`}
             >
-              <Clock className="w-5 h-5" />
+              <Clock className="w-3 h-3 sm:w-5 sm:h-5" />
               <div className="text-center">
-                <div className="text-sm font-bold">
+                <div className="text-xs sm:text-sm font-bold">
                   العرض ساري حتى ({formatDate(offer.endDate)})
                 </div>
               </div>
@@ -437,91 +404,6 @@ function DirectoryProductsSection({ products, loading, tenant }) {
         {products.map((product) => (
           <ProductCard key={product._id} product={product} tenant={tenant} />
         ))}
-      </div>
-    </div>
-  );
-}
-
-function ProductCard({ product, tenant }) {
-  const imageUrl = product.image?.asset?.url
-    ? urlFor(product.image).width(400).height(300).url()
-    : null;
-
-  const formatPrice = (price, currency = "SAR") => {
-    if (!price || price === 0) return "السعر عند الطلب";
-    return `${price.toLocaleString("ar-SA")} ${currency}`;
-  };
-
-  const formatQuantity = (quantity, weightUnit = "kg") => {
-    if (!quantity || quantity === 0) return "الكمية عند الطلب";
-    return `${quantity.toLocaleString("ar-SA")} ${weightUnit}`;
-  };
-
-  const getDescription = (description) => {
-    if (!description) return "";
-    if (Array.isArray(description)) {
-      return description[0]?.children?.[0]?.text || "";
-    }
-    return typeof description === "string" ? description : "";
-  };
-
-  return (
-    <div className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-      {/* Product Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-        {imageUrl ? (
-          <ImageOptimized
-            src={imageUrl}
-            alt={`${product.title} - منتج من ${tenant?.name || "الشركة"}`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-            <Package className="w-16 h-16 text-gray-400" />
-          </div>
-        )}
-
-        {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
-
-        {/* Shopping cart icon on hover */}
-        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
-            <ShoppingCart className="w-5 h-5 text-primary" />
-          </div>
-        </div>
-      </div>
-
-      {/* Product Info */}
-      <div className="p-4 space-y-3">
-        {/* Title */}
-        <h4 className="font-bold text-lg text-gray-900 line-clamp-2 group-hover:text-primary transition-colors duration-200">
-          {product.title}
-        </h4>
-
-        {/* Price and Quantity */}
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-1">
-            <span className="font-semibold text-primary">
-              {formatPrice(product.price, product.currency)}
-            </span>
-          </div>
-          <div className="text-gray-600">
-            {formatQuantity(product.quantity, product.weightUnit)}
-          </div>
-        </div>
-
-        {/* Description */}
-        {getDescription(product.description) && (
-          <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
-            {getDescription(product.description)}
-          </p>
-        )}
-
-        {/* Bottom border accent */}
-        <div className="h-1 bg-gradient-to-r from-primary/20 via-primary to-primary/20 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
       </div>
     </div>
   );

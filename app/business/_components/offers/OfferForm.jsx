@@ -65,7 +65,7 @@ export default function OfferForm({
         <Input
           value={form.title}
           onChange={(e) => onChange({ ...form, title: e.target.value })}
-          placeholder="تصوير الأعراس"
+          placeholder="أدخل عنوان العرض"
           className="h-12 text-base md:h-10 md:text-sm"
         />
       </div>

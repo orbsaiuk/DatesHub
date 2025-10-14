@@ -33,8 +33,7 @@ export default function ProductCard({ product, tenant }) {
             src={imageUrl}
             alt={`${product.title} - منتج من ${tenant?.name || "الشركة"}`}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-contain group-hover:scale-105 transition-transform duration-300"
+            className="object-cover group-hover:scale-105 transition-transform duration-300 w-full h-full"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">

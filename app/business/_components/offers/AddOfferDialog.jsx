@@ -127,7 +127,7 @@ export default function AddOfferDialog({
         <DialogHeader>
           <DialogTitle className="text-center">عرض جديد</DialogTitle>
           <DialogDescription className="text-center">
-            املأ التفاصيل لعرض خدمتك.
+            املأ تفاصيل العرض.
           </DialogDescription>
         </DialogHeader>
         <OfferForm

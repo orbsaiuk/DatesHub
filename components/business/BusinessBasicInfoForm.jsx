@@ -115,8 +115,9 @@ export default function BusinessBasicInfoForm({
           handleFieldChange(id, newValue, onChange);
         }}
         placeholder={placeholder}
-        className={`mt-1 appearance-none ${error ? "border-destructive focus-visible:ring-destructive" : ""
-          }`}
+        className={`mt-1 appearance-none ${
+          error ? "border-destructive focus-visible:ring-destructive" : ""
+        }`}
       />
     );
   };

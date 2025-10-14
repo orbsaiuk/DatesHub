@@ -39,20 +39,21 @@ export default function DirectoryFilters({
   const [dirty, setDirty] = useState(false);
 
   // Dynamic options based on entity type
-  const typeOptions = entityType === "company"
-    ? [
-      { label: "متجر الكتروني", value: "online-store" },
-      { label: "محل تمور", value: "dates-shop" },
-      { label: "موزع", value: "distributor" },
-    ]
-    : [
-      { label: "مصنع تمور", value: "dates-factory" },
-      { label: "مصنع تعبئة", value: "packaging-factory" },
-      { label: "مصنع تغليف", value: "wrapping-factory" },
-      { label: "مزرعة", value: "farm" },
-      { label: "تاجر جملة", value: "wholesaler" },
-      { label: "مصدر", value: "exporter" },
-    ];
+  const typeOptions =
+    entityType === "company"
+      ? [
+          { label: "متجر الكتروني", value: "online-store" },
+          { label: "محل تمور", value: "dates-shop" },
+          { label: "موزع", value: "distributor" },
+        ]
+      : [
+          { label: "مصنع تمور", value: "dates-factory" },
+          { label: "مصنع تعبئة", value: "packaging-factory" },
+          { label: "مصنع تغليف", value: "wrapping-factory" },
+          { label: "مزرعة", value: "farm" },
+          { label: "تاجر جملة", value: "wholesaler" },
+          { label: "مصدر", value: "exporter" },
+        ];
 
   const typeLabel = entityType === "company" ? "نوع الشركة:" : "نوع المورد:";
 
@@ -62,8 +63,8 @@ export default function DirectoryFilters({
     const ctypeParam = searchParams?.get("ctype");
     return Boolean(
       (locParam && locParam.trim()) ||
-      (specParam && specParam.trim()) ||
-      (ctypeParam && ctypeParam !== "all")
+        (specParam && specParam.trim()) ||
+        (ctypeParam && ctypeParam !== "all")
     );
   }, [searchParams]);
 
@@ -205,12 +206,14 @@ export default function DirectoryFilters({
                       >
                         <span
                           aria-hidden
-                          className={`inline-flex size-4 items-center justify-center rounded-full border ${isSelected ? "border-primary" : "border-input"
-                            }`}
+                          className={`inline-flex size-4 items-center justify-center rounded-full border ${
+                            isSelected ? "border-primary" : "border-input"
+                          }`}
                         >
                           <span
-                            className={`block size-2 rounded-full ${isSelected ? "bg-primary" : "bg-transparent"
-                              }`}
+                            className={`block size-2 rounded-full ${
+                              isSelected ? "bg-primary" : "bg-transparent"
+                            }`}
                           />
                         </span>
                         <Label className="cursor-pointer text-sm">

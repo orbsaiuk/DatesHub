@@ -12,9 +12,11 @@ export default function ProductsHeader({ total }) {
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         <Package className="w-6 h-6 text-primary" />
-        <h3 className="text-2xl font-bold text-gray-900">منتجاتنا</h3>
+        <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+          منتجاتنا
+        </h3>
       </div>
-      <Badge variant="secondary" className="text-sm">
+      <Badge variant="secondary" className="text-xs sm:text-sm">
         {getProductCountText(total)}
       </Badge>
     </div>
