@@ -20,10 +20,12 @@ export default function DirectoryLocationContent({ tenant }) {
                 const marker = allMarkers[i];
                 const searchQ = encodeURIComponent(locStr || "");
                 return (
-                  <li key={i} className="text-xs text-muted-foreground">
-                    <span>
-                      {i + 1}. {locStr} -{" "}
-                    </span>
+                  <li
+                    key={i}
+                    className="text-xs text-muted-foreground flex items-center gap-2"
+                  >
+                    <span>- {i + 1}</span>
+                    <span style={{ direction: "ltr" }}>{locStr}</span>
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${searchQ}`}
                       target="_blank"

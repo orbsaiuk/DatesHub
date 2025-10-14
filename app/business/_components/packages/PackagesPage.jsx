@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Shield, Zap, Crown } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,6 +19,7 @@ export default function PackagesPage({
   currentSubscription,
   allPlans,
 }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [billingInterval, setBillingInterval] = useState("month");
   const [showUpgradeConfirm, setShowUpgradeConfirm] = useState(null);
@@ -84,7 +86,7 @@ export default function PackagesPage({
           // Free plan - no checkout needed
           toast.success(`تم الاشتراك بنجاح في ${planName}!`);
           setTimeout(() => {
-            window.location.reload();
+            router.refresh();
           }, 1500);
         }
       } else {
@@ -189,16 +191,14 @@ export default function PackagesPage({
         />
 
         {/* Current Plan Status */}
-        {currentSubscription && (
-          <CurrentPlanCard
-            subscription={currentSubscription}
-            limits={currentSubscription.plan?.limits}
-            icon={getPlanIcon(getPlanTier(currentSubscription.plan))}
-            getUsagePercentage={getUsagePercentage}
-            tenantType={tenantType}
-            tenantId={tenantId}
-          />
-        )}
+        <CurrentPlanCard
+          subscription={currentSubscription}
+          limits={currentSubscription?.plan?.limits}
+          icon={getPlanIcon(getPlanTier(currentSubscription?.plan || { slug: "free" }))}
+          getUsagePercentage={getUsagePercentage}
+          tenantType={tenantType}
+          tenantId={tenantId}
+        />
 
         {/* Plans Grid */}
         <PlansGrid

@@ -64,7 +64,7 @@ export default function JoinSection() {
                   className="w-full min-h-[44px] py-3 sm:py-4 text-base sm:text-lg bg-button-1 hover:bg-button-1-hover text-white rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
                   asChild
                 >
-                  <Link href="/sign-up" aria-label="انضم إلى OrbsAI كمستخدم">
+                  <Link href="/sign-up" aria-label="انضم إلى DatesHub كمستخدم">
                     انضم الآن
                   </Link>
                 </Button>
@@ -110,7 +110,7 @@ export default function JoinSection() {
                   className="w-full min-h-[44px] py-3 sm:py-4 text-base sm:text-lg bg-button-1 hover:bg-button-1-hover text-white rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
                   asChild
                 >
-                  <Link href="/become" aria-label="انضم إلى OrbsAI كشركة">
+                  <Link href="/become" aria-label="انضم إلى DatesHub كشركة">
                     انضم كشركة
                   </Link>
                 </Button>

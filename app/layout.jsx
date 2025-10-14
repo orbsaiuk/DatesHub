@@ -22,8 +22,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "OrbsAI",
-    template: "%s | OrbsAI",
+    default: "DatesHub",
+    template: "%s | DatesHub",
   },
   description:
     "اكتشف وتواصل مع الشركات والموردين المعتمدين حول العالم. استكشف فئات الأعمال والعروض الحصرية وملفات الشركات التفصيلية. انضم إلى شبكتنا الموثوقة اليوم.",
@@ -39,10 +39,10 @@ export const metadata = {
     "business offers",
     "corporate partnerships",
   ],
-  authors: [{ name: "OrbsAI Team" }],
-  creator: "OrbsAI",
-  publisher: "OrbsAI",
-  applicationName: "OrbsAI",
+  authors: [{ name: "DatesHub Team" }],
+  creator: "DatesHub",
+  publisher: "DatesHub",
+  applicationName: "DatesHub",
   category: "Business",
   classification: "Business Directory",
   alternates: {
@@ -51,8 +51,8 @@ export const metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    siteName: "OrbsAI",
-    title: "OrbsAI",
+    siteName: "DatesHub",
+    title: "DatesHub",
     description:
       "اكتشف وتواصل مع الشركات والموردين المعتمدين. استكشف الفئات والعروض وتفاصيل الأعمال.",
     images: [
@@ -60,7 +60,7 @@ export const metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "OrbsAI - Business Directory Platform",
+        alt: "DatesHub - Business Directory Platform",
         type: "image/jpeg",
       },
     ],
@@ -68,15 +68,15 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@orbsai",
-    creator: "@orbsai",
-    title: "OrbsAI - تواصل مع شركات وموردين موثوقين",
+    site: "@dateshub",
+    creator: "@dateshub",
+    title: "DatesHub - تواصل مع شركات وموردين موثوقين",
     description:
       "اكتشف وتواصل مع الشركات والموردين حول العالم. استكشف فئات الأعمال والعروض الحصرية وملفات الشركات التفصيلية.",
     images: [
       {
         url: "/og-image.jpg",
-        alt: "OrbsAI - Business Directory Platform",
+        alt: "DatesHub - Business Directory Platform",
       },
     ],
   },

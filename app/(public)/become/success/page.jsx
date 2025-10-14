@@ -23,14 +23,14 @@ export async function generateMetadata({ searchParams }) {
       const request = await checkTenantRequestExists(id);
       if (!request) {
         return {
-          title: "الصفحة غير موجودة - شبكة OrbsAI التجارية",
+          title: "الصفحة غير موجودة - شبكة DatesHub التجارية",
           description: "عذرًا، لم نتمكن من العثور على الطلب المحدد.",
           robots: { index: false, follow: false },
         };
       }
     } catch (error) {
       return {
-        title: "الصفحة غير موجودة - شبكة OrbsAI التجارية",
+        title: "الصفحة غير موجودة - شبكة DatesHub التجارية",
         description: "حدث خطأ أثناء البحث عن الطلب.",
         robots: { index: false, follow: false },
       };
@@ -39,14 +39,14 @@ export async function generateMetadata({ searchParams }) {
 
   // Return success page metadata
   return {
-    title: "تم إرسال الطلب - شبكة OrbsAI التجارية",
+    title: "تم إرسال الطلب - شبكة DatesHub التجارية",
     description:
-      "تم إرسال طلب تسجيل عملك التجاري بنجاح. سيقوم فريقنا بمراجعة طلبك وإخطارك عند الموافقة عليه. شكراً لانضمامك إلى OrbsAI.",
+      "تم إرسال طلب تسجيل عملك التجاري بنجاح. سيقوم فريقنا بمراجعة طلبك وإخطارك عند الموافقة عليه. شكراً لانضمامك إلى DatesHub.",
     keywords: [
       "تم إرسال الطلب",
       "تسجيل الأعمال",
       "في انتظار الموافقة",
-      "OrbsAI",
+      "DatesHub",
     ],
     robots: { index: false, follow: false },
   };

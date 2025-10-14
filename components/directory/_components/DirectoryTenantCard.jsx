@@ -28,8 +28,9 @@ function StarRating({ rating = 0 }) {
         return (
           <Star
             key={index}
-            className={`size-4 ${isFilled ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-              }`}
+            className={`size-4 ${
+              isFilled ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+            }`}
           />
         );
       })}
@@ -128,13 +129,13 @@ export default function DirectoryTenantCard({
                   tenant.tenantType || "company",
                   tenant.companyType || tenant.supplierType
                 ) && (
-                    <Badge variant="secondary" className="text-xs">
-                      {getTenantTypeLabel(
-                        tenant.tenantType || "company",
-                        tenant.companyType || tenant.supplierType
-                      )}
-                    </Badge>
-                  )}
+                  <Badge variant="secondary" className="text-xs">
+                    {getTenantTypeLabel(
+                      tenant.tenantType || "company",
+                      tenant.companyType || tenant.supplierType
+                    )}
+                  </Badge>
+                )}
               </div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                 <StarRating rating={rating} />
@@ -177,7 +178,9 @@ export default function DirectoryTenantCard({
           {/* Location */}
           <div className="flex items-start gap-2">
             <MapPin className="size-4 mt-0.5 flex-shrink-0" />
-            <span className="text-sm">{location}</span>
+            <span className="text-sm" style={{ direction: "ltr" }}>
+              {location}
+            </span>
           </div>
 
           {/* Working hours */}

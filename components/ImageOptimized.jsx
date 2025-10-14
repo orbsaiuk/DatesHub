@@ -87,7 +87,7 @@ function generateAltText(sanityImage, tenantName = "", context = "") {
   }
 
   if (tenantName && context !== "logo") {
-    parts.push("على دليل أعمال OrbsAI");
+    parts.push("على دليل أعمال DatesHub");
   }
 
   return parts.join(" - ") || "صورة عمل";

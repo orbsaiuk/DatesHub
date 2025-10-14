@@ -14,6 +14,8 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
+export const revalidate = 0; // Disable caching for this page
+
 export default async function CompanyPackagesPage() {
   const { userId } = await auth();
   if (!userId) {

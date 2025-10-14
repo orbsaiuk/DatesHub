@@ -12,11 +12,6 @@ import {
   createSupplierDocument,
 } from "@/services/sanity/entities";
 import { ensureUserMembership } from "@/services/sanity/memberships";
-import {
-  getPlanBySlug,
-  getAllPlans,
-  createSubscription,
-} from "@/services/sanity/subscriptions";
 
 export const runtime = "nodejs";
 
@@ -105,34 +100,6 @@ export async function POST(req) {
       throw new Error(`Entity creation failed: ${entityResult.reason}`);
     }
     const created = entityResult.value;
-
-    // Create default Free subscription for the new tenant (best-effort)
-    try {
-      let freePlan = await getPlanBySlug("free");
-      if (!freePlan) {
-        const plans = await getAllPlans();
-        freePlan = (plans || []).find((p) => {
-          try {
-            const amt = p?.price?.amount;
-            return Number(amt) === 0;
-          } catch (_) {
-            return false;
-          }
-        });
-      }
-
-      if (freePlan?._id) {
-        await createSubscription({
-          tenantType: entityType,
-          tenantId,
-          plan: { _type: "reference", _ref: freePlan._id },
-          status: "active",
-          startDate: new Date().toISOString(),
-        });
-      }
-    } catch (subErr) {
-      // Non-blocking - subscription creation failure is not critical
-    }
 
     // User membership is important but not critical for webhook success (non-blocking)
 

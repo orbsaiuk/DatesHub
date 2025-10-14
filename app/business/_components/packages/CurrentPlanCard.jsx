@@ -47,7 +47,11 @@ export default function CurrentPlanCard({
     }
   };
 
-  if (!subscription) return null;
+  // If no subscription, show free plan card
+  const displaySubscription = subscription || {
+    plan: { name: "الباقة المجانية" },
+    status: "active",
+  };
 
   return (
     <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-transparent mx-4 sm:mx-6">
@@ -58,19 +62,19 @@ export default function CurrentPlanCard({
             <div className="min-w-0 flex-1">
               <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-2 text-lg sm:text-xl">
                 <span className="leading-tight">
-                  الباقة الحالية: {subscription.plan?.name}
+                  الباقة الحالية: {displaySubscription.plan?.name}
                 </span>
                 <Badge
                   variant={
-                    subscription.status === "active" ? "default" : "secondary"
+                    displaySubscription.status === "active" ? "default" : "secondary"
                   }
                   className="w-fit text-xs sm:text-sm"
                 >
-                  {subscription.status}
+                  {displaySubscription.status}
                 </Badge>
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-1">
-                {subscription.endDate && (
+                {subscription?.endDate && (
                   <span className="flex items-center space-x-1">
                     <Calendar className="w-4 h-4 flex-shrink-0" />
                     <span className="leading-tight">
@@ -85,7 +89,7 @@ export default function CurrentPlanCard({
             </div>
           </div>
 
-          {subscription.stripeCustomerId && (
+          {subscription?.stripeCustomerId && (
             <Button
               variant="outline"
               size="sm"
@@ -103,7 +107,7 @@ export default function CurrentPlanCard({
         </div>
       </CardHeader>
 
-      {subscription.currentUsage && limits && (
+      {subscription?.currentUsage && limits && (
         <CardContent className="pt-0">
           <h4 className="font-medium mb-4 flex items-center space-x-2 text-base sm:text-lg">
             <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />

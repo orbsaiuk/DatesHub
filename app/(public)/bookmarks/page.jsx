@@ -10,9 +10,9 @@ import BreadcrumbNavigation from "@/components/navigation/BreadcrumbNavigation";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "المحفوظات - الشركات المحفوظة | OrbsAI",
+  title: "المحفوظات - الشركات المحفوظة | DatesHub",
   description:
-    "الوصول إلى الشركات المحفوظة. إدارة الشركات المفضلة، مراجعة ملفاتها الشخصية، وإعادة الاتصال بشركاء الأعمال المفضلين بسهولة على OrbsAI.",
+    "الوصول إلى الشركات المحفوظة. إدارة الشركات المفضلة، مراجعة ملفاتها الشخصية، وإعادة الاتصال بشركاء الأعمال المفضلين بسهولة على DatesHub.",
   keywords: ["المحفوظات", "الشركات المحفوظة", "الشركات المفضلة", "شركات مفضلة"],
   robots: { index: false, follow: false },
 };

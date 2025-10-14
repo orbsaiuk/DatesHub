@@ -44,7 +44,7 @@ export async function GET(req) {
         query
       )}&limit=1&accept-language=en&email=${encodeURIComponent(contact)}`;
       const res = await fetch(url, {
-        headers: { "User-Agent": `orbsai-company-form/1.0 (${contact})` },
+        headers: { "User-Agent": `dateshub-company-form/1.0 (${contact})` },
         cache: "no-store",
         signal: controller.signal,
       });

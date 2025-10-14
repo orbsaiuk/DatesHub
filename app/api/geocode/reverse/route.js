@@ -83,7 +83,7 @@ export async function GET(req) {
         contact
       )}`;
       const res = await fetch(url, {
-        headers: { "User-Agent": `orbsai-company-form/1.0 (${contact})` },
+        headers: { "User-Agent": `dateshub-company-form/1.0 (${contact})` },
         cache: "no-store",
         signal: controller.signal,
       });

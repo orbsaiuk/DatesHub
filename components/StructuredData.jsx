@@ -18,7 +18,7 @@ export function generateWebsiteSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "OrbsAI",
+    name: "DatesHub",
     description:
       "Discover and connect with verified companies and suppliers worldwide",
     url: siteUrl,
@@ -32,12 +32,12 @@ export function generateWebsiteSchema() {
     },
     publisher: {
       "@type": "Organization",
-      name: "OrbsAI",
+      name: "DatesHub",
       url: siteUrl,
     },
     mainEntity: {
       "@type": "Organization",
-      name: "OrbsAI",
+      name: "DatesHub",
       url: siteUrl,
       description:
         "Business directory platform connecting companies and suppliers",

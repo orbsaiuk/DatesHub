@@ -113,7 +113,7 @@ export default function Categories() {
                     <ImageOptimized
                       src={src}
                       sanityImage={category?.icon}
-                      alt={`أيقونة فئة ${title} - تصفح شركات ${title.toLowerCase()} على OrbsAI`}
+                      alt={`أيقونة فئة ${title} - تصفح شركات ${title.toLowerCase()} على DatesHub`}
                       width={200}
                       height={200}
                       className="rounded-sm aspect-square object-contain bg-white ring-1 ring-border/50 shadow-sm transition-transform duration-300 group-hover:scale-105 group-active:scale-95 p-1"
@@ -143,10 +143,11 @@ export default function Categories() {
                 aria-label={`Go to slide ${i + 1}`}
                 aria-current={selectedIndex === i ? "true" : "false"}
                 onClick={() => scrollTo(i)}
-                className={`h-2.5 w-2.5 rounded-full transition-all ${selectedIndex === i
-                  ? "bg-primary scale-110"
-                  : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                  }`}
+                className={`h-2.5 w-2.5 rounded-full transition-all ${
+                  selectedIndex === i
+                    ? "bg-primary scale-110"
+                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                }`}
               />
             ))}
           </div>

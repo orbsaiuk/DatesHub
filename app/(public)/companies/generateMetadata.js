@@ -81,11 +81,11 @@ export async function generateCompaniesMetadata(searchParams) {
       description,
       url: canonicalUrl,
       type: "website",
-      siteName: "OrbsAI",
+      siteName: "DatesHub",
       images: [
         {
           url: "/next.svg",
-          alt: `${title} - OrbsAI`,
+          alt: `${title} - DatesHub`,
         },
       ],
     },

@@ -19,7 +19,7 @@ export default async function Discover() {
                 <ImageOptimized
                   sanityImage={c.logo}
                   tenantName={c.name}
-                  alt={`${c.name} company logo on OrbsAI`}
+                  alt={`${c.name} company logo on DatesHub`}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   width={800}
                   height={600}

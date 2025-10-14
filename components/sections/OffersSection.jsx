@@ -165,7 +165,7 @@ function OfferBanner({ offer, type }) {
             src={imageUrl}
             alt={`${offer.title} - عرض خاص من ${
               entity?.name || "شركة"
-            } على OrbsAI`}
+            } على DatesHub`}
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 800px"
