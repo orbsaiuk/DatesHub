@@ -77,7 +77,6 @@ export async function GET(request) {
       });
     }
   } catch (error) {
-    console.error("Error checking usage:", error);
     return NextResponse.json(
       { error: "Failed to check usage" },
       { status: 500 }
@@ -148,7 +147,6 @@ export async function POST(request) {
       increment,
     });
   } catch (error) {
-    console.error("Error updating usage:", error);
     return NextResponse.json(
       { error: "Failed to update usage" },
       { status: 500 }

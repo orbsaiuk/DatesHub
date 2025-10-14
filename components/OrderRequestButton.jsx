@@ -91,7 +91,6 @@ export default function OrderRequestButton({
       onRequestSubmitted?.();
       onRequestAccepted?.();
     } catch (error) {
-      console.error("Error submitting order request:", error);
       toast.error("فشل إرسال الطلب. يرجى المحاولة مرة أخرى.");
     } finally {
       setIsLoading(false);

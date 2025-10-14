@@ -9,7 +9,6 @@ export async function checkTenantRequestExists(id) {
     const result = await readClient.fetch(TENANT_REQUEST_EXISTS_QUERY, { id });
     return result;
   } catch (error) {
-    console.error("Error checking tenant request existence:", error);
     return null;
   }
 }
@@ -21,7 +20,6 @@ export async function getUserPendingTenantRequest(userId) {
     });
     return result;
   } catch (error) {
-    console.error("Error checking user pending tenant request:", error);
     return null;
   }
 }

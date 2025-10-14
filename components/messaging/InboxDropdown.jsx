@@ -48,7 +48,7 @@ export default function InboxDropdown() {
         setUnreadCount(unread);
       }
     } catch (error) {
-      console.error("Failed to load conversations:", error);
+      // Failed to load conversations
     } finally {
       setLoading(false);
     }

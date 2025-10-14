@@ -46,7 +46,7 @@ const getCompanyName = async (id) => {
       return data.name || " تحميل...";
     }
   } catch (error) {
-    console.error("Error fetching company name:", error);
+    // Error fetching company name
   }
   return `شركة ${id}`;
 };
@@ -61,7 +61,7 @@ const getSupplierName = async (id) => {
       return data.name || data?.supplier?.name || " تحميل...";
     }
   } catch (error) {
-    console.error("Error fetching supplier name:", error);
+    // Error fetching supplier name
   }
   return `مورد ${id}`;
 };
@@ -79,7 +79,7 @@ const getConversationLabel = async (conversationId) => {
       }
     }
   } catch (error) {
-    console.error("Error fetching conversation label:", error);
+    // Error fetching conversation label
   }
   return "محادثة";
 };
@@ -93,7 +93,7 @@ const getBlogTitle = async (id) => {
       return data.title || `تحميل...`;
     }
   } catch (error) {
-    console.error("Error fetching blog title:", error);
+    // Error fetching blog title
   }
   return `مقالة ${id}`;
 };

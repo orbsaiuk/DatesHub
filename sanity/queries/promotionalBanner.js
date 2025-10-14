@@ -24,7 +24,8 @@ export const ACTIVE_PROMOTIONAL_BANNERS_QUERY = `
   targetAudience,
   displayOrder,
   startDate,
-  endDate
+  endDate,
+  showEndDate
 }`;
 
 export const ALL_PROMOTIONAL_BANNERS_QUERY = `
@@ -51,6 +52,7 @@ export const ALL_PROMOTIONAL_BANNERS_QUERY = `
   displayOrder,
   startDate,
   endDate,
+  showEndDate,
   _createdAt,
   _updatedAt
 }`;
@@ -79,6 +81,7 @@ export const PROMOTIONAL_BANNER_BY_ID_QUERY = `
   displayOrder,
   startDate,
   endDate,
+  showEndDate,
   _createdAt,
   _updatedAt
 }`;

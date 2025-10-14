@@ -18,7 +18,6 @@ export async function getPublishedBlogs() {
   try {
     return await readClient.fetch(PUBLISHED_BLOGS_QUERY);
   } catch (error) {
-    console.error("Error fetching published blogs:", error);
     return [];
   }
 }
@@ -27,7 +26,6 @@ export async function getFeaturedBlogs() {
   try {
     return await readClient.fetch(FEATURED_BLOGS_QUERY);
   } catch (error) {
-    console.error("Error fetching featured blogs:", error);
     return [];
   }
 }
@@ -37,7 +35,6 @@ export async function getBlogBySlug(slug) {
     if (!slug) return null;
     return await readClient.fetch(BLOG_BY_SLUG_QUERY, { slug });
   } catch (error) {
-    console.error("Error fetching blog by slug:", error);
     return null;
   }
 }
@@ -47,7 +44,6 @@ export async function getBlogById(id) {
     if (!id) return null;
     return await readClient.fetch(BLOG_BY_ID_QUERY, { id });
   } catch (error) {
-    console.error("Error fetching blog by id:", error);
     return null;
   }
 }
@@ -57,7 +53,6 @@ export async function getBlogsByAuthor(authorId) {
     if (!authorId) return [];
     return await readClient.fetch(BLOGS_BY_AUTHOR_QUERY, { authorId });
   } catch (error) {
-    console.error("Error fetching blogs by author:", error);
     return [];
   }
 }
@@ -66,7 +61,6 @@ export async function getRecentBlogs(limit = 5) {
   try {
     return await readClient.fetch(RECENT_BLOGS_QUERY, { limit });
   } catch (error) {
-    console.error("Error fetching recent blogs:", error);
     return [];
   }
 }
@@ -89,7 +83,6 @@ export async function getBlogsByQuery(options = {}) {
     });
     return await readClient.fetch(query, params);
   } catch (error) {
-    console.error("Error fetching blogs:", error);
     return [];
   }
 }
@@ -117,7 +110,6 @@ export async function getRelatedBlogs(currentBlogId, authorId = null) {
     // Fallback to recent blogs if no author-based results
     return await readClient.fetch(RECENT_BLOGS_QUERY, { limit: 5 });
   } catch (error) {
-    console.error("Error fetching related blogs:", error);
     return [];
   }
 }
@@ -127,7 +119,6 @@ export async function searchBlogs(options = {}) {
     const { query, params } = buildBlogsQuery(options);
     return await readClient.fetch(query, params);
   } catch (error) {
-    console.error("Error searching blogs:", error);
     return [];
   }
 }
@@ -144,7 +135,6 @@ export async function getBlogsForTenant(tenantType, tenantId) {
     // Use authenticated client to read private datasets
     return await writeClient.fetch(query, { tenantId });
   } catch (error) {
-    console.error("Error fetching blogs for tenant:", error);
     return [];
   }
 }
@@ -153,7 +143,6 @@ export async function getPopularBlogTags() {
   try {
     return await readClient.fetch(POPULAR_BLOG_TAGS_QUERY);
   } catch (error) {
-    console.error("Error fetching popular blog tags:", error);
     return [];
   }
 }
@@ -162,7 +151,6 @@ export async function getBlogArchive() {
   try {
     return await readClient.fetch(BLOG_ARCHIVE_QUERY);
   } catch (error) {
-    console.error("Error fetching blog archive:", error);
     return [];
   }
 }
@@ -175,7 +163,6 @@ export async function incrementBlogViews(blogId) {
 
     return true;
   } catch (error) {
-    console.error("Error incrementing blog views:", error);
     return false;
   }
 }
@@ -195,7 +182,6 @@ export async function createBlogPost(blogData) {
 
     return blog;
   } catch (error) {
-    console.error("Error creating blog post:", error);
     throw error;
   }
 }
@@ -215,7 +201,6 @@ export async function updateBlogPost(blogId, updates) {
 
     return blog;
   } catch (error) {
-    console.error("Error updating blog post:", error);
     throw error;
   }
 }
@@ -227,7 +212,6 @@ export async function deleteBlogPost(blogId) {
     await writeClient.delete(blogId);
     return true;
   } catch (error) {
-    console.error("Error deleting blog post:", error);
     throw error;
   }
 }
@@ -237,7 +221,6 @@ export async function getBlogsByStatus(status = "pending") {
     const { query, params } = buildBlogsQuery({ status });
     return await readClient.fetch(query, params);
   } catch (error) {
-    console.error("Error fetching blogs by status:", error);
     return [];
   }
 }

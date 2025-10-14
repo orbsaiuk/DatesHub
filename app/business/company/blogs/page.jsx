@@ -24,7 +24,6 @@ export default async function CompanyBlogsPage() {
 
   const items = await getBlogsForTenant("company", tenantId);
   const subscription = await getCurrentSubscription("company", tenantId);
-  console.log(items);
 
   const stats = {
     total: items.length,

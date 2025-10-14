@@ -5,8 +5,6 @@ import { hasTenanMembership } from "@/lib/auth/authorization";
 import { COMPANY_BY_TENANT_QUERY } from "@/sanity/queries/company";
 import { SUPPLIER_BY_TENANT_QUERY } from "@/sanity/queries/supplier";
 
-
-
 export async function POST(req) {
   try {
     const { userId } = await auth();
@@ -121,7 +119,6 @@ export async function POST(req) {
 
     return NextResponse.json({ ok: true, blog: created });
   } catch (err) {
-    console.error("/api/blogs/create error", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

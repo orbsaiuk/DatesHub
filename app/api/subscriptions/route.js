@@ -38,7 +38,6 @@ export async function GET(request) {
 
     return NextResponse.json({ subscription });
   } catch (error) {
-    console.error("Error fetching subscription:", error);
     return NextResponse.json(
       { error: "Failed to fetch subscription" },
       { status: 500 }
@@ -109,7 +108,6 @@ export async function POST(request) {
 
     return NextResponse.json({ subscription });
   } catch (error) {
-    console.error("Error creating subscription:", error);
     return NextResponse.json(
       { error: "Failed to create subscription" },
       { status: 500 }
@@ -138,7 +136,6 @@ export async function PATCH(request) {
 
     return NextResponse.json({ subscription });
   } catch (error) {
-    console.error("Error updating subscription:", error);
     return NextResponse.json(
       { error: "Failed to update subscription" },
       { status: 500 }

@@ -35,9 +35,6 @@ export default function MessageCompanyButton({
         router.push(`/messages/${conversationId}`);
       }
     } catch (e) {
-      if (process.env.NODE_ENV === "development") {
-        console.error("Error starting conversation:", e);
-      }
       alert("تعذر بدء المحادثة. يرجى المحاولة مرة أخرى.");
     } finally {
       setBusy(false);

@@ -149,7 +149,6 @@ export async function POST(req) {
 
     return NextResponse.json({ ok: true, offer: created });
   } catch (err) {
-    console.error("/api/offers/create error", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

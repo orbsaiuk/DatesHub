@@ -6,7 +6,7 @@ import { MessageSquare, RefreshCw } from "lucide-react";
 
 export default function MessagesError({ error, reset }) {
   useEffect(() => {
-    console.error("Messages error:", error);
+    // Error reporting service can be added here
   }, [error]);
 
   return (

@@ -18,7 +18,6 @@ export default function UpgradeConfirmDialog({
   loading,
   formatPrice,
   billingInterval,
-  canUpgrade,
 }) {
   if (!plan) return null;
 
@@ -30,8 +29,7 @@ export default function UpgradeConfirmDialog({
             تأكيد تغيير الباقة
           </DialogTitle>
           <DialogDescription className="text-sm sm:text-base">
-            هل أنت متأكد من أنك تريد {canUpgrade(plan) ? "الترقية" : "التغيير"}{" "}
-            إلى باقة {plan.name}؟
+            هل أنت متأكد من أنك تريد الترقية إلى باقة {plan.name}؟
           </DialogDescription>
         </DialogHeader>
 

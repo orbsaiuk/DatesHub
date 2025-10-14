@@ -100,7 +100,6 @@ export async function POST(request, { params }) {
     try {
       await sendOrderRequestResponseToCustomer(updatedOrderRequest);
     } catch (emailError) {
-      console.error("Failed to send email notification:", emailError);
       // Don't fail the request if email fails
     }
 

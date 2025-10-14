@@ -109,7 +109,6 @@ export default function BusinessConversationPageClient({
       }
     } catch (err) {
       setError("فشل في تحميل المحادثة");
-      console.error("Failed to load conversation:", err);
     } finally {
       setLoading(false);
     }
@@ -125,7 +124,7 @@ export default function BusinessConversationPageClient({
       // Dispatch event to update inbox count
       window.dispatchEvent(new CustomEvent("unreadCountUpdate"));
     } catch (error) {
-      console.error("Failed to mark as read:", error);
+      // Failed to mark as read
     }
   };
 
@@ -157,7 +156,6 @@ export default function BusinessConversationPageClient({
       }
     } catch (error) {
       setError("فشل في إرسال الرسالة");
-      console.error("Failed to send message:", error);
     } finally {
       setSending(false);
     }
@@ -169,7 +167,7 @@ export default function BusinessConversationPageClient({
       // Reload the conversation to get updated messages
       await loadConversation();
     } catch (error) {
-      console.error("Error refreshing conversation:", error);
+      // Error refreshing conversation
     }
   };
 

@@ -98,7 +98,6 @@ export async function PATCH(request) {
         : undefined,
       contact: rawUpdate.contact,
       locations: sanitizeLocations(rawUpdate.locations),
-
     };
     const updates = Object.fromEntries(
       Object.entries(allowed).filter(([, v]) => typeof v !== "undefined")
@@ -118,7 +117,6 @@ export async function PATCH(request) {
       supplier: updatedSupplier,
     });
   } catch (error) {
-    console.error("Error updating supplier:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -36,7 +36,6 @@ export async function GET(request, { params }) {
 
     return NextResponse.json(event);
   } catch (error) {
-    console.error("Error fetching event:", error);
     return NextResponse.json(
       { error: "Failed to fetch event" },
       { status: 500 }
@@ -99,7 +98,6 @@ export async function PUT(request, { params }) {
     const result = await writeClient.patch(id).set(updateData).commit();
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Error updating event:", error);
     return NextResponse.json(
       { error: "Failed to update event" },
       { status: 500 }
@@ -142,7 +140,6 @@ export async function DELETE(request, { params }) {
     await writeClient.delete(id);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting event:", error);
     return NextResponse.json(
       { error: "Failed to delete event" },
       { status: 500 }

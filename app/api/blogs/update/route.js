@@ -182,7 +182,6 @@ export async function POST(req) {
 
     return NextResponse.json({ ok: true, blog: updated });
   } catch (err) {
-    console.error("/api/blogs/update error", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

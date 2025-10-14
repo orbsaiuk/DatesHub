@@ -62,7 +62,6 @@ export default function EventRequestMessage({
         alert(data.error || "Failed to respond to event request");
       }
     } catch (error) {
-      console.error("Error responding to event request:", error);
       alert("Failed to respond to event request");
     } finally {
       setLoading(false);

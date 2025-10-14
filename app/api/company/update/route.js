@@ -132,7 +132,6 @@ export async function POST(req) {
 
     return NextResponse.json({ ok: true, result });
   } catch (error) {
-    console.error("/api/company/update error", error);
     return NextResponse.json(
       { error: "Failed to update company" },
       { status: 500 }

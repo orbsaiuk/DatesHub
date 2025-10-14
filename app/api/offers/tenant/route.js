@@ -34,7 +34,6 @@ export async function GET(request) {
       ...result,
     });
   } catch (error) {
-    console.error("Error fetching tenant offers:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch offers" },
       { status: 500 }

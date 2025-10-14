@@ -8,7 +8,6 @@ export default function PlansGrid({
   getPlanIcon,
   isCurrentPlan,
   canUpgrade,
-  canDowngrade,
   loading,
   onPlanSelect,
   formatPrice,
@@ -21,7 +20,6 @@ export default function PlansGrid({
           const isPopular = !!plan.isPopular;
           const isCurrent = isCurrentPlan(plan._id, plan);
           const canUpgradeToThis = canUpgrade(plan);
-          const canDowngradeToThis = canDowngrade(plan);
 
           return (
             <PlanCard
@@ -32,7 +30,6 @@ export default function PlansGrid({
               isPopular={isPopular}
               isCurrent={isCurrent}
               canUpgradeToThis={canUpgradeToThis}
-              canDowngradeToThis={canDowngradeToThis}
               loading={loading}
               onChoose={() => onPlanSelect(plan)}
               formatPrice={formatPrice}

@@ -33,7 +33,6 @@ export async function getCompanyProducts(tenantId) {
 
     return { items, stats };
   } catch (error) {
-    console.error("Error fetching company products:", error);
     return { items: [], stats: { total: 0 } };
   }
 }
@@ -71,7 +70,6 @@ export async function getSupplierProducts(tenantId) {
 
     return { items, stats };
   } catch (error) {
-    console.error("Error fetching supplier products:", error);
     return { items: [], stats: { total: 0 } };
   }
 }
@@ -123,7 +121,6 @@ export async function createProduct(productData) {
     const result = await writeClient.create(doc);
     return result;
   } catch (error) {
-    console.error("Error creating product:", error);
     throw error;
   }
 }
@@ -190,7 +187,6 @@ export async function getProductsForTenant(
 
     return { items, stats };
   } catch (error) {
-    console.error("Error fetching products for tenant:", error);
     return { items: [], stats: { total: 0, page: 1, totalPages: 0 } };
   }
 }
@@ -201,7 +197,6 @@ export async function deleteProduct(productId) {
     const result = await writeClient.delete(productId);
     return result;
   } catch (error) {
-    console.error("Error deleting product:", error);
     throw error;
   }
 }
@@ -251,7 +246,6 @@ export async function updateProduct(productId, updateData) {
 
     return result;
   } catch (error) {
-    console.error("Error updating product:", error);
     throw error;
   }
 }

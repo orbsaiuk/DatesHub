@@ -81,7 +81,7 @@ export async function POST(req) {
           },
         });
       } catch (err) {
-        console.error("Failed to set Clerk publicMetadata.role", err);
+        // Failed to set Clerk publicMetadata.role
       }
     }
 

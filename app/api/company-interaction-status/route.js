@@ -73,7 +73,6 @@ export async function GET(request) {
       canMessage: !!(acceptedOrderRequest || existingConversation),
     });
   } catch (error) {
-    console.error("Error checking company interaction status:", error);
     return NextResponse.json(
       { error: "Failed to check interaction status" },
       { status: 500 }

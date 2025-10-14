@@ -46,7 +46,6 @@ export default function DirectoryProductsSection({ tenant, tenantType }) {
         setStats({ total: 0, totalPages: 0 });
       }
     } catch (error) {
-      console.error("Error fetching products:", error);
       setProducts([]);
       setStats({ total: 0, totalPages: 0 });
     } finally {

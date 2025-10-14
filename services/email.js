@@ -269,7 +269,7 @@ export async function sendOrderRequestResponseToCustomer(orderRequest) {
           user?.primaryEmailAddress?.emailAddress ||
           user?.emailAddresses?.[0]?.emailAddress;
       } catch (error) {
-        console.error("Error fetching user from Clerk:", error);
+        // Error fetching user from Clerk
       }
     }
 
@@ -382,7 +382,6 @@ export async function sendOrderRequestResponseToCustomer(orderRequest) {
       return { ok: false, error: emailResult.error || emailResult.reason };
     }
   } catch (error) {
-    console.error("Error sending order request response email:", error);
     return { ok: false, error: String(error) };
   }
 }

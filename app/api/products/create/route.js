@@ -100,7 +100,6 @@ export async function POST(request) {
           }
         );
       } catch (error) {
-        console.error("Error uploading image:", error);
         return NextResponse.json(
           { error: "فشل في رفع الصورة" },
           { status: 500 }
@@ -129,7 +128,6 @@ export async function POST(request) {
       message: "تم إنشاء المنتج بنجاح",
     });
   } catch (error) {
-    console.error("Error creating product:", error);
     return NextResponse.json({ error: "فشل في إنشاء المنتج" }, { status: 500 });
   }
 }

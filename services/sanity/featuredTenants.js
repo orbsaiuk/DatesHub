@@ -23,7 +23,6 @@ export async function getFeaturedTenants(type = "companies", limit = 8) {
     const tenants = await writeClient.fetch(modifiedQuery);
     return tenants || [];
   } catch (error) {
-    console.error(error);
     return [];
   }
 }

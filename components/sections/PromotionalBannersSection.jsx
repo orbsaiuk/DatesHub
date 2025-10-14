@@ -73,9 +73,7 @@ export default function PromotionalBannersSection({ banners = [] }) {
 }
 
 function SimpleBanner({ banner }) {
-  const imageUrl = banner.image?.asset?.url
-    ? urlFor(banner.image).width(800).height(400).url()
-    : null;
+  const imageUrl = banner.image?.asset?.url ? urlFor(banner.image).url() : null;
   const hasBackgroundImage = Boolean(imageUrl);
 
   const formatDate = (dateString) => {
@@ -97,121 +95,138 @@ function SimpleBanner({ banner }) {
   const isExternalLink = banner.ctaLink?.startsWith("http");
 
   return (
-    <div className="relative overflow-hidden rounded-xl bg-white shadow-lg border min-h-[280px]">
+    <div className="relative overflow-hidden rounded-xl bg-white shadow-lg border h-[250px] sm:h-[300px] md:h-[380px] lg:h-[480px]">
       {/* Background Image */}
       {imageUrl && (
         <div className="absolute inset-0">
           <ImageOptimized
             src={imageUrl}
-            alt={`${banner.title} - بانر ترويجي`}
+            alt={`بانر ترويجي`}
             fill
-            sizes="(max-width: 1024px) 100vw, 800px"
-            className="object-cover"
+            quality={85}
+            format="webp"
+            className="w-full h-full"
+            priority
           />
-          <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent"></div>
+          {banner.title && (
+            <div className="absolute inset-0 bg-gradient-to-l from-black/70 via-black/40 to-black/20"></div>
+          )}
         </div>
       )}
 
       {/* Content */}
-      <div className="relative z-10 p-8 lg:p-12">
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
-          <div>
-            {/* Subtitle */}
-            {banner.subtitle && (
-              <div className="mb-4">
-                <span
-                  className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                    hasBackgroundImage
-                      ? "bg-white/20 text-white"
-                      : "bg-blue-50 text-blue-700"
-                  }`}
-                >
-                  {banner.subtitle}
-                </span>
+      {banner.title ||
+        banner.subtitle ||
+        banner.description ||
+        banner.ctaText ||
+        (banner.ctaLink && (
+          <div className="relative z-10 p-8 lg:p-12">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+              <div>
+                {/* Subtitle */}
+                {banner?.subtitle && (
+                  <div className="mb-4">
+                    <span
+                      className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                        hasBackgroundImage
+                          ? "bg-white/20 text-white"
+                          : "bg-blue-50 text-blue-700"
+                      }`}
+                    >
+                      {banner?.subtitle}
+                    </span>
+                  </div>
+                )}
+
+                {/* Title */}
+                {banner.title && (
+                  <h3
+                    className={`text-3xl lg:text-4xl font-bold mb-4 leading-tight ${
+                      hasBackgroundImage ? "text-white" : "text-gray-900"
+                    }`}
+                  >
+                    {(() => {
+                      // Fix title order and convert numbers to Arabic
+                      const title = banner.title || "";
+                      const match = title.match(/^(\d+)(.+)$/);
+                      if (match) {
+                        // If title starts with number, move it to the end and convert to Arabic
+                        const arabicNumber = toArabicNumerals(match[1]);
+                        return `${match[2]} ${arabicNumber}`;
+                      }
+
+                      // Convert any numbers in the title to Arabic
+                      return toArabicNumerals(title);
+                    })()}
+                  </h3>
+                )}
+
+                {/* Description */}
+                {banner.description &&
+                  banner.description[0]?.children?.[0]?.text && (
+                    <p
+                      className={`text-lg mb-6 leading-relaxed ${
+                        hasBackgroundImage ? "text-white/90" : "text-gray-600"
+                      }`}
+                    >
+                      {toArabicNumerals(banner.description[0].children[0].text)}
+                    </p>
+                  )}
+
+                {/* Date Info */}
+                {(banner.startDate || banner.endDate) &&
+                  (banner.endDate ? banner.showEndDate !== false : true) && (
+                    <div
+                      className={`flex items-center gap-2 mb-6 text-sm ${
+                        hasBackgroundImage ? "text-white/80" : "text-gray-500"
+                      }`}
+                    >
+                      <Clock className="w-4 h-4" />
+                      <span>
+                        {banner.endDate &&
+                          banner.showEndDate !== false &&
+                          `ساري حتى ${formatDate(banner.endDate)}`}
+                        {(!banner.endDate || banner.showEndDate === false) &&
+                          banner.startDate &&
+                          `بدأ في ${formatDate(banner.startDate)}`}
+                      </span>
+                    </div>
+                  )}
+
+                {/* CTA Button */}
+                {banner.ctaText &&
+                  banner.ctaLink &&
+                  (isExternalLink ? (
+                    <a
+                      href={banner.ctaLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
+                        hasBackgroundImage
+                          ? "bg-white text-gray-900 hover:bg-gray-100"
+                          : "bg-primary text-white hover:bg-primary/90"
+                      }`}
+                    >
+                      {toArabicNumerals(banner.ctaText)}
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  ) : (
+                    <Link
+                      href={banner.ctaLink}
+                      className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
+                        hasBackgroundImage
+                          ? "bg-white text-gray-900 hover:bg-gray-100"
+                          : "bg-primary text-white hover:bg-primary/90"
+                      }`}
+                    >
+                      {toArabicNumerals(banner.ctaText)}
+                      <ArrowLeft className="w-4 h-4" />
+                    </Link>
+                  ))}
               </div>
-            )}
-
-            {/* Title */}
-            <h3
-              className={`text-3xl lg:text-4xl font-bold mb-4 leading-tight ${
-                hasBackgroundImage ? "text-white" : "text-gray-900"
-              }`}
-            >
-              {(() => {
-                // Fix title order and convert numbers to Arabic
-                const title = banner.title || "";
-                const match = title.match(/^(\d+)(.+)$/);
-                if (match) {
-                  // If title starts with number, move it to the end and convert to Arabic
-                  const arabicNumber = toArabicNumerals(match[1]);
-                  return `${match[2]} ${arabicNumber}`;
-                }
-
-                // Convert any numbers in the title to Arabic
-                return toArabicNumerals(title);
-              })()}
-            </h3>
-
-            {/* Description */}
-            {banner.description &&
-              banner.description[0]?.children?.[0]?.text && (
-                <p
-                  className={`text-lg mb-6 leading-relaxed ${
-                    hasBackgroundImage ? "text-white/90" : "text-gray-600"
-                  }`}
-                >
-                  {toArabicNumerals(banner.description[0].children[0].text)}
-                </p>
-              )}
-
-            {/* Date Info */}
-            {(banner.startDate || banner.endDate) && (
-              <div
-                className={`flex items-center gap-2 mb-6 text-sm ${
-                  hasBackgroundImage ? "text-white/80" : "text-gray-500"
-                }`}
-              >
-                <Clock className="w-4 h-4" />
-                <span>
-                  {banner.endDate && `ساري حتى ${formatDate(banner.endDate)}`}
-                  {!banner.endDate &&
-                    banner.startDate &&
-                    `بدأ في ${formatDate(banner.startDate)}`}
-                </span>
-              </div>
-            )}
-
-            {/* CTA Button */}
-            {isExternalLink ? (
-              <a
-                href={banner.ctaLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
-                  hasBackgroundImage
-                    ? "bg-white text-gray-900 hover:bg-gray-100"
-                    : "bg-primary text-white hover:bg-primary/90"
-                }`}
-              >
-                {toArabicNumerals(banner.ctaText)}
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            ) : (
-              <Link
-                href={banner.ctaLink}
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
-                  hasBackgroundImage
-                    ? "bg-white text-gray-900 hover:bg-gray-100"
-                    : "bg-primary text-white hover:bg-primary/90"
-                }`}
-              >
-                {toArabicNumerals(banner.ctaText)}
-                <ArrowLeft className="w-4 h-4" />
-              </Link>
-            )}
+            </div>
           </div>
-        </div>
-      </div>
+        ))}
     </div>
   );
 }

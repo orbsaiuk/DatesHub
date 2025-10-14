@@ -15,7 +15,6 @@ export async function getAllPlans() {
   try {
     return await readClient.fetch(ALL_PLANS_QUERY);
   } catch (error) {
-    console.error("Error fetching plans:", error);
     return [];
   }
 }
@@ -24,7 +23,6 @@ export async function getPlanBySlug(slug) {
   try {
     return await readClient.fetch(PLAN_BY_SLUG_QUERY, { slug });
   } catch (error) {
-    console.error("Error fetching plan by slug:", error);
     return null;
   }
 }
@@ -33,7 +31,6 @@ export async function getPlanById(planId) {
   try {
     return await readClient.fetch(PLAN_BY_ID_QUERY, { planId });
   } catch (error) {
-    console.error("Error fetching plan by ID:", error);
     return null;
   }
 }
@@ -54,7 +51,6 @@ export async function getPlanByStripePriceId(priceId) {
     }`;
     return await readClient.fetch(query, { priceId });
   } catch (error) {
-    console.error("Error fetching plan by Stripe price ID:", error);
     return null;
   }
 }
@@ -63,7 +59,6 @@ export async function getPricingPlans() {
   try {
     return await readClient.fetch(PRICING_PLANS_QUERY);
   } catch (error) {
-    console.error("Error fetching pricing plans:", error);
     return [];
   }
 }
@@ -76,7 +71,6 @@ export async function getCurrentSubscription(tenantType, tenantId) {
       tenantId,
     });
   } catch (error) {
-    console.error("Error fetching current subscription:", error);
     return null;
   }
 }
@@ -88,7 +82,6 @@ export async function getAllSubscriptions(tenantType, tenantId) {
       tenantId,
     });
   } catch (error) {
-    console.error("Error fetching subscriptions:", error);
     return [];
   }
 }
@@ -99,7 +92,6 @@ export async function getSubscriptionById(subscriptionId) {
       subscriptionId,
     });
   } catch (error) {
-    console.error("Error fetching subscription by ID:", error);
     return null;
   }
 }
@@ -145,7 +137,6 @@ export async function createSubscription(subscriptionData) {
 
     return subscription;
   } catch (error) {
-    console.error("Error creating subscription:", error);
     throw error;
   }
 }
@@ -160,7 +151,6 @@ export async function updateSubscription(subscriptionId, updates) {
       })
       .commit();
   } catch (error) {
-    console.error("Error updating subscription:", error);
     throw error;
   }
 }
@@ -176,7 +166,6 @@ export async function updatePlan(planId, updates) {
       })
       .commit();
   } catch (error) {
-    console.error("Error updating plan:", error);
     throw error;
   }
 }
@@ -190,7 +179,6 @@ export async function cancelSubscription(subscriptionId) {
 
     return await updateSubscription(subscriptionId, updates);
   } catch (error) {
-    console.error("Error canceling subscription:", error);
     throw error;
   }
 }
@@ -203,7 +191,6 @@ export async function getSubscriptionUsage(tenantType, tenantId) {
       tenantId,
     });
   } catch (error) {
-    console.error("Error fetching subscription usage:", error);
     return null;
   }
 }
@@ -222,7 +209,6 @@ export async function updateUsage(tenantType, tenantId, usageUpdates) {
       usage: newUsage,
     });
   } catch (error) {
-    console.error("Error updating usage:", error);
     throw error;
   }
 }
@@ -250,7 +236,6 @@ export async function incrementUsage(
       usage: newUsage,
     });
   } catch (error) {
-    console.error("Error incrementing usage:", error);
     throw error;
   }
 }
@@ -281,7 +266,6 @@ export async function checkUsageLimit(tenantType, tenantId, usageType) {
       remaining: Math.max(0, limit - current),
     };
   } catch (error) {
-    console.error("Error checking usage limit:", error);
     return { allowed: false, reason: "Error checking limits" };
   }
 }
@@ -296,7 +280,6 @@ export async function createPayment(paymentData) {
       transactionDate: paymentData.transactionDate || new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Error creating payment:", error);
     throw error;
   }
 }
@@ -327,7 +310,6 @@ export async function updateTenantSubscription(
       })
       .commit();
   } catch (error) {
-    console.error("Error updating tenant subscription:", error);
     throw error;
   }
 }
@@ -357,7 +339,6 @@ export async function getSubscriptionByStripeId(stripeSubscriptionId) {
     }`;
     return await writeClient.fetch(query, { stripeSubscriptionId });
   } catch (error) {
-    console.error("Error fetching subscription by Stripe ID:", error);
     return null;
   }
 }

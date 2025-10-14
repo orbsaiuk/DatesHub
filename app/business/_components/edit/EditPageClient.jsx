@@ -26,15 +26,15 @@ export default function EditPageClient({ initialEntity, entityType }) {
     logo: initial?.logo || null,
     ...(entityType === "company"
       ? {
-        socialLinks: Array.isArray(initial?.socialLinks)
-          ? initial.socialLinks
-          : [],
-        companyType: initial?.companyType || "",
-        totalEmployees: initial?.totalEmployees || "",
-      }
+          socialLinks: Array.isArray(initial?.socialLinks)
+            ? initial.socialLinks
+            : [],
+          companyType: initial?.companyType || "",
+          totalEmployees: initial?.totalEmployees || "",
+        }
       : {
-        supplierType: initial?.supplierType || "",
-      }),
+          supplierType: initial?.supplierType || "",
+        }),
   });
 
   const [errors, setErrors] = useState({});
@@ -110,8 +110,6 @@ export default function EditPageClient({ initialEntity, entityType }) {
       }
     }
 
-
-
     setCurrentSection(nextId);
   };
 
@@ -142,12 +140,7 @@ export default function EditPageClient({ initialEntity, entityType }) {
   const locationValidation = validateLocations(formData.locations, true);
   const hasIncompleteLocations = !locationValidation.isValid;
 
-  // Debug logging
-  console.log('Location validation:', {
-    locations: formData.locations,
-    validation: locationValidation,
-    hasIncompleteLocations
-  });
+  // Debug logging removed
 
   const saveDisabled = hasNoCategories || hasIncompleteLocations;
   const saveDisabledReason = hasNoCategories
@@ -171,10 +164,11 @@ export default function EditPageClient({ initialEntity, entityType }) {
                 <button
                   key={s.id}
                   onClick={() => handleSectionChange(s.id)}
-                  className={`whitespace-nowrap px-3 py-2 rounded-full text-sm border ${currentSection === s.id
-                    ? "bg-muted text-foreground"
-                    : "text-muted-foreground hover:bg-muted/60"
-                    }`}
+                  className={`whitespace-nowrap px-3 py-2 rounded-full text-sm border ${
+                    currentSection === s.id
+                      ? "bg-muted text-foreground"
+                      : "text-muted-foreground hover:bg-muted/60"
+                  }`}
                 >
                   {s.label}
                 </button>

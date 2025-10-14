@@ -64,10 +64,6 @@ export async function POST(request) {
         null;
     } catch (e) {
       // Non-fatal; we'll fallback below
-      console.warn(
-        "Unable to resolve owner email via currentUser:",
-        e?.message
-      );
     }
 
     derivedName = effectiveTenantName;
@@ -99,14 +95,6 @@ export async function POST(request) {
     });
   } catch (error) {
     // Surface more diagnostic info in server logs while keeping response generic
-    console.error("Error creating checkout session:", {
-      message: error.message,
-      name: error.name,
-      type: error.type,
-      code: error.code,
-      raw: error.raw,
-      stack: error.stack,
-    });
     return NextResponse.json(
       {
         error: "Failed to create checkout session",

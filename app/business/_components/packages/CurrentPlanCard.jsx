@@ -40,17 +40,30 @@ export default function CurrentPlanCard({
         toast.error(error.error || "فشل في فتح بوابة الدفع");
       }
     } catch (error) {
-      console.error("Error opening billing portal:", error);
       toast.error("حدث خطأ ما. يرجى المحاولة مرة أخرى.");
     } finally {
       setBillingLoading(false);
     }
   };
 
+  // Translate subscription status to Arabic
+  const translateStatus = (status) => {
+    const statusMap = {
+      active: "فعال",
+      canceled: "ملغي",
+      past_due: "متأخر الدفع",
+      unpaid: "غير مدفوع",
+      trialing: "فترة تجريبية",
+      incomplete: "غير مكتمل",
+      incomplete_expired: "انتهت صلاحية التجربة",
+    };
+    return statusMap[status] || status;
+  };
+
   // If no subscription, show free plan card
   const displaySubscription = subscription || {
     plan: { name: "الباقة المجانية" },
-    status: "active",
+    status: "فعال",
   };
 
   return (
@@ -66,11 +79,14 @@ export default function CurrentPlanCard({
                 </span>
                 <Badge
                   variant={
-                    displaySubscription.status === "active" ? "default" : "secondary"
+                    displaySubscription.status === "active" ||
+                    displaySubscription.status === "فعال"
+                      ? "default"
+                      : "secondary"
                   }
                   className="w-fit text-xs sm:text-sm"
                 >
-                  {displaySubscription.status}
+                  {translateStatus(displaySubscription.status)}
                 </Badge>
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-1">

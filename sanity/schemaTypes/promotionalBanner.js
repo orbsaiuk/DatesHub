@@ -9,14 +9,14 @@ export default defineType({
       name: "title",
       title: "Title",
       type: "string",
-      validation: (Rule) => Rule.required().max(100),
-      description: "Main headline for the promotional banner",
+      validation: (Rule) => Rule.optional().max(100),
+      description: "Main headline for the promotional banner (optional)",
     }),
     defineField({
       name: "subtitle",
       title: "Subtitle",
       type: "string",
-      validation: (Rule) => Rule.max(200),
+      validation: (Rule) => Rule.optional().max(200),
       description: "Optional subtitle or tagline",
     }),
     defineField({
@@ -24,8 +24,8 @@ export default defineType({
       title: "Description",
       type: "array",
       of: [{ type: "block" }],
-      validation: (Rule) => Rule.required(),
-      description: "Detailed description of the promotion",
+      validation: (Rule) => Rule.optional(),
+      description: "Detailed description of the promotion (optional)",
     }),
     defineField({
       name: "image",
@@ -33,7 +33,7 @@ export default defineType({
       type: "image",
       options: {
         hotspot: true,
-        metadata: ["blurhash", "lqip", "palette"]
+        metadata: ["blurhash", "lqip", "palette"],
       },
       validation: (Rule) => Rule.required(),
       description: "High-quality banner image (recommended: 1200x600px)",
@@ -42,19 +42,19 @@ export default defineType({
       name: "ctaText",
       title: "Call to Action Text",
       type: "string",
-      initialValue: "اكتشف المزيد",
-      validation: (Rule) => Rule.required().max(50),
-      description: "Text for the action button",
+      validation: (Rule) => Rule.optional().max(50),
+      description: "Text for the action button (optional)",
     }),
     defineField({
       name: "ctaLink",
       title: "Call to Action Link",
       type: "url",
-      validation: (Rule) => Rule.required().uri({
-        allowRelative: true,
-        scheme: ['http', 'https', 'mailto', 'tel']
-      }),
-      description: "Where the CTA button should link to",
+      validation: (Rule) =>
+        Rule.optional().uri({
+          allowRelative: true,
+          scheme: ["http", "https", "mailto", "tel"],
+        }),
+      description: "Where the CTA button should link to (optional)",
     }),
     defineField({
       name: "isActive",
@@ -84,6 +84,15 @@ export default defineType({
       description: "When this banner should stop showing (optional)",
     }),
     defineField({
+      name: "showEndDate",
+      title: "Show End Date",
+      type: "boolean",
+      initialValue: true,
+      description:
+        "Whether to display the end date to users (only works if endDate is provided)",
+      hidden: ({ parent }) => !parent?.endDate,
+    }),
+    defineField({
       name: "targetAudience",
       title: "Target Audience",
       type: "string",
@@ -92,23 +101,26 @@ export default defineType({
           {
             title: "All Users",
             value: "all",
-            description: "Shown to everyone: regular users, companies, and non-logged visitors"
+            description:
+              "Shown to everyone: regular users, companies, and non-logged visitors",
           },
           {
             title: "Companies Target",
             value: "companies",
-            description: "Shown to regular users and non-logged visitors to attract companies to join"
+            description:
+              "Shown to regular users and non-logged visitors to attract companies to join",
           },
           {
             title: "Suppliers Target",
             value: "suppliers",
-            description: "Shown to companies to attract suppliers to join"
-          }
+            description: "Shown to companies to attract suppliers to join",
+          },
         ],
-        layout: "radio"
+        layout: "radio",
       },
       initialValue: "all",
-      description: "Choose who should see this banner: 'All' = everyone (including non-logged users), 'Companies' = shown to regular/non-logged users (to attract companies), 'Suppliers' = shown to companies (to attract suppliers)",
+      description:
+        "Choose who should see this banner: 'All' = everyone (including non-logged users), 'Companies' = shown to regular/non-logged users (to attract companies), 'Suppliers' = shown to companies (to attract suppliers)",
     }),
   ],
   preview: {
@@ -116,18 +128,18 @@ export default defineType({
       title: "title",
       subtitle: "targetAudience",
       media: "image",
-      isActive: "isActive"
+      isActive: "isActive",
     },
     prepare({ title, subtitle, media, isActive }) {
       const audienceLabels = {
         all: "All Users",
         companies: "Companies Target",
-        suppliers: "Suppliers Target"
+        suppliers: "Suppliers Target",
       };
       return {
         title: title,
-        subtitle: `${audienceLabels[subtitle] || subtitle} ${isActive ? '(Active)' : '(Inactive)'}`,
-        media: media
+        subtitle: `${audienceLabels[subtitle] || subtitle} ${isActive ? "(Active)" : "(Inactive)"}`,
+        media: media,
       };
     },
   },
@@ -135,12 +147,12 @@ export default defineType({
     {
       title: "Display Order",
       name: "displayOrder",
-      by: [{ field: "displayOrder", direction: "asc" }]
+      by: [{ field: "displayOrder", direction: "asc" }],
     },
     {
       title: "Created Date",
       name: "createdAt",
-      by: [{ field: "_createdAt", direction: "desc" }]
-    }
-  ]
+      by: [{ field: "_createdAt", direction: "desc" }],
+    },
+  ],
 });

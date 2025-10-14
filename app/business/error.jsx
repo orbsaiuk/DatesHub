@@ -6,8 +6,7 @@ import { AlertCircle } from "lucide-react";
 
 export default function BusinessError({ error, reset }) {
   useEffect(() => {
-    // Log error to error reporting service
-    console.error("Business dashboard error:", error);
+    // Error reporting service can be added here
   }, [error]);
 
   return (

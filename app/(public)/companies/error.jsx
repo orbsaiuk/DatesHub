@@ -6,7 +6,7 @@ import { Building2, RefreshCw } from "lucide-react";
 
 export default function CompaniesError({ error, reset }) {
   useEffect(() => {
-    console.error("Companies directory error:", error);
+    // Error reporting service can be added here
   }, [error]);
 
   return (

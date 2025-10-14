@@ -54,8 +54,6 @@ export async function POST(request) {
       product: updatedProduct,
     });
   } catch (error) {
-    console.error("Error updating product:", error);
-
     if (error.message?.includes("not found")) {
       return NextResponse.json({ error: "المنتج غير موجود" }, { status: 404 });
     }

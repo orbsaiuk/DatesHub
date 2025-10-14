@@ -27,7 +27,6 @@ export default function Categories() {
           : (result?.data ?? []);
         setCategories(categoriesData);
       } catch (error) {
-        console.error("Error fetching categories:", error);
         setCategories([]);
       }
     };

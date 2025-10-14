@@ -122,7 +122,7 @@ export default function Sidebar({ userRole, entity, children }) {
 
   // Load initial collapsed state from localStorage
   useEffect(() => {
-    const collapsed = localStorage.getItem("sidebarCollapsed") === "true";
+    const collapsed = localStorage.getItem("sidebarCollapsed") === "false";
     setIsSidebarCollapsed(collapsed);
   }, []);
 
@@ -146,7 +146,7 @@ export default function Sidebar({ userRole, entity, children }) {
           setUnreadCount(count);
         }
       } catch (error) {
-        console.error("Error fetching unread count:", error);
+        // Error fetching unread count
       }
     };
 

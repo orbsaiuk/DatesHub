@@ -11,7 +11,6 @@ import LoadingState from "./LoadingState";
 import CurrentPlanCard from "./CurrentPlanCard";
 import PlansGrid from "./PlansGrid";
 import UpgradeConfirmDialog from "./UpgradeConfirmDialog";
-import FAQSection from "./FAQSection";
 
 export default function PackagesPage({
   tenantType,
@@ -124,15 +123,6 @@ export default function PackagesPage({
     return tierOrder[plan.tier] > tierOrder[currentTier];
   };
 
-  const canDowngrade = (plan) => {
-    const currentPlan = currentSubscription?.plan;
-    if (!currentPlan) return false;
-
-    const tierOrder = { free: 0, pro: 1, enterprise: 2 };
-    const currentTier = getPlanTier(currentPlan);
-    return tierOrder[plan.tier] < tierOrder[currentTier];
-  };
-
   const getUsagePercentage = (used, limit) => {
     if (limit === -1) return 0; // Unlimited
     if (limit === 0) return 100;
@@ -155,11 +145,13 @@ export default function PackagesPage({
   const annualSavings =
     monthlyPro && annualPro
       ? Math.max(
-        0,
-        ((monthlyPro.price.amount * 12 - annualPro.price.amount) /
-          (monthlyPro.price.amount * 12)) *
-        100
-      ).toFixed(0).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d])
+          0,
+          ((monthlyPro.price.amount * 12 - annualPro.price.amount) /
+            (monthlyPro.price.amount * 12)) *
+            100
+        )
+          .toFixed(0)
+          .replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d])
       : 0;
 
   const getPlanIcon = (tier) => {
@@ -194,7 +186,9 @@ export default function PackagesPage({
         <CurrentPlanCard
           subscription={currentSubscription}
           limits={currentSubscription?.plan?.limits}
-          icon={getPlanIcon(getPlanTier(currentSubscription?.plan || { slug: "free" }))}
+          icon={getPlanIcon(
+            getPlanTier(currentSubscription?.plan || { slug: "free" })
+          )}
           getUsagePercentage={getUsagePercentage}
           tenantType={tenantType}
           tenantId={tenantId}
@@ -207,7 +201,6 @@ export default function PackagesPage({
           getPlanIcon={getPlanIcon}
           isCurrentPlan={(planId, plan) => isCurrentPlan(planId, plan)}
           canUpgrade={canUpgrade}
-          canDowngrade={canDowngrade}
           loading={loading}
           onPlanSelect={setShowUpgradeConfirm}
           formatPrice={formatPrice}
@@ -222,11 +215,7 @@ export default function PackagesPage({
           loading={loading}
           formatPrice={formatPrice}
           billingInterval={billingInterval}
-          canUpgrade={canUpgrade}
         />
-
-        {/* FAQ Section */}
-        <FAQSection />
       </div>
     </div>
   );

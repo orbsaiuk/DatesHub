@@ -12,7 +12,6 @@ export default function PlanCard({
   isPopular,
   isCurrent,
   canUpgradeToThis,
-  canDowngradeToThis,
   loading,
   onChoose,
   formatPrice,
@@ -113,15 +112,6 @@ export default function PlanCard({
                 <ArrowUp className="w-4 h-4 me-2" />
               )}
               الترقية إلى {plan.name}
-            </Button>
-          ) : canDowngradeToThis ? (
-            <Button
-              variant="outline"
-              className="w-full h-12 text-sm sm:text-base cursor-pointer touch-manipulation"
-              onClick={onChoose}
-              disabled={loading}
-            >
-              التراجع إلى {plan.name}
             </Button>
           ) : tier === "enterprise" ? (
             <Button

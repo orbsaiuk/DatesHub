@@ -12,7 +12,6 @@ export async function GET(_req, { params }) {
     if (!user) return new NextResponse("Not found", { status: 404 });
     return NextResponse.json({ ok: true, user });
   } catch (err) {
-    console.error("GET /api/users/[id] error", err);
     return new NextResponse("Server error", { status: 500 });
   }
 }

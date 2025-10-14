@@ -6,8 +6,7 @@ import { AlertTriangle } from "lucide-react";
 
 export default function Error({ error, reset }) {
   useEffect(() => {
-    // Log error to error reporting service (e.g., Sentry)
-    console.error("Root error boundary caught:", error);
+    // Error reporting service (e.g., Sentry) can be added here
   }, [error]);
 
   return (

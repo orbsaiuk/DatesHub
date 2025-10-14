@@ -46,7 +46,6 @@ export async function ensureUserMembership(clerkId, entityType, tenantId) {
 
     return { ok: true, userId: targetUserId };
   } catch (e) {
-    console.error("Failed to ensure user membership", e);
     return { ok: false, error: String(e) };
   }
 }

@@ -74,7 +74,6 @@ export default function BlogsClient({
   const openPreview = (blog) => {
     setPreviewBlog(blog);
     setTimeout(() => setShowPreview(true), 0);
-    console.log(blog);
   };
 
   async function handleDelete(blog) {

@@ -35,7 +35,6 @@ export async function GET(request, { params }) {
       extraServices: company.extraServices || [],
     });
   } catch (error) {
-    console.error("Error fetching company services:", error);
     return NextResponse.json(
       { error: "Failed to fetch company services" },
       { status: 500 }

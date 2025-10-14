@@ -6,7 +6,7 @@ import { Package, RefreshCw } from "lucide-react";
 
 export default function SuppliersError({ error, reset }) {
   useEffect(() => {
-    console.error("Suppliers directory error:", error);
+    // Error reporting service can be added here
   }, [error]);
 
   return (

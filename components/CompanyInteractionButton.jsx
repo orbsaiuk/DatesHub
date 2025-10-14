@@ -41,7 +41,6 @@ export default function CompanyInteractionButton({
         setHasPendingRequest(data.hasPendingRequest);
       }
     } catch (error) {
-      console.error("Error checking interaction status:", error);
       // Default to showing event request button on error
       setHasAcceptedRequest(false);
       setHasPendingRequest(false);

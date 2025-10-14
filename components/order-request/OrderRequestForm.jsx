@@ -47,9 +47,7 @@ export default function OrderRequestForm({
       await onSubmit?.(data);
       reset();
     } catch (error) {
-      if (process.env.NODE_ENV === "development") {
-        console.error("Error submitting order request:", error);
-      }
+      // Error submitting order request
     }
   };
 

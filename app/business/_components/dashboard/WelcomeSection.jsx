@@ -2,10 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
 export default function WelcomeSection({ entity, entityType, subscription }) {
-  // Debug logging in development
-  if (process.env.NODE_ENV === "development") {
-    console.log("WelcomeSection subscription data:", subscription);
-  }
+  // Debug logging removed
 
   // Get plan information from subscription
   const getPlanDisplay = () => {
