@@ -3,6 +3,55 @@ import { writeClient } from "@/sanity/lib/serverClient";
 import { currentUser } from "@clerk/nextjs/server";
 import { formatTime } from "@/lib/dateUtils";
 
+// Helper function to get multiple admin emails from environment variables
+export function getAdminEmails() {
+  const adminEmails = [];
+
+  // Get admin emails from ADMIN_EMAILS (comma-separated)
+  const adminEmailsEnv = (process.env.ADMIN_EMAILS || "").trim();
+  if (adminEmailsEnv) {
+    const emails = adminEmailsEnv
+      .split(",")
+      .map((email) => email.trim())
+      .filter((email) => email);
+    adminEmails.push(...emails);
+  }
+
+  // Remove duplicates
+  return [...new Set(adminEmails)];
+}
+
+// Helper function to send emails to all admins
+export async function sendEmailToAdmins(subject, html) {
+  const adminEmails = getAdminEmails();
+
+  if (adminEmails.length === 0) {
+    return { ok: false, reason: "no admin emails configured" };
+  }
+
+  const emailPromises = adminEmails.map((adminEmail) =>
+    sendEmail({ to: adminEmail, subject, html })
+  );
+
+  try {
+    const results = await Promise.allSettled(emailPromises);
+    const successful = results.filter(
+      (result) => result.status === "fulfilled" && result.value.ok
+    ).length;
+
+    return {
+      ok: true,
+      data: {
+        total: adminEmails.length,
+        successful,
+        failed: adminEmails.length - successful,
+      },
+    };
+  } catch (error) {
+    return { ok: false, error: error.message };
+  }
+}
+
 // Sends a confirmation email to the customer after submitting an order request
 export async function sendOrderRequestConfirmationToCustomer(orderRequest) {
   try {

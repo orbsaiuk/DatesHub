@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { writeClient } from "@/sanity/lib/serverClient";
 import { uuid } from "@sanity/uuid";
 import { sendEmail, buildBasicHtmlEmail } from "@/lib/email";
+import { sendEmailToAdmins } from "@/services/email";
 import { getUserPendingTenantRequest } from "@/services/sanity/tenantRequest";
 
 export const runtime = "nodejs";
@@ -40,7 +41,7 @@ async function parseMultipartAndUploadLogo(request) {
   if (typeof dataStr === "string") {
     try {
       data = JSON.parse(dataStr);
-    } catch { }
+    } catch {}
   }
 
   let logoImageRef = null;
@@ -147,19 +148,19 @@ export async function POST(request) {
       contact: contact || null,
       locations: Array.isArray(locations)
         ? locations.map((l) => ({
-          _key: l?._key || uuid(),
-          country: l?.country || null,
-          city: l?.city || null,
-          address: l?.address || null,
-          region: l?.region || null,
-          zipCode: l?.zipCode || null,
-          geo:
-            l?.geo &&
+            _key: l?._key || uuid(),
+            country: l?.country || null,
+            city: l?.city || null,
+            address: l?.address || null,
+            region: l?.region || null,
+            zipCode: l?.zipCode || null,
+            geo:
+              l?.geo &&
               typeof l.geo.lat === "number" &&
               typeof l.geo.lng === "number"
-              ? { _type: "geopoint", lat: l.geo.lat, lng: l.geo.lng }
-              : undefined,
-        }))
+                ? { _type: "geopoint", lat: l.geo.lat, lng: l.geo.lng }
+                : undefined,
+          }))
         : [],
       openingHours: openingHours,
     };
@@ -205,16 +206,24 @@ export async function POST(request) {
       emailPromises.push(sendEmail({ to: toEmail, subject, html }));
     }
 
-    // Admin notification email
-    const adminEmail = (process.env.ADMIN_NOTIFIER_EMAIL || "").trim();
-    if (adminEmail) {
-      const subject = `[طلب ${tenantType === "company" ? "شركة" : "مورد"} جديد] ${name || "بدون عنوان"}`;
-      const html = buildBasicHtmlEmail("طلب جديد", [
-        `النوع: ${tenantType === "company" ? "شركة" : "مورد"}`,
-        `الاسم: ${name || "-"}`,
-        `البريد الإلكتروني: ${toEmail || "-"}`,
-      ]);
-      emailPromises.push(sendEmail({ to: adminEmail, subject, html }));
+    // Admin notification email to all admins
+    const subject = `[طلب ${tenantType === "company" ? "شركة" : "مورد"} جديد] ${name || "بدون عنوان"}`;
+    const html = buildBasicHtmlEmail("طلب جديد", [
+      `النوع: ${tenantType === "company" ? "شركة" : "مورد"}`,
+      `الاسم: ${name || "-"}`,
+      `البريد الإلكتروني: ${toEmail || "-"}`,
+    ]);
+
+    const adminEmailResult = await sendEmailToAdmins(subject, html);
+    if (adminEmailResult.ok) {
+      console.log(
+        `Admin notification sent to ${adminEmailResult.data.successful}/${adminEmailResult.data.total} admins`
+      );
+    } else {
+      console.warn(
+        "Failed to send admin notification:",
+        adminEmailResult.reason || adminEmailResult.error
+      );
     }
 
     // Wait for all emails to complete before returning response
