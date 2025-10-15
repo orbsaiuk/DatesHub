@@ -105,10 +105,6 @@ export const metadata = {
     ],
   },
   manifest: "/manifest.json",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0ea5e9" },
-    { media: "(prefers-color-scheme: dark)", color: "#1e293b" },
-  ],
   robots: {
     index: true,
     follow: true,
@@ -122,8 +118,6 @@ export const metadata = {
   },
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
-    yandex: process.env.YANDEX_VERIFICATION,
-    yahoo: process.env.YAHOO_SITE_VERIFICATION,
   },
 };
 

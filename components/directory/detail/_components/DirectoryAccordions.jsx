@@ -11,7 +11,6 @@ import DirectoryReviewsContent from "./accordions/DirectoryReviewsContent";
 import DirectoryLocationContent from "./accordions/DirectoryLocationContent";
 import DirectoryContactContent from "./accordions/DirectoryContactContent";
 
-
 export default function DirectoryAccordions({
   reviews = [],
   tenant,
@@ -57,14 +56,14 @@ export default function DirectoryAccordions({
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="contact" id="contact-section">
+        {/* <AccordionItem value="contact" id="contact-section">
           <AccordionTrigger className="px-4 sm:px-6 font-bold text-lg">
             التواصل
           </AccordionTrigger>
           <AccordionContent className="px-4 sm:px-6">
             <DirectoryContactContent tenant={tenant} />
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem> */}
       </Accordion>
     </div>
   );
