@@ -73,7 +73,7 @@ export default function Categories() {
           setApi={setApi}
         >
           <div className="flex items-center justify-between mb-6 sm:mb-10">
-            <h2 className="text-2xl sm:text-4xl tracking-tight leading-tight text-section-title">
+            <h2 className="text-2xl sm:text-4xl tracking-tight leading-tight">
               تصفح حسب الفئة
             </h2>
             <div className="hidden sm:flex items-center gap-2 pt-8">

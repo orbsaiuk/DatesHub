@@ -51,9 +51,7 @@ export default function Blog({
     <section className="w-full py-10 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4 mb-6 sm:mb-10">
-          <h2 className="text-2xl sm:text-4xl tracking-tight text-section-title">
-            نصائح في تجارة التمور
-          </h2>
+          <h2 className="text-2xl sm:text-4xl tracking-tight">المدونة</h2>
           <Link
             href="/blogs"
             aria-label="عرض كل مقالات المدونة"

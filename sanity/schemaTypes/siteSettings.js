@@ -90,6 +90,14 @@ export default defineType({
           fields: [
             { name: "title", title: "Title", type: "string" },
             { name: "description", title: "Description", type: "text" },
+            {
+              name: "icon",
+              title: "Icon (SVG only)",
+              type: "file",
+              options: {
+                accept: ".svg",
+              },
+            },
           ],
         },
       ],
@@ -105,6 +113,14 @@ export default defineType({
           fields: [
             { name: "title", title: "Title", type: "string" },
             { name: "description", title: "Description", type: "text" },
+            {
+              name: "icon",
+              title: "Icon (SVG only)",
+              type: "file",
+              options: {
+                accept: ".svg",
+              },
+            },
           ],
         },
       ],
@@ -121,6 +137,14 @@ export default defineType({
           fields: [
             { name: "title", title: "Title", type: "string" },
             { name: "description", title: "Description", type: "text" },
+            {
+              name: "icon",
+              title: "Icon (SVG only)",
+              type: "file",
+              options: {
+                accept: ".svg",
+              },
+            },
           ],
         },
       ],
@@ -137,6 +161,14 @@ export default defineType({
           fields: [
             { name: "title", title: "Title", type: "string" },
             { name: "description", title: "Description", type: "text" },
+            {
+              name: "icon",
+              title: "Icon (SVG only)",
+              type: "file",
+              options: {
+                accept: ".svg",
+              },
+            },
           ],
         },
       ],

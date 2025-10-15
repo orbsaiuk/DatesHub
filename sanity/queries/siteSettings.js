@@ -24,8 +24,8 @@ export const SITE_SETTINGS_QUERY = `
     ogImage
   },
   faq[]{q, a},
-  how[]{title, description, bullets, icon},
-  why[]{title, description},
-  companyHow[]{title, description, bullets, icon},
-  companyWhy[]{title, description}
+  how[]{title, description, bullets, icon{asset->{url}}},
+  why[]{title, description, icon{asset->{url}}},
+  companyHow[]{title, description, bullets, icon{asset->{url}}},
+  companyWhy[]{title, description, icon{asset->{url}}}
 }`;

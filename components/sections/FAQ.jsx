@@ -10,7 +10,7 @@ export default function FAQ({ items }) {
   return (
     <section id="faq" className="w-full py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl sm:text-4xl tracking-tight mb-10 text-section-title">
+        <h2 className="text-2xl sm:text-4xl tracking-tight mb-10">
           الأسئلة الشائعة
         </h2>
         <Accordion

@@ -27,7 +27,7 @@ export default function ProductCard({ product, tenant }) {
   return (
     <div className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
       {/* Product Image */}
-      <div className="relative aspect-[4/2] overflow-hidden bg-gray-100">
+      <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
         {imageUrl ? (
           <ImageOptimized
             src={imageUrl}

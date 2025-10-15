@@ -52,9 +52,9 @@ export default function FeaturedTenants({
 
   // Render tenant card
   const renderTenantCard = (item) => (
-    <Card className="h-full transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-md">
+    <Card className="h-full transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-md group">
       <CardContent className="pt-6">
-        <div className="rounded-lg bg-muted/50 border flex items-center justify-center overflow-hidden">
+        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 rounded-lg border">
           <ImageOptimized
             sanityImage={item.logo?.asset ? item.logo : null}
             src={
@@ -65,13 +65,15 @@ export default function FeaturedTenants({
                   : undefined
             }
             alt={`${item.name} logo`}
-            width={230}
-            height={230}
-            className={` ${item.logo?.asset ? "object-contain" : "object-cover w-full"}`}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300 w-full h-full"
             tenantName={item.name}
             context="logo"
             priority
           />
+
+          {/* Overlay on hover */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
         </div>
       </CardContent>
       <CardHeader className="space-y-2">
@@ -120,6 +122,9 @@ export default function FeaturedTenants({
             عرض التفاصيل
           </Link>
         </Button>
+
+        {/* Bottom border accent */}
+        <div className="h-1 bg-gradient-to-r from-primary/20 via-primary to-primary/20 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
       </CardFooter>
     </Card>
   );
@@ -129,7 +134,7 @@ export default function FeaturedTenants({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-8 sm:gap-10">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-4 mb-6 sm:mb-10">
-            <h2 className="text-2xl sm:text-4xl tracking-tight text-section-title">
+            <h2 className="text-2xl sm:text-4xl tracking-tight">
               {type === "companies" ? "شركات مميزة" : "موردين مميزين"}
             </h2>
             {/* Only show View All button if there are more items than displayed */}

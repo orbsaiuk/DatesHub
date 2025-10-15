@@ -286,7 +286,7 @@ export default function Sidebar({ userRole, entity, children }) {
             isSidebarCollapsed ? "w-16" : "w-64"
           }`}
         >
-          <div className="h-full bg-secondary backdrop-blur supports-[backdrop-filter]:bg-secondary/95 shadow-lg flex flex-col overflow-x-hidden min-w-0">
+          <div className="h-full bg-white backdrop-blur supports-[backdrop-filter]:bg-white/95 shadow-lg flex flex-col overflow-x-hidden min-w-0">
             {/* Navigation */}
             <nav
               className={`flex-1 ${
